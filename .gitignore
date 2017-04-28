@@ -1,0 +1,43 @@
+#Ignore PSoC Creator temp and user specific files
+
+#Ignore Archive directory, bundles there
+Archive/*
+Backup/*
+Archive/
+Backup/
+
+#Projects optional files
+*.cydsn/codegentemp/
+*.cydsn/Generated_Source/
+*.cydsn/Export/
+*.cydsn/*.cyfit
+*.cydsn/*.rpt
+*.cydsn/*.html
+*.cydsn/*.cycdx
+*.cydsn/*.svd
+
+#PSoC 5LP based projects
+*.cydsn/CortexM3/
+
+#PSoC 4 based projects
+*.cydsn/CortexM0/
+
+
+#User specific files
+ComponentUpdateLog.txt
+*.Xwx47
+
+# Random file
+*.cylib/CortexM0/
+
+codegentemp
+Generated_Source
+CortexM3
+CortexM0
+Export
+*.rpt
+*.html
+*.svd
+*.cyfit
+*.Administrator
+*.chuck.erhardt
