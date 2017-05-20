@@ -394,9 +394,9 @@ void `$INSTANCE_NAME`_StopListening(void)
 
 void `$INSTANCE_NAME`_TransmitPulse(void)
 {
-    `$CE_INSTANCE`_Write(1);
+    `$CE_PIN`_Write(1);
     CyDelayUs(15);
-    `$CE_INSTANCE`_Write(0);
+    `$CE_PIN`_Write(0);
 }
 
 void `$INSTANCE_NAME`_Listen(const bool listen)
