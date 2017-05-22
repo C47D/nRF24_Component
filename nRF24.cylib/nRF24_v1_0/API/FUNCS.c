@@ -29,8 +29,7 @@
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
 
-#define SIZE(x) sizeof(x)/sizeof(x[0])
-
+// nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
 
 // PSoC Component Functions
@@ -38,7 +37,7 @@
 // Configure the radio and clear TX and RX FIFOs.
 void `$INSTANCE_NAME`_Start(void)
 {
-    CyDelay(`$INSTANCE_NAME`_POR_DELAY); // Recommended power on reset delay for nRF24 radio.
+    CyDelay(`$INSTANCE_NAME`_POR_DELAY);
     `$INSTANCE_NAME`_Init();
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
@@ -205,38 +204,47 @@ void `$INSTANCE_NAME`_SetChannel(uint8_t channel)
 
 void `$INSTANCE_NAME`_SetRxAddress(const uint8_t* addr, size_t addrSize)
 {
-    if( NULL != addr )
+    if( NULL == addr )
     {
-        if( 5 < addrSize )
-        {
-            addrSize = 5;
-        }
-        `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P0_REG, addr, addrSize);
+        return;
     }
+    
+    if( 5 < addrSize )
+    {
+        addrSize = 5;
+    }
+    
+    `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P0_REG, addr, addrSize);
 }
 
 void `$INSTANCE_NAME`_SetRxPipe0Address(const uint8_t* addr, size_t addrSize)
 {
     if( NULL != addr )
     {
-        if( 5 < addrSize )
-        { 
-            addrSize = 5;
-        }
-        `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P0_REG, addr, addrSize);
+        return;
     }
+    
+    if( 5 < addrSize )
+    { 
+        addrSize = 5;
+    }
+    
+    `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P0_REG, addr, addrSize);
 }
 
 void `$INSTANCE_NAME`_SetRxPipe1Address(const uint8_t* addr, size_t addrSize)
 {
-    if( NULL != addr )
+    if( NULL == addr )
     {
-        if( 5 < addrSize )
-        { 
-            addrSize = 5;
-        }
-        `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P1_REG, addr, addrSize);
+        return;
     }
+    
+    if( 5 < addrSize )
+    { 
+        addrSize = 5;
+    }
+
+    `$INSTANCE_NAME`_WriteLongRegister(NRF_RX_ADDR_P1_REG, addr, addrSize);
 }
 
 void `$INSTANCE_NAME`_SetRxPipe2Address(const uint8_t addr)
@@ -261,14 +269,17 @@ void `$INSTANCE_NAME`_SetRxPipe5Address(const uint8_t addr)
 
 void `$INSTANCE_NAME`_SetTxAddress(const uint8_t* addr, size_t addrSize)
 {
-    if( NULL != addr )
+    if( NULL == addr )
     {
-        if( 5 < addrSize )
-        {
-            addrSize = 5;
-        }
-        `$INSTANCE_NAME`_WriteLongRegister(NRF_TX_ADDR_REG, addr, addrSize);
+        return;
     }
+    
+    if( 5 < addrSize )
+    {
+        addrSize = 5;
+    }
+    
+    `$INSTANCE_NAME`_WriteLongRegister(NRF_TX_ADDR_REG, addr, addrSize);
 }
 
 void `$INSTANCE_NAME`_SetPayloadSize(const NRF_DATA_PIPE_t pipe , uint8_t payloadSize)
@@ -298,7 +309,8 @@ void `$INSTANCE_NAME`_SetPayloadSize(const NRF_DATA_PIPE_t pipe , uint8_t payloa
     case NRF_DATA_PIPE5:
         `$INSTANCE_NAME`_WriteRegister(NRF_RX_PW_P5_REG, payloadSize);
         break;
-    default: return;
+    default:
+        break;
     }
 }
 
@@ -324,7 +336,8 @@ uint8_t `$INSTANCE_NAME`_GetPayloadSize(const NRF_DATA_PIPE_t pipe)
     case NRF_DATA_PIPE5:
         return `$INSTANCE_NAME`_ReadRegister(NRF_RX_PW_P5_REG);
         break;
-    default: return 0;
+    default: 
+        return 0;
     }
 }
 
@@ -384,12 +397,12 @@ void `$INSTANCE_NAME`_DisablePayloadWithNoACKCmd(void)
 
 void `$INSTANCE_NAME`_StartListening(void)
 {
-    `$INSTANCE_NAME`_Listen(true); // Set CE pin high.
+    `$INSTANCE_NAME`_Listen(true);
 }
 
 void `$INSTANCE_NAME`_StopListening(void)
 {
-    `$INSTANCE_NAME`_Listen(false); // Set CE pin low.
+    `$INSTANCE_NAME`_Listen(false);
 }
 
 void `$INSTANCE_NAME`_TransmitPulse(void)
@@ -401,7 +414,7 @@ void `$INSTANCE_NAME`_TransmitPulse(void)
 
 void `$INSTANCE_NAME`_Listen(const bool listen)
 {
-    if( listen )
+    if ( listen )
     {
         `$CE_PIN`_Write(1);
     } else {
@@ -457,46 +470,50 @@ uint8_t `$INSTANCE_NAME`_GetLostPacketsCount(void)
 
 void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-        uint8_t i;
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H)
-        `$SPI_INTERFACE`_ClearRxBuffer();
-        `$SPI_INTERFACE`_ClearTxBuffer();
-        
-        `$SS_PIN`_Write(0);
-        `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
-        
-        for(i = dataSize; i != 0 ; i--){
-            `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
-        }
-        
-        while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-        `$SS_PIN`_Write(1);
-#else
-        `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-        `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-        `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-        
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_CMD);
-
-        for(i = dataSize; i != 0 ; i--){
-            `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
-        }
-
-        while(`$SPI_INTERFACE`_SpiIsBusBusy());
-#endif
+        return;
     }
+    
+    uint8_t i;
+#if !defined(CY_SCB_`$SPI_INSTANCE`_H)
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+        
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
+        
+    for(i = dataSize; i != 0 ; i--){
+        `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
+    }
+        
+    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+    `$SS_PIN`_Write(1);
+#else
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+        
+    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+        
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_CMD);
+
+    for(i = dataSize; i != 0 ; i--){
+        `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
+    }
+
+    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+#endif
 }
 
 void `$INSTANCE_NAME`_TxTransmit(const uint8_t* data, size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-        `$INSTANCE_NAME`_FillTxFIFO(data, dataSize);
-        `$INSTANCE_NAME`_TransmitPulse();
+        return;
     }
+    
+    `$INSTANCE_NAME`_FillTxFIFO(data, dataSize);
+    `$INSTANCE_NAME`_TransmitPulse();
 }
 
 bool `$INSTANCE_NAME`_IsDataReady(void)
@@ -511,86 +528,91 @@ bool `$INSTANCE_NAME`_IsDataReady(void)
 
 void `$INSTANCE_NAME`_GetRxPayload(uint8_t* data, size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-        `$INSTANCE_NAME`_ReadLongRegister(NRF_R_RX_PAYLOAD_CMD, data, dataSize);
+        return;
     }
+    
+    `$INSTANCE_NAME`_ReadLongRegister(NRF_R_RX_PAYLOAD_CMD, data, dataSize);
 }
 
 void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
+        return;
+    }
     // if ( 32 < payloadSize ) { payloadSize = 32; } // i think biggest payload can be 32
     
-        uint8_t i;
+    uint8_t i;
 #if !defined(CY_SCB_`$SPI_INSTANCE`_H)
-        `$SPI_INTERFACE`_ClearRxBuffer();
-        `$SPI_INTERFACE`_ClearTxBuffer();
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
         
-        `$SS_PIN`_Write(0);
-        `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
         
-        for(i = dataSize; i != 0 ; i--){
-            `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
-        }
-        
-        while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-        `$SS_PIN`_Write(1);
-#else
-        `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-        `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-        `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
-        
-        for(i = dataSize; i != 0; i--){
-            `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
-        }
-        
-        while(`$SPI_INTERFACE`_SpiIsBusBusy());
-#endif
-        `$INSTANCE_NAME`_TransmitPulse();
+    for(i = dataSize; i != 0 ; i--){
+        `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
     }
+        
+    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+    `$SS_PIN`_Write(1);
+#else
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+        
+    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
+        
+    for(i = dataSize; i != 0; i--){
+        `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
+    }
+        
+    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+#endif
+    `$INSTANCE_NAME`_TransmitPulse();
 }
 
 void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-        uint8_t i;
+        return;
+    }
+    
+    uint8_t i;
 #if !defined(CY_SCB_`$SPI_INSTANCE`_H)
-        `$SPI_INTERFACE`_ClearRxBuffer();
-        `$SPI_INTERFACE`_ClearTxBuffer();
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
         
-        `$SS_PIN`_Write(0);
-        `$SPI_INTERFACE`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
         
-        for(i = dataSize; i != 0 ; i--){
-            `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
-        }
+    for(i = dataSize; i != 0 ; i--){
+        `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
+    }
         
-        while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-        `$SS_PIN`_Write(1);
+    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+    `$SS_PIN`_Write(1);
 #else
-        `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-        `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
-        `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
         
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
         /*
         for(i = 0; i < payloadSize; i++){
             `$INSTANCE_NAME`_SPI_SpiUartWriteTxData(data[i]);
         }
         */
-        for(i = dataSize; i != 0; i--){
-            `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
-        }
-        while(`$SPI_INTERFACE`_SpiIsBusBusy()); // Wait until SPI cycle complete.
-#endif
+    for(i = dataSize; i != 0; i--){
+        `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
     }
+    while(`$SPI_INTERFACE`_SpiIsBusBusy()); // Wait until SPI cycle complete.
+#endif
 }
 
 uint8_t `$INSTANCE_NAME`_GetDataPipeWithPayload(void)
@@ -728,47 +750,49 @@ uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
 
 void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data , const size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-        uint8_t i, j;
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H)    
-        `$SPI_INTERFACE`_ClearRxBuffer();
-        `$SPI_INTERFACE`_ClearTxBuffer();
-        
-        `$SS_PIN`_Write(0);
-        `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
-        for(i = dataSize; i != 0; i--)
-        {
-            `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
-        }
-        `$SS_PIN`_Write(1);
-        
-        (void)`$SPI_INTERFACE`_ReadRxData(); // Dummy read, this is the STATUS Register
-        for(j = 0; j < dataSize; j++) // TODO: Fix this loop
-        {
-            *(data + j) = `$SPI_INTERFACE`_ReadRxData();
-        }
-        while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-#else    
-        `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-        `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-        `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
-        for(i = dataSize; i != 0; i--)
-        {
-            `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-        }
-        
-        (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
-
-        for(j = 0; j < dataSize; j++) // TODO: Fix this loop
-        {
-            *(data + j) = `$SPI_INTERFACE`_SpiUartReadRxData();
-        }
-        while(`$SPI_INTERFACE`_SpiIsBusBusy());
-#endif
+        return;
     }
+    
+    uint8_t i, j;
+#if !defined(CY_SCB_`$SPI_INSTANCE`_H)    
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+        
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
+    for(i = dataSize; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
+    }
+    `$SS_PIN`_Write(1);
+        
+    (void)`$SPI_INTERFACE`_ReadRxData(); // Dummy read, this is the STATUS Register
+    for(j = 0; j < dataSize; j++) // TODO: Fix this loop
+    {
+        *(data + j) = `$SPI_INTERFACE`_ReadRxData();
+    }
+    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+#else    
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+        
+    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
+    for(i = dataSize; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
+    }
+        
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
+
+    for(j = 0; j < dataSize; j++) // TODO: Fix this loop
+    {
+        *(data + j) = `$SPI_INTERFACE`_SpiUartReadRxData();
+    }
+    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+#endif
 }
 
 void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data)
@@ -795,34 +819,36 @@ void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data
 
 void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t *data, const size_t dataSize)
 {
-    if ( NULL != data )
+    if ( NULL == data )
     {
-	    uint8_t i;
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H)
-        `$SPI_INTERFACE`_ClearRxBuffer();
-        `$SPI_INTERFACE`_ClearTxBuffer();
-        
-        `$SS_PIN`_Write(0);
-        `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
-        for(i = dataSize; i != 0; i--)
-        {
-            `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
-        }
-        while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-        `$SS_PIN`_Write(1);
-#else
-        `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-        `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-        `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
-        for(i = dataSize; i != 0; i--)
-        {
-            `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
-        }
-        while(`$SPI_INTERFACE`_SpiIsBusBusy());
-#endif
+        return;
     }
+    
+	uint8_t i;
+#if !defined(CY_SCB_`$SPI_INSTANCE`_H)
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+        
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
+    for(i = dataSize; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_WriteTxData(data[dataSize - i]);
+    }
+    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+    `$SS_PIN`_Write(1);
+#else
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+        
+    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
+    for(i = dataSize; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_SpiUartWriteTxData(data[dataSize - i]);
+    }
+    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+#endif
 }
 
 uint8_t `$INSTANCE_NAME`_ReadBit(const NRF_REGISTER_t reg, uint8_t bit)
