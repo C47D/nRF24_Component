@@ -130,7 +130,7 @@ void `$INSTANCE_NAME`_RestoreConfig(void)
 
 void `$INSTANCE_NAME`_SetMode(const NRF_MODE_t mode)
 {
-#if 0
+#if 1
     NRF_MODE_TX == mode ?
         `$INSTANCE_NAME`_SetTxMode() :
         `$INSTANCE_NAME`_SetRxMode() ;
@@ -424,7 +424,7 @@ void `$INSTANCE_NAME`_TransmitPulse(void)
 
 void `$INSTANCE_NAME`_Listen(const bool listen)
 {
-#if 0
+#if 1
     listen ? `$CE_PIN`_Write(1) : `$CE_PIN`_Write(0);
 #else
     if ( listen )
@@ -528,10 +528,10 @@ void `$INSTANCE_NAME`_TxTransmit(const uint8_t* data, size_t dataSize)
 
 bool `$INSTANCE_NAME`_IsDataReady(void)
 {
-#if 0
-    return NRF_STATUS_DATA_IS_RDY == `$INSTANCE_NAME`_GetStatus();
+#if 1
+    return NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_GetStatus();
 #else
-    if( NRF_STATUS_DATA_IS_RDY == `$INSTANCE_NAME`_GetStatus() )
+    if( NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_GetStatus() )
     {
         return true;
     }else{
