@@ -35,13 +35,6 @@ int main(void)
     nRF24_SetPayloadSize(NRF_DATA_PIPE0, PAYLOAD_SIZE);
     
     UART_Start();
-    
-    uint8_t bit;
-    
-    bit = nRF24_ReadBit(NRF_CONFIG_REG, 1);
-    UART_PutHexByte(bit);
-    UART_PutCRLF();
-    
     Timer_Start();
 
     while (1) {

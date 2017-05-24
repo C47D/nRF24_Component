@@ -45,42 +45,47 @@ void `$INSTANCE_NAME`_Start(void)
 void `$INSTANCE_NAME`_Init(void)
 {
     `$SPI_INTERFACE`_Start();
-#if defined(CY_SCB_`$SPI_INTERFACE`_H)
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-#endif
-    `$INSTANCE_NAME`_WriteRegister(NRF_CONFIG_REG, (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR)
-                                                   | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS)
-                                                   | (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT)
-                                                   | (`$EN_CRC` << NRF_CONFIG_EN_CRC)
-                                                   | (`$CRCO` << NRF_CONFIG_CRCO)
-                                                   | (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
-    `$INSTANCE_NAME`_WriteRegister(NRF_EN_AA_REG, (`$ENAA_P5` << NRF_EN_AA_ENAA_P5)
-                                                  | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4)
-                                                  | (`$ENAA_P3` << NRF_EN_AA_ENAA_P3)
-                                                  | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2)
-                                                  | (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) 
-                                                  | (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
-    `$INSTANCE_NAME`_WriteRegister(NRF_EN_RXADDR_REG, (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5)
-                                                      | (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4)
-                                                      | (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3)
-                                                      | (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2)
-                                                      | (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1)
-                                                      | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
+    `$INSTANCE_NAME`_WriteRegister(NRF_CONFIG_REG,
+                (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR)
+                | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS)
+                | (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT)
+                | (`$EN_CRC` << NRF_CONFIG_EN_CRC)
+                | (`$CRCO` << NRF_CONFIG_CRCO)
+                | (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
+    `$INSTANCE_NAME`_WriteRegister(NRF_EN_AA_REG,
+                (`$ENAA_P5` << NRF_EN_AA_ENAA_P5)
+                | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4)
+                | (`$ENAA_P3` << NRF_EN_AA_ENAA_P3)
+                | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2)
+                | (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) 
+                | (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
+    `$INSTANCE_NAME`_WriteRegister(NRF_EN_RXADDR_REG,
+                (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5)
+                | (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4)
+                | (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3)
+                | (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2)
+                | (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1)
+                | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
     `$INSTANCE_NAME`_WriteRegister(NRF_SETUP_AW_REG, `$AW`);
-    `$INSTANCE_NAME`_WriteRegister(NRF_SETUP_RETR_REG, (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT) | `$ARC`);
+    `$INSTANCE_NAME`_WriteRegister(NRF_SETUP_RETR_REG,
+                (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT)
+                | `$ARC`);
     `$INSTANCE_NAME`_WriteRegister(NRF_RF_CH_REG, `$RF_CH`);
-    `$INSTANCE_NAME`_WriteRegister(NRF_RF_SETUP_REG, (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE)
-                                                    | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR)
-                                                    | (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
-    `$INSTANCE_NAME`_WriteRegister(NRF_DYNPD_REG, (`$DPL_P5` << NRF_DYNPD_DPL_P5)
-                                                | (`$DPL_P4` << NRF_DYNPD_DPL_P4)
-                                                | (`$DPL_P3` << NRF_DYNPD_DPL_P3)
-                                                | (`$DPL_P2` << NRF_DYNPD_DPL_P2)
-                                                | (`$DPL_P1` << NRF_DYNPD_DPL_P1)
-                                                | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
-    `$INSTANCE_NAME`_WriteRegister(NRF_FEATURE_REG, (`$EN_DPL` << NRF_FEATURE_EN_DPL)
-                                                  | (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) 
-                                                  | (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
+    `$INSTANCE_NAME`_WriteRegister(NRF_RF_SETUP_REG,
+                (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE)
+                | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR)
+                | (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
+    `$INSTANCE_NAME`_WriteRegister(NRF_DYNPD_REG,
+                (`$DPL_P5` << NRF_DYNPD_DPL_P5)
+                | (`$DPL_P4` << NRF_DYNPD_DPL_P4)
+                | (`$DPL_P3` << NRF_DYNPD_DPL_P3)
+                | (`$DPL_P2` << NRF_DYNPD_DPL_P2)
+                | (`$DPL_P1` << NRF_DYNPD_DPL_P1)
+                | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
+    `$INSTANCE_NAME`_WriteRegister(NRF_FEATURE_REG,
+                (`$EN_DPL` << NRF_FEATURE_EN_DPL)
+                | (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) 
+                | (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
 }
 
 // Enable the nRF24 component.
@@ -125,12 +130,18 @@ void `$INSTANCE_NAME`_RestoreConfig(void)
 
 void `$INSTANCE_NAME`_SetMode(const NRF_MODE_t mode)
 {
+#if 0
+    NRF_MODE_TX == mode ?
+        `$INSTANCE_NAME`_SetTxMode() :
+        `$INSTANCE_NAME`_SetRxMode() ;
+#else
     if( NRF_MODE_TX == mode )
     {
         `$INSTANCE_NAME`_SetTxMode();
     } else {
         `$INSTANCE_NAME`_SetRxMode();
     }
+#endif
 }
 
 // In power down mode nRF24 is disabled using minimal current consumption.
@@ -413,57 +424,60 @@ void `$INSTANCE_NAME`_TransmitPulse(void)
 
 void `$INSTANCE_NAME`_Listen(const bool listen)
 {
+#if 0
+    listen ? `$CE_PIN`_Write(1) : `$CE_PIN`_Write(0);
+#else
     if ( listen )
     {
         `$CE_PIN`_Write(1);
     } else {
         `$CE_PIN`_Write(0);
     }
+#endif
 }
 
 uint8_t `$INSTANCE_NAME`_GetStatus(void)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
+    
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
     
     return `$SPI_INTERFACE`_ReadRxData();
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
 
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
     
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
 	
     return `$SPI_INTERFACE`_SpiUartReadRxData();
+    
 #endif
 }
 
 uint8_t `$INSTANCE_NAME`_GetRetransmissionsCount(void)
 {
-    uint8_t count;
-    
-    count = `$INSTANCE_NAME`_ReadRegister(NRF_OBSERVE_TX_REG);
-    count &= NRF_OBSERVE_TX_ARC_CNT_MASK;
-    
+    uint8_t count = `$INSTANCE_NAME`_ReadRegister(NRF_OBSERVE_TX_REG);
+    count = count & NRF_OBSERVE_TX_ARC_CNT_MASK;
     return count;
 }
 
 uint8_t `$INSTANCE_NAME`_GetLostPacketsCount(void)
 {
-    uint8_t lostPackets;
-    
-    lostPackets = `$INSTANCE_NAME`_ReadRegister(NRF_OBSERVE_TX_REG);
-    lostPackets &= NRF_OBSERVE_TX_PLOS_CNT_MASK;
-    lostPackets >>= 4;
-  
+    uint8_t lostPackets = `$INSTANCE_NAME`_ReadRegister(NRF_OBSERVE_TX_REG);
+    lostPackets = lostPackets & NRF_OBSERVE_TX_PLOS_CNT_MASK;
+    lostPackets = lostPackets >> 4;
     return lostPackets;
 }
 
@@ -475,6 +489,7 @@ void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
     }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -484,7 +499,9 @@ void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
 
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
@@ -493,7 +510,8 @@ void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
 }
 
@@ -510,12 +528,16 @@ void `$INSTANCE_NAME`_TxTransmit(const uint8_t* data, size_t dataSize)
 
 bool `$INSTANCE_NAME`_IsDataReady(void)
 {
+#if 0
+    return NRF_STATUS_DATA_IS_RDY == `$INSTANCE_NAME`_GetStatus();
+#else
     if( NRF_STATUS_DATA_IS_RDY == `$INSTANCE_NAME`_GetStatus() )
     {
         return true;
     }else{
         return false;    
     }
+#endif
 }
 
 void `$INSTANCE_NAME`_GetRxPayload(uint8_t* data, size_t dataSize)
@@ -537,6 +559,7 @@ void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
     // if ( 32 < payloadSize ) { payloadSize = 32; } // i think biggest payload can be 32
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -546,7 +569,9 @@ void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
         
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
@@ -555,7 +580,8 @@ void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
     
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
     `$INSTANCE_NAME`_TransmitPulse();
 }
@@ -568,6 +594,7 @@ void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, 
     }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -577,7 +604,9 @@ void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, 
 
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
+    
 #else // SCB block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
@@ -586,17 +615,15 @@ void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, 
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while(`$SPI_INTERFACE`_SpiIsBusBusy()); // Wait until SPI cycle complete.
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
 }
 
 uint8_t `$INSTANCE_NAME`_GetDataPipeWithPayload(void)
 {
-    uint8_t pipe;
-    
-    pipe = `$INSTANCE_NAME`_ReadRegister(NRF_STATUS_REG);
+    uint8_t pipe = `$INSTANCE_NAME`_ReadRegister(NRF_STATUS_REG);
     pipe = (pipe & 0x0Eu) >> 1;
-  
     return pipe;
 }
 
@@ -629,7 +656,6 @@ uint8_t `$INSTANCE_NAME`_IsRXFIFOEmpty(void)
 
 void `$INSTANCE_NAME`_ClearIRQ(void)
 {
-    
     uint8_t sts = `$INSTANCE_NAME`_GetStatus();
     
     if ( NRF_STATUS_RX_DR_MASK & sts) // RX_DR: Data Received
@@ -640,7 +666,6 @@ void `$INSTANCE_NAME`_ClearIRQ(void)
     } else { // MAX_RT: Retry Timeout
         `$INSTANCE_NAME`_SetBit(NRF_STATUS_REG, NRF_STATUS_MAX_RT);    
     }
-
 }
 
 void `$INSTANCE_NAME`_ClearIRQFlag(uint8_t flag)
@@ -659,22 +684,29 @@ uint8_t `$INSTANCE_NAME`_GetIRQFlag(void)
 void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(cmd);
+    
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     CyDelayUs(5); // Let the /ss line go idle
     `$SS_PIN`_Write(1);
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
     `$SPI_INTERFACE`_SpiUartWriteTxData(cmd);
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
-    CyDelayUs(10); // Let the /ss line go idle
+    
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    // Let the /ss line go idle
+    CyDelayUs(5);
+    
 #endif
 }
 
@@ -698,28 +730,34 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
 uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
+    
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
     
     (void)`$SPI_INTERFACE`_ReadRxData(); // Dummy read, this is the STATUS Register
     return `$SPI_INTERFACE`_ReadRxData();
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
     
     (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
     return `$SPI_INTERFACE`_SpiUartReadRxData();
+    
 #endif
 }
 
@@ -731,7 +769,9 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     }
     
     uint8_t i, j;
+    
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -750,8 +790,12 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     {
         *(data + j) = `$SPI_INTERFACE`_ReadRxData();
     }
+    
+    // TODO: Place this right after the SPI WriteTxData
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
@@ -769,29 +813,46 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     {
         *(data + j) = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
 }
 
 void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(data);
+    
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+    
+    // The component should be in one of the following states to change
+    // the active slave select signal source correctly
+    // * The component is disabled
+    // * The component has completed transfer
     
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartWriteTxData(data);
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    
+    // Returns the current status on the bus, determined using the
+    // slave select signal. If the returned value is nonzero, the bus
+    // is busy. If zero is returned, the bus is free.
+    
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
 }
 
@@ -803,6 +864,7 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t 
     }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -812,7 +874,9 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t 
 
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
+    
 #else // SCB Block
+    
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
         
@@ -820,7 +884,8 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t 
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while(`$SPI_INTERFACE`_SpiIsBusBusy());
+    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    
 #endif
 }
 
