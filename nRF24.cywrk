@@ -3,12 +3,13 @@
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
 <CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="nRF24" persistent="nRF24.cywrk" platform="NOT_USED">
-<current_project name=".\nRF24_UDB_Tx.cydsn\nRF24_UDB_Tx.cyprj" />
+<current_project name=".\nRF24_SCB_Tx.cydsn\nRF24_SCB_Tx.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
 <v>.\nRF24.cylib\nRF24.cyprj</v>
 <v>.\nRF24_UDB_Tx.cydsn\nRF24_UDB_Tx.cyprj</v>
+<v>.\nRF24_SCB_Tx.cydsn\nRF24_SCB_Tx.cyprj</v>
 </projects>
 <workspace_id v="1bdece0d-d89c-48d4-8d51-81760f0ea490" />
 <WriteAppVersionLastSavedWith v="4.0.0.432" />

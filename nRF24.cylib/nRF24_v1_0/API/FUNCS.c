@@ -20,10 +20,8 @@
 #include <`$SS_PIN`.h>
 #include <`$CE_PIN`.h>
 
-//#include "project.h"
-
-#if defined (CY_SCB_`$SPI_INSTANCE`_H)
-	#include <`$SPI_INSTANCE`_SPI_UART.h>
+#if defined (CY_SCB_`$SPI_INTERFACE`_H)
+	#include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
 #include "`$INSTANCE_NAME`_FUNCS.h"
@@ -47,7 +45,7 @@ void `$INSTANCE_NAME`_Start(void)
 void `$INSTANCE_NAME`_Init(void)
 {
     `$SPI_INTERFACE`_Start();
-#if defined(CY_SCB_`$SPI_INSTANCE`_H)
+#if defined(CY_SCB_`$SPI_INTERFACE`_H)
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
 #endif
     `$INSTANCE_NAME`_WriteRegister(NRF_CONFIG_REG, (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR)
@@ -425,7 +423,7 @@ void `$INSTANCE_NAME`_Listen(const bool listen)
 
 uint8_t `$INSTANCE_NAME`_GetStatus(void)
 {
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
@@ -476,7 +474,7 @@ void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
         return;
     }
     
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -538,7 +536,7 @@ void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
     }
     // if ( 32 < payloadSize ) { payloadSize = 32; } // i think biggest payload can be 32
     
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -569,7 +567,7 @@ void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, 
         return;
     }
     
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -660,7 +658,7 @@ uint8_t `$INSTANCE_NAME`_GetIRQFlag(void)
 
 void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
 {
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
@@ -699,7 +697,7 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
 
 uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
 {
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
@@ -733,7 +731,7 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     }
     
     uint8_t i, j;
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
@@ -777,7 +775,7 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
 
 void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data)
 {
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
     
@@ -804,7 +802,7 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t 
         return;
     }
     
-#if !defined(CY_SCB_`$SPI_INSTANCE`_H) // UDB Block
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
         
