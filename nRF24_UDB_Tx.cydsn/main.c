@@ -30,15 +30,19 @@ int main(void)
 
     nRF24_Start();
     
-//    nRF_Tx_EnableDynamicPayload(NRF_DYNPD_DPL_P0);
     nRF24_SetRxAddress(RX_ADDR, sizeof(RX_ADDR));
-    nRF24_SetRxPipe0Address(RX_ADDR, sizeof(RX_ADDR));
     nRF24_SetTxAddress(TX_ADDR, sizeof(TX_ADDR));
     nRF24_SetPayloadSize(NRF_DATA_PIPE0, PAYLOAD_SIZE);
     
     UART_Start();
     
-    //Timer_Start();
+    uint8_t bit;
+    
+    bit = nRF24_ReadBit(NRF_CONFIG_REG, 1);
+    UART_PutHexByte(bit);
+    UART_PutCRLF();
+    
+    Timer_Start();
 
     while (1) {
 
