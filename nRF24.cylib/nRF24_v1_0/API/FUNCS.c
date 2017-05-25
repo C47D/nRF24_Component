@@ -36,6 +36,7 @@
 void `$INSTANCE_NAME`_Start(void)
 {
     CyDelay(`$INSTANCE_NAME`_POR_DELAY);
+    `$SPI_INTERFACE`_Start();
     `$INSTANCE_NAME`_Init();
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
@@ -44,7 +45,6 @@ void `$INSTANCE_NAME`_Start(void)
 // Configure the nRF24 registers with the data of the customizer.
 void `$INSTANCE_NAME`_Init(void)
 {
-    `$SPI_INTERFACE`_Start();
     `$INSTANCE_NAME`_WriteRegister(NRF_CONFIG_REG,
                 (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR)
                 | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS)
@@ -843,14 +843,16 @@ void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data
     // * The component is disabled
     // * The component has completed transfer
     
+    // http://www.cypress.com/forum/psoc-4-architecture/psoc-4-scb-spi-operation-how-properly-write-and-read-data
+    // Configure SCB FIFO to byte mode, this allows the FIFO to be 16 bytes deep
+    // When using software FIFO (the buffer is larger than the hw FIFO)
+    // the data might not be handled fast enough to be placed on the
+    // TX-FIFO.
+    
     `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartWriteTxData(data);
-    
-    // Returns the current status on the bus, determined using the
-    // slave select signal. If the returned value is nonzero, the bus
-    // is busy. If zero is returned, the bus is free.
-    
+       
     while( `$SPI_INTERFACE`_SpiIsBusBusy() );
     
 #endif

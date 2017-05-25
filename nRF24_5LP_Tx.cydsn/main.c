@@ -37,8 +37,8 @@ int main(void)
     UART_Start();
     Timer_Start();
 
-    while (1) {
-        
+    for(;;)
+    {
         if( true == timerFlag ){
             Timer_Stop();
             
@@ -68,7 +68,6 @@ int main(void)
             
             irqFlag = false;
         }
-
     }
 }
 
