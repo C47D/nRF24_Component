@@ -37,9 +37,11 @@ void `$INSTANCE_NAME`_Start(void)
 {
     CyDelay(`$INSTANCE_NAME`_POR_DELAY);
     `$SPI_INTERFACE`_Start();
+    `$SS_PIN`_Write(1);
     `$INSTANCE_NAME`_Init();
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
+    // TODO: Listen or not based on the mode
 }
 
 // Configure the nRF24 registers with the data of the customizer.
@@ -204,7 +206,8 @@ void `$INSTANCE_NAME`_DisableAutoACK(const NRF_DATA_PIPE_t pipe)
 
 void `$INSTANCE_NAME`_SetChannel(uint8_t channel)
 {
-    if( 125 < channel ) // There's only 125 channels available
+    // There's only 125 channels available
+    if( 125 < channel )
     {
         channel = 125;
     }
@@ -456,11 +459,12 @@ uint8_t `$INSTANCE_NAME`_GetStatus(void)
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
 
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-    
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
-	
+
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1 );
+	`$SS_PIN`_Write(1);
+    
     return `$SPI_INTERFACE`_SpiUartReadRxData();
     
 #endif
@@ -504,13 +508,13 @@ void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t dataSize)
     
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-        
+
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( dataSize + 1 ) );
+    `$SS_PIN`_Write(1);
     
 #endif
 }
@@ -574,13 +578,13 @@ void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t dataSize)
     
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
 
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
-    
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( dataSize + 1 ) );
+    `$SS_PIN`_Write(1);
     
 #endif
     `$INSTANCE_NAME`_TransmitPulse();
@@ -609,13 +613,13 @@ void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, 
     
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
-        
+
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( dataSize + 1 ) );
+    `$SS_PIN`_Write(1);
     
 #endif
 }
@@ -700,12 +704,11 @@ void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(cmd);
     
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
-    // Let the /ss line go idle
-    CyDelayUs(5);
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1 );
+    `$SS_PIN`_Write(1);
     
 #endif
 }
@@ -741,7 +744,7 @@ uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
     while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
     `$SS_PIN`_Write(1);
     
-    (void)`$SPI_INTERFACE`_ReadRxData(); // Dummy read, this is the STATUS Register
+    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
     return `$SPI_INTERFACE`_ReadRxData();
     
 #else // SCB Block
@@ -749,13 +752,14 @@ uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
     
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 2 );
+    `$SS_PIN`_Write(1);
     
-    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
     return `$SPI_INTERFACE`_SpiUartReadRxData();
     
 #endif
@@ -798,14 +802,17 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
 
     for(i = dataSize; i != 0; i--)
     {
         `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
     }
+    
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != dataSize );
+    `$SS_PIN`_Write(1);
 
     (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
 
@@ -813,8 +820,6 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     {
         *(data + j) = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
-    
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
     
 #endif
 }
@@ -838,22 +843,12 @@ void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
-    // The component should be in one of the following states to change
-    // the active slave select signal source correctly
-    // * The component is disabled
-    // * The component has completed transfer
-    
-    // http://www.cypress.com/forum/psoc-4-architecture/psoc-4-scb-spi-operation-how-properly-write-and-read-data
-    // Configure SCB FIFO to byte mode, this allows the FIFO to be 16 bytes deep
-    // When using software FIFO (the buffer is larger than the hw FIFO)
-    // the data might not be handled fast enough to be placed on the
-    // TX-FIFO.
-    
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+    `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartWriteTxData(data);
-       
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 2 );
+    `$SS_PIN`_Write(1);
     
 #endif
 }
@@ -881,12 +876,17 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t 
     
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-        
-    `$SPI_INTERFACE`_SpiSetActiveSlaveSelect(`$SS_NUMBER`);
+
+    `$SS_PIN`_Write(0);
+
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartPutArray(data, dataSize);
 
-    while( `$SPI_INTERFACE`_SpiIsBusBusy() );
+    // Wait for the RxBuffer to have dataSize + 1 bytes,
+    // dataSize + 1 because we need to count the Command + Register byte at the
+    // beginning of the transaction
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( dataSize + 1 ) );
+    `$SS_PIN`_Write(1);
     
 #endif
 }
