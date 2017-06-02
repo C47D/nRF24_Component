@@ -152,16 +152,6 @@ void `$INSTANCE_NAME`_ReadPayloadWidth(void);
 void `$INSTANCE_NAME`_WriteACKPayload(void);
 void `$INSTANCE_NAME`_NoACKPayload(void);
 
-// SPI Functions
-uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg);
-void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* bufIn , const size_t bufSize);
-void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data);
-void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* bufIn, const size_t bufSize);
-uint8_t `$INSTANCE_NAME`_ReadBit(const NRF_REGISTER_t reg, uint8_t bit);
-void `$INSTANCE_NAME`_WriteBit(const NRF_REGISTER_t reg, const uint8_t bit, const uint8_t value);
-void `$INSTANCE_NAME`_ClearBit(const NRF_REGISTER_t reg, const uint8_t bit);
-void `$INSTANCE_NAME`_SetBit(const NRF_REGISTER_t reg, const uint8_t bit);
-
 #endif /* `$INSTANCE_NAME`_FUNCS_H */
 
 /* [] END OF FILE */
