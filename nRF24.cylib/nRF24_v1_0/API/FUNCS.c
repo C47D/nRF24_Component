@@ -26,7 +26,7 @@
 
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
-#include "`$INSTANCE_NAME`_HAL.h"
+#include "`$INSTANCE_NAME`_SPI_CMD.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
@@ -682,51 +682,6 @@ uint8_t `$INSTANCE_NAME`_GetIRQFlag(void)
 {
     // TODO
     return 0;
-}
-
-// nRF24 Commands
-
-void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
-{
-#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
-    
-    `$SPI_INTERFACE`_ClearRxBuffer();
-    `$SPI_INTERFACE`_ClearTxBuffer();
-    
-    `$SS_PIN`_Write(0);
-    `$SPI_INTERFACE`_WriteTxData(cmd);
-    
-    while(0 == (`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE));
-    CyDelayUs(5); // Let the /ss line go idle
-    `$SS_PIN`_Write(1);
-    
-#else // SCB Block
-    
-    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
-    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
-    
-    `$SS_PIN`_Write(0);
-    `$SPI_INTERFACE`_SpiUartWriteTxData(cmd);
-    
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1 );
-    `$SS_PIN`_Write(1);
-    
-#endif
-}
-
-void `$INSTANCE_NAME`_ReuseTxPayloadCmd(void)
-{
-    `$INSTANCE_NAME`_SendCommand(NRF_REUSE_TX_PL_CMD);
-}
-
-void `$INSTANCE_NAME`_FlushRxCmd(void)
-{
-    `$INSTANCE_NAME`_SendCommand(NRF_FLUSH_RX_CMD);
-}
-
-void `$INSTANCE_NAME`_FlushTxCmd(void)
-{
-    `$INSTANCE_NAME`_SendCommand(NRF_FLUSH_TX_CMD);
 }
 
 /* [] END OF FILE */

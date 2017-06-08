@@ -27,17 +27,6 @@
 
 #include "`$INSTANCE_NAME`_REGS.h"
 
-// TODO:
-//
-// v0_4
-// Documentar y ejemplos básicos
-//
-// v0_5
-// Empezar el customizer con VS
-//
-// v0_6
-// Port para el P6
-
 // PSoC Component Functions
 void `$INSTANCE_NAME`_Start(void);
 void `$INSTANCE_NAME`_Init(void);
@@ -140,17 +129,6 @@ uint8_t `$INSTANCE_NAME`_IsRXFIFOEmpty(void);
 void `$INSTANCE_NAME`_ClearIRQ(void);
 void `$INSTANCE_NAME`_ClearIRQFlag(uint8_t flag);
 uint8_t `$INSTANCE_NAME`_GetIRQFlag(void);
-
-// nRF24 Commands
-void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd);
-void `$INSTANCE_NAME`_ReadRXPayloadCmd(void);
-void `$INSTANCE_NAME`_WriteTXPayloadCmd(void);
-void `$INSTANCE_NAME`_FlushRxCmd(void);
-void `$INSTANCE_NAME`_FlushTxCmd(void);
-void `$INSTANCE_NAME`_ReuseTxPayloadCmd(void);
-void `$INSTANCE_NAME`_ReadPayloadWidth(void);
-void `$INSTANCE_NAME`_WriteACKPayload(void);
-void `$INSTANCE_NAME`_NoACKPayload(void);
 
 #endif /* `$INSTANCE_NAME`_FUNCS_H */
 
