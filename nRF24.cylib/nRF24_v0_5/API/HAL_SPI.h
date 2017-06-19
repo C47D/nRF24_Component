@@ -28,14 +28,14 @@
 uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg);
 void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data , const size_t size);
 void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data);
-void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* data, size_t size);
 uint8_t `$INSTANCE_NAME`_ReadBit(const NRF_REGISTER_t reg, uint8_t bit);
 void `$INSTANCE_NAME`_WriteBit(const NRF_REGISTER_t reg, const uint8_t bit, const uint8_t value);
 void `$INSTANCE_NAME`_ClearBit(const NRF_REGISTER_t reg, const uint8_t bit);
 void `$INSTANCE_NAME`_SetBit(const NRF_REGISTER_t reg, const uint8_t bit);
 
 void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd);
-void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_ReadRXPayloadCmd(uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_FlushRxCmd(void);
 void `$INSTANCE_NAME`_FlushTxCmd(void);

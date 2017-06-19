@@ -193,6 +193,7 @@ typedef enum{
 
 // OBSERVE TX: Transmit observe register
 #define NRF_OBSERVE_TX_PLOS_CNT_MASK    0xF0
+#define NRF_OBSERVE_TX_PLOS_CNT_POS     4
 #define NRF_OBSERVE_TX_ARC_CNT_MASK     0x0F
 
 // RPD: Received Power Detector

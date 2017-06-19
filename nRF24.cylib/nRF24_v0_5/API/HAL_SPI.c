@@ -112,7 +112,7 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
         `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_NOP_CMD );
     }
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != size );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
 
     (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
@@ -154,7 +154,7 @@ void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data
 #endif
 }
 
-void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* data, size_t size)
 {
     if( NULL == data )
     {
@@ -163,7 +163,7 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t*
     
     if( 5 < size)
     {
-        return;
+        size = 5;
     }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
@@ -191,7 +191,7 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t*
     // Wait for the RxBuffer to have dataSize + 1 bytes,
     // dataSize + 1 because we need to count the Command + Register
     // byte at the beginning of the transaction.
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
     
 #endif
@@ -205,6 +205,9 @@ uint8_t `$INSTANCE_NAME`_ReadBit(const NRF_REGISTER_t reg, uint8_t bit)
 void `$INSTANCE_NAME`_WriteBit(const NRF_REGISTER_t reg, const uint8_t bit, const uint8_t value)
 {
 	uint8_t temp = `$INSTANCE_NAME`_ReadRegister( reg );
+    
+    // TODO: check if bit already is equal to value, return in case it does.
+    
     if( value )
     {
         temp |= ( 1 << bit );
@@ -277,10 +280,18 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
 }
 
 // Read RX payload: 1 - 32 bytes.
-// A read operation always starts at byte 0.Payload is deleted
-// from FIFO after it is read. Used in RX mode.
-void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size)
+// A read operation always starts at byte 0.
+// Payload is deleted from FIFO after it is read. Used in RX mode.
+void `$INSTANCE_NAME`_ReadRXPayloadCmd(uint8_t* data, const size_t size)
 {
+    
+    if ( NULL == data )
+    {
+        return;
+    }
+    
+    uint8_t i, j; // declare in for loops, -std=c11
+    
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     
     `$SPI_INTERFACE`_ClearRxBuffer();
@@ -289,8 +300,19 @@ void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData( NRF_R_RX_PAYLOAD_CMD );
     
+    for(i = size; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_WriteTxData( NRF_NOP_CMD );
+    }
+
     while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
     `$SS_PIN`_Write(1);
+        
+    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
+    for(j = 0; j < size; j++)
+    {
+        data[j] = `$SPI_INTERFACE`_ReadRxData();
+    }
     
 #else // SCB Block
     
@@ -298,10 +320,21 @@ void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
     `$SS_PIN`_Write(0);
-    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_TX_PAYLOAD_CMD );
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_R_RX_PAYLOAD_CMD );
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1 );
+    for(i = size; i != 0; i--)
+    {
+        `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_NOP_CMD );
+    }
+    
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
+
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
+    for(j = 0; j < size; j++)
+    {
+        data[j] = `$SPI_INTERFACE`_SpiUartReadRxData();
+    }
     
 #endif
 }
@@ -341,7 +374,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_TX_PAYLOAD_CMD );
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
     
 #endif
@@ -384,7 +417,7 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_R_RX_PL_WID_CMD );
     `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_NOP_CMD );
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
     
     (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
@@ -442,7 +475,7 @@ void `$INSTANCE_NAME`_WriteACKPayloadCmd(const NRF_DATA_PIPE_t pipe, const uint8
     `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_ACK_PAYLOAD_CMD | pipe );
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != size );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
     
 #endif
@@ -485,7 +518,7 @@ void `$INSTANCE_NAME`_NoACKPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_TX_PAYLOAD_NOACK_CMD );
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != size );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( 1 + size ) );
     `$SS_PIN`_Write(1);
     
 #endif

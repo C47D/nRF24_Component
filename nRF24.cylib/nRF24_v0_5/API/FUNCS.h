@@ -60,10 +60,10 @@ void `$INSTANCE_NAME`_SetChannel(uint8_t channel);
 // STATUS Reg
 
 // RX ADDR P0 Reg
-void `$INSTANCE_NAME`_SetRxAddress(const uint8_t* addr, size_t addrSize);
-void `$INSTANCE_NAME`_SetRxPipe0Address(const uint8_t* addr, size_t addrSize);
+void `$INSTANCE_NAME`_SetRxAddress(const uint8_t* addr, size_t size);
+void `$INSTANCE_NAME`_SetRxPipe0Address(const uint8_t* addr, size_t size);
 // RX ADDR P1 Reg
-void `$INSTANCE_NAME`_SetRxPipe1Address(const uint8_t* addr, size_t addrSize);
+void `$INSTANCE_NAME`_SetRxPipe1Address(const uint8_t* addr, size_t size);
 // RX ADDR P2 Reg
 void `$INSTANCE_NAME`_SetRxPipe2Address(const uint8_t addr);
 // RX ADDR P3 Reg
@@ -73,14 +73,14 @@ void `$INSTANCE_NAME`_SetRxPipe4Address(const uint8_t addr);
 // RX ADDR P5 Reg
 void `$INSTANCE_NAME`_SetRxPipe5Address(const uint8_t addr);
 // TX_ADDR Reg
-void `$INSTANCE_NAME`_SetTxAddress(const uint8_t* addr, size_t addrSize);
+void `$INSTANCE_NAME`_SetTxAddress(const uint8_t* addr, size_t size);
 // RX_PW_P0 Reg
 // RX_PW_P1 Reg
 // RX_PW_P2 Reg
 // RX_PW_P3 Reg
 // RX_PW_P4 Reg
 // RX_PW_P5 Reg
-void `$INSTANCE_NAME`_SetPayloadSize(const NRF_DATA_PIPE_t pipe , uint8_t payloadSize);
+void `$INSTANCE_NAME`_SetPayloadSize(const NRF_DATA_PIPE_t pipe , uint8_t size);
 uint8_t `$INSTANCE_NAME`_GetPayloadSize(const NRF_DATA_PIPE_t pipe);
 // FIFO_STATUS Reg
 void `$INSTANCE_NAME`_PTX_ReuseLastTransmittedPayload(void);
@@ -112,12 +112,12 @@ void `$INSTANCE_NAME`_Listen(const bool listen);
 uint8_t `$INSTANCE_NAME`_GetStatus(void);
 uint8_t `$INSTANCE_NAME`_GetRetransmissionsCount(void);
 uint8_t `$INSTANCE_NAME`_GetLostPacketsCount(void);
-void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t payloadSize);
-void `$INSTANCE_NAME`_TxTransmit(const uint8_t* data, size_t payloadSize);
+void `$INSTANCE_NAME`_FillTxFIFO(const uint8_t* data, size_t size);
+void `$INSTANCE_NAME`_TxTransmit(const uint8_t* data, size_t size);
 bool `$INSTANCE_NAME`_IsDataReady(void);
-void `$INSTANCE_NAME`_GetRxPayload(uint8_t* payload, size_t payloadSize);
-void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t payloadSize);
-void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, size_t payloadSize);
+void `$INSTANCE_NAME`_GetRxPayload(uint8_t* payload, const size_t size);
+void `$INSTANCE_NAME`_TxTransmitWaitNoACK(const uint8_t* data, size_t size);
+void `$INSTANCE_NAME`_RxWritePayload(const NRF_DATA_PIPE_t pipe, uint8_t* data, size_t size);
 uint8_t `$INSTANCE_NAME`_GetDataPipeWithPayload(void);
 uint8_t `$INSTANCE_NAME`_PRX_ReceivedPowerDetector(void);
 uint8_t `$INSTANCE_NAME`_IsTXFIFOFull(void);
