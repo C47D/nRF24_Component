@@ -16,8 +16,8 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
-#ifndef `$INSTANCE_NAME`_HAL_H
-#define `$INSTANCE_NAME`_HAL_H
+#ifndef `$INSTANCE_NAME`_HAL_SPI_H
+#define `$INSTANCE_NAME`_HAL_SPI_H
     
 #include <cytypes.h>
 #include <cyfitter.h>
@@ -35,16 +35,16 @@ void `$INSTANCE_NAME`_ClearBit(const NRF_REGISTER_t reg, const uint8_t bit);
 void `$INSTANCE_NAME`_SetBit(const NRF_REGISTER_t reg, const uint8_t bit);
 
 void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd);
-void `$INSTANCE_NAME`_ReuseTxPayloadCmd(void);
+void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_FlushRxCmd(void);
 void `$INSTANCE_NAME`_FlushTxCmd(void);
-void `$INSTANCE_NAME`_ReadRXPayloadCmd(void);
-void `$INSTANCE_NAME`_WriteTXPayloadCmd(void);
-void `$INSTANCE_NAME`_ReadPayloadWidthCmd(void);
+void `$INSTANCE_NAME`_ReuseTxPayloadCmd(void);
+uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void);
 void `$INSTANCE_NAME`_WriteACKPayloadCmd(const NRF_DATA_PIPE_t pipe, const uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_NoACKPayloadCmd(const uint8_t* data, const size_t size);
 uint8_t `$INSTANCE_NAME`_NOPCmd(void);
 
-#endif
+#endif /* `$INSTANCE_NAME`_HAL_SPI_H */
 
 /* [] END OF FILE */

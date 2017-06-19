@@ -26,7 +26,7 @@
 
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
-#include "`$INSTANCE_NAME`_SPI_CMD.h"
+#include "`$INSTANCE_NAME`_HAL_SPI.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100

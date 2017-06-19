@@ -24,7 +24,7 @@
 	#include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
-#include "`$INSTANCE_NAME`_SPI_CMD.h"
+#include "`$INSTANCE_NAME`_HAL_SPI.h"
 
 // nRF24 SPI Commands
 
@@ -36,8 +36,8 @@ uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
     `$SPI_INTERFACE`_ClearTxBuffer();
     
     `$SS_PIN`_Write(0);
-    `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
-    `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
+    `$SPI_INTERFACE`_WriteTxData( NRF_R_REGISTER_CMD | reg );
+    `$SPI_INTERFACE`_WriteTxData( NRF_NOP_CMD );
     
     while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
     `$SS_PIN`_Write(1);
@@ -65,12 +65,15 @@ uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
 
 void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data , const size_t size)
 {
-    if ( NULL == data )
+    if( NULL == data )
     {
         return;
     }
     
-    // TODO: check is dataSize is not larger than 5 bytes
+    if( 5 < size)
+    {
+        return;
+    }
     
     uint8_t i, j;
     
@@ -90,10 +93,10 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE ) );
     `$SS_PIN`_Write(1);
         
-    (void)`$SPI_INTERFACE`_ReadRxData(); // Dummy read, this is the STATUS Register
-    for(j = 0; j < size; j++) // TODO: Fix this loop
+    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
+    for(j = 0; j < size; j++)
     {
-        *(data + j) = `$SPI_INTERFACE`_ReadRxData();
+        data[j] = `$SPI_INTERFACE`_ReadRxData();
     }
     
 #else // SCB Block
@@ -102,21 +105,21 @@ void `$INSTANCE_NAME`_ReadLongRegister(const NRF_REGISTER_t reg, uint8_t* data ,
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
 
     `$SS_PIN`_Write(0);
-    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_R_REGISTER_CMD | reg );
 
-    for(i = dataSize; i != 0; i--)
+    for(i = size; i != 0; i--)
     {
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
+        `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_NOP_CMD );
     }
     
-    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != dataSize );
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != size );
     `$SS_PIN`_Write(1);
 
-    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // Dummy read, this is the STATUS Register
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
 
-    for(j = 0; j < dataSize; j++) // TODO: Fix this loop
+    for(j = 0; j < size; j++)
     {
-        *(data + j) = `$SPI_INTERFACE`_SpiUartReadRxData();
+        data[j] = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
     
 #endif
@@ -153,7 +156,12 @@ void `$INSTANCE_NAME`_WriteRegister(const NRF_REGISTER_t reg, const uint8_t data
 
 void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t* data, const size_t size)
 {
-    if ( NULL == data )
+    if( NULL == data )
+    {
+        return;
+    }
+    
+    if( 5 < size)
     {
         return;
     }
@@ -181,8 +189,8 @@ void `$INSTANCE_NAME`_WriteLongRegister(const NRF_REGISTER_t reg, const uint8_t*
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
     // Wait for the RxBuffer to have dataSize + 1 bytes,
-    // dataSize + 1 because we need to count the Command + Register byte at the
-    // beginning of the transaction
+    // dataSize + 1 because we need to count the Command + Register
+    // byte at the beginning of the transaction.
     while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
     `$SS_PIN`_Write(1);
     
@@ -244,6 +252,10 @@ void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
 #endif
 }
 
+// Used for a PTX device
+// Reuse last transmitted payload.
+// TX payload reuse is active until W_TX_PAYLOAD or FLUSH_TX is executed.
+// TX payload reuse must not be activated or deactivated during package transmission.
 void `$INSTANCE_NAME`_ReuseTxPayloadCmd(void)
 {
     `$INSTANCE_NAME`_SendCommand( NRF_REUSE_TX_PL_CMD );
@@ -264,25 +276,128 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
     `$INSTANCE_NAME`_SendCommand( NRF_FLUSH_TX_CMD );
 }
 
-// Used for a PTX device
-// Reuse last transmitted payload.
-// TX payload reuse is active until W_TX_PAYLOAD or FLUSH_TX is executed.
-// TX payload reuse must not be activated or deactivated during package transmission.
-void `$INSTANCE_NAME`_ReadRXPayloadCmd(void)
+// Read RX payload: 1 - 32 bytes.
+// A read operation always starts at byte 0.Payload is deleted
+// from FIFO after it is read. Used in RX mode.
+void `$INSTANCE_NAME`_ReadRXPayloadCmd(const uint8_t* data, const size_t size)
 {
-    `$INSTANCE_NAME`_SendCommand( NRF_REUSE_TX_PL_CMD );
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData( NRF_R_RX_PAYLOAD_CMD );
+    
+    while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
+    `$SS_PIN`_Write(1);
+    
+#else // SCB Block
+    
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_TX_PAYLOAD_CMD );
+    
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1 );
+    `$SS_PIN`_Write(1);
+    
+#endif
 }
 
-void `$INSTANCE_NAME`_WriteTXPayloadCmd(void)
+// Write TX payload: 1 - 32 bytes.
+// A write operation always starts at byte 0 used in TX payload.
+void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
 {
+    if( NULL == data)
+    {
+        return;
+    }
     
+    if( 32 < size )
+    {
+        return;
+    }
+    
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData( NRF_W_TX_PAYLOAD_CMD );
+    `$SPI_INTERFACE`_PutArray(data, size);
+    
+    while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
+    `$SS_PIN`_Write(1);
+    
+#else // SCB Block
+    
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_W_TX_PAYLOAD_CMD );
+    `$SPI_INTERFACE`_SpiUartPutArray(data, size);
+    
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
+    `$SS_PIN`_Write(1);
+    
+#endif
 }
 
 // Read RX payload width for the top R_RX_PAYLOAD in the RX FIFO
 // Note: Flush RX FIFO if the read value is larger than 32 bytes
-void `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
+uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
 {
+    uint8_t width;
     
+#if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
+    
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_WriteTxData( NRF_R_RX_PL_WID_CMD );
+    `$SPI_INTERFACE`_WriteTxData( NRF_NOP_CMD );
+    
+    while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
+    `$SS_PIN`_Write(1);
+    
+    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
+    width = `$SPI_INTERFACE`_ReadRxData();
+    
+    if( 32 < width)
+    {
+        `$INSTANCE_NAME`_FlushRxCmd();
+    }
+    
+    return width;
+    
+#else // SCB Block
+    
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
+    
+    `$SS_PIN`_Write(0);
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_R_RX_PL_WID_CMD );
+    `$SPI_INTERFACE`_SpiUartWriteTxData( NRF_NOP_CMD );
+    
+    while( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != ( size + 1 ) );
+    `$SS_PIN`_Write(1);
+    
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
+    width = `$SPI_INTERFACE`_SpiUartReadRxData();
+    
+    if( 32 < width)
+    {
+        `$INSTANCE_NAME`_FlushRxCmd(void);
+    }
+    
+    return width;
+    
+#endif
 }
 
 // Used in RX mode
@@ -292,14 +407,17 @@ void `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
 // are handled using first in - first out principle.
 // Write payload: 1 - 32 bytes.
 // A write operation always starts at byte 0.
-void `$INSTANCE_NAME`_WriteACKPayloadCmd(const NRF_DATA_PIPE_t pipe, const uint8_t* data, const size_t size) // used in rx mode
+void `$INSTANCE_NAME`_WriteACKPayloadCmd(const NRF_DATA_PIPE_t pipe, const uint8_t* data, const size_t size)
 {
     if ( NULL == data )
     {
         return;
     }
     
-    // TODO: Check if size is max 32 bytes
+    if( 32 < size)
+    {
+        return;
+    }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     
@@ -332,14 +450,17 @@ void `$INSTANCE_NAME`_WriteACKPayloadCmd(const NRF_DATA_PIPE_t pipe, const uint8
 
 // Used in TX mode
 // Disables AUTOACK on this specific packet.
-void `$INSTANCE_NAME`_NoACKPayloadCmd(const uint8_t* data, const size_t size) // Used in tx mode
+void `$INSTANCE_NAME`_NoACKPayloadCmd(const uint8_t* data, const size_t size)
 {
-        if ( NULL == data )
+    if ( NULL == data )
     {
         return;
     }
     
-    // TODO: Check if size is max 32 bytes
+    if( 32 < size )
+    {
+        return;
+    }
     
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
     
