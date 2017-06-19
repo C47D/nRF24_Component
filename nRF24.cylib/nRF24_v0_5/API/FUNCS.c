@@ -31,8 +31,6 @@
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
 
-// PSoC Component Functions
-
 // Configure the radio and clear TX and RX FIFOs.
 void `$INSTANCE_NAME`_Start(void)
 {
@@ -42,7 +40,6 @@ void `$INSTANCE_NAME`_Start(void)
     `$INSTANCE_NAME`_Init();
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
-    // TODO: Listen or not based on the mode
 }
 
 // Configure the nRF24 registers with the data of the customizer.
@@ -133,18 +130,8 @@ void `$INSTANCE_NAME`_RestoreConfig(void)
 
 void `$INSTANCE_NAME`_SetMode(const NRF_MODE_t mode)
 {
-#if 1
-    NRF_MODE_TX == mode ?
-        `$INSTANCE_NAME`_SetTxMode() :
-        `$INSTANCE_NAME`_SetRxMode() ;
-#else
-    if( NRF_MODE_TX == mode )
-    {
-        `$INSTANCE_NAME`_SetTxMode();
-    } else {
-        `$INSTANCE_NAME`_SetRxMode();
-    }
-#endif
+    NRF_MODE_TX == mode ? `$INSTANCE_NAME`_SetTxMode() :
+                            `$INSTANCE_NAME`_SetRxMode() ;
 }
 
 // In power down mode nRF24 is disabled using minimal current consumption.
