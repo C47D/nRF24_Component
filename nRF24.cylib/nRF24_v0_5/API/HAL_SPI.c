@@ -204,16 +204,49 @@ uint8_t `$INSTANCE_NAME`_ReadBit(const NRF_REGISTER_t reg, uint8_t bit)
 
 void `$INSTANCE_NAME`_WriteBit(const NRF_REGISTER_t reg, const uint8_t bit, const uint8_t value)
 {
+    // Get the @reg content
 	uint8_t temp = `$INSTANCE_NAME`_ReadRegister( reg );
     
-    // TODO: check if bit already is equal to value, return in case it does.
+    // Check if @bit is already set
+    if( ( temp & ( 1 << bit ) ) != 0 )
+    {
+        // it is set, return early if we wanted to set it ( @value == 1 ),
+        // continue if we wanted to clear it ( @value == 0 )
+        if ( value ) return;
+    }
     
+    // calculate the new value to write back to @reg
+    temp = value ? temp | ( 1 << bit ) : temp & ~( 1 << bit );
+
+#if 0
+    // Check if bit is already value ( set or clear )
+    if( value )
+    {
+        if( temp & ( 1 << bit ) != 0 )
+        {
+            // bit is already set
+            return;
+        }
+    }
+    else
+    {
+        if( temp & ( 1 << bit ) == 0 )
+        {
+            // bit is already clear
+            return;
+        }        
+    }
+    
+    // calculate the new value
     if( value )
     {
         temp |= ( 1 << bit );
     } else {
         temp &= ~( 1 << bit );
     }
+#endif    
+    
+    // Write back to @reg
     `$INSTANCE_NAME`_WriteRegister( reg, temp );
 }
 

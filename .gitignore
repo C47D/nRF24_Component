@@ -1,12 +1,18 @@
-#Ignore PSoC Creator temp and user specific files
+# Ignore PSoC Creator temp and user specific files
 
-#Ignore Archive directory, bundles there
+# Ignore test projects
+nRF24_5LP_Tx.cydsn
+nRF24_SCB_Tx.cydsn
+nRF24_tests.cydsn
+nRF24_UDB_Tx.cydsn
+
+# Ignore Archive directory, project bundles there
 Archive/*
 Backup/*
 Archive/
 Backup/
 
-#Projects optional files
+# Projects optional files
 *.cydsn/codegentemp/
 *.cydsn/Generated_Source/
 *.cydsn/Export/
@@ -16,14 +22,14 @@ Backup/
 *.cydsn/*.cycdx
 *.cydsn/*.svd
 
-#PSoC 5LP based projects
+# PSoC 5LP based projects
 *.cydsn/CortexM3/
 
-#PSoC 4 based projects
+# PSoC 4 based projects
 *.cydsn/CortexM0/
 
 
-#User specific files
+# User specific files
 ComponentUpdateLog.txt
 *.Xwx47
 
