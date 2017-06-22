@@ -10,7 +10,7 @@ Tests for PSoC6 will be done when PSoC 4.1 and the PSoC6 are available.
 - [x] Finish the component configuration tab on the customizer.
 - [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO.
 - [x] Check SCB SPI version, it fails on some transfers, this was solved using a separated CS (chip select) pin.
-- [ ] Improve set and clear bit functions, on WriteBit function we can check if the bit is already set to the value we want.
+- [x] Improve set and clear bit functions, on WriteBit function we can check if the bit is already set to the value we want.
 - [ ] Check PSoC6 implementation.
 - [ ] Add a proper customizer using Visual Studio to design it.
 
