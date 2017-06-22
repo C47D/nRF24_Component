@@ -26,8 +26,6 @@
 
 #include "`$INSTANCE_NAME`_HAL_SPI.h"
 
-// nRF24 SPI Commands
-
 uint8_t `$INSTANCE_NAME`_ReadRegister(const NRF_REGISTER_t reg)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
@@ -215,36 +213,9 @@ void `$INSTANCE_NAME`_WriteBit(const NRF_REGISTER_t reg, const uint8_t bit, cons
         if ( value ) return;
     }
     
-    // calculate the new value to write back to @reg
+    // calculate the new value to write back to @reg, if @value is != 0, then
+    // we set the bit, if @value == 0, then we clear the bit
     temp = value ? temp | ( 1 << bit ) : temp & ~( 1 << bit );
-
-#if 0
-    // Check if bit is already value ( set or clear )
-    if( value )
-    {
-        if( temp & ( 1 << bit ) != 0 )
-        {
-            // bit is already set
-            return;
-        }
-    }
-    else
-    {
-        if( temp & ( 1 << bit ) == 0 )
-        {
-            // bit is already clear
-            return;
-        }        
-    }
-    
-    // calculate the new value
-    if( value )
-    {
-        temp |= ( 1 << bit );
-    } else {
-        temp &= ~( 1 << bit );
-    }
-#endif    
     
     // Write back to @reg
     `$INSTANCE_NAME`_WriteRegister( reg, temp );
@@ -271,7 +242,6 @@ void `$INSTANCE_NAME`_SendCommand(const NRF_CMD_t cmd)
     `$SPI_INTERFACE`_WriteTxData(cmd);
     
     while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
-    CyDelayUs(5); // Let the /ss line go idle
     `$SS_PIN`_Write(1);
     
 #else // SCB Block
