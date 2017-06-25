@@ -540,7 +540,6 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SPI_INTERFACE`_WriteTxData( NRF_NOP_CMD );
     
     while( 0 == ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE ) );
-    CyDelayUs(5); // Let the /ss line go idle
     `$SS_PIN`_Write(1);
     
     return `$SPI_INTERFACE`_ReadRxData();
