@@ -6,9 +6,6 @@ nRF24_SCB_Tx.cydsn
 nRF24_tests.cydsn
 nRF24_UDB_Tx.cydsn
 
-# Ignore new version, update until is done
-nRF24.cylib/nRF24_v1_0
-
 # Ignore Archive directory, project bundles there
 Archive/*
 Backup/*
