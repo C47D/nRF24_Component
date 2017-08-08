@@ -287,15 +287,15 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_RX_PL_WID_CMD);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-        ;
+    //while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
+    //    ;
     `$SS_PIN`_Write(1);
 
     (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
     width = `$SPI_INTERFACE`_SpiUartReadRxData();
 
     if (32 < width) {
-        `$INSTANCE_NAME`_FlushRxCmd(void);
+        `$INSTANCE_NAME`_FlushRxCmd();
     }
 
     return width;
