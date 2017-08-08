@@ -16,18 +16,18 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
+#include <`$CE_PIN`.h>
 #include <`$SPI_INTERFACE`.h>
 #include <`$SS_PIN`.h>
-#include <`$CE_PIN`.h>
 
-#if defined (CY_SCB_`$SPI_INTERFACE`_H)
-	#include <`$SPI_INTERFACE`_SPI_UART.h>
+#if defined(CY_SCB_`$SPI_INTERFACE`_H)
+#include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
-#include "`$INSTANCE_NAME`_HAL_SPI.h"
 #include "`$INSTANCE_NAME`_FUNCS.h"
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_HAL_SPI.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
+#include "`$INSTANCE_NAME`_REGS.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
@@ -60,47 +60,45 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
-    `$INSTANCE_NAME`_writeRegister(NRF_CONFIG_REG,
-                (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR)
-                | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS)
-                | (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT)
-                | (`$EN_CRC` << NRF_CONFIG_EN_CRC)
-                | (`$CRCO` << NRF_CONFIG_CRCO)
-                | (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
+    `$INSTANCE_NAME`_writeRegister(
+        NRF_CONFIG_REG,
+        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) |
+            (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
+            (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) |
+            (`$EN_CRC` << NRF_CONFIG_EN_CRC) | (`$CRCO` << NRF_CONFIG_CRCO) |
+            (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG,
-                (`$ENAA_P5` << NRF_EN_AA_ENAA_P5)
-                | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4)
-                | (`$ENAA_P3` << NRF_EN_AA_ENAA_P3)
-                | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2)
-                | (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) 
-                | (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
+                                   (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) |
+                                       (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
+                                       (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) |
+                                       (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
+                                       (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) |
+                                       (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_RXADDR_REG,
-                (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5)
-                | (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4)
-                | (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3)
-                | (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2)
-                | (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1)
-                | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
+                                   (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5) |
+                                       (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4) |
+                                       (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3) |
+                                       (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2) |
+                                       (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1) |
+                                       (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, `$AW`);
-    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_RETR_REG,
-                (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT)
-                | `$ARC`);
+    `$INSTANCE_NAME`_writeRegister(
+        NRF_SETUP_RETR_REG, (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT) | `$ARC`);
     `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, `$RF_CH`);
     `$INSTANCE_NAME`_writeRegister(NRF_RF_SETUP_REG,
-                (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE)
-                | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR)
-                | (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
-    `$INSTANCE_NAME`_writeRegister(NRF_DYNPD_REG,
-                (`$DPL_P5` << NRF_DYNPD_DPL_P5)
-                | (`$DPL_P4` << NRF_DYNPD_DPL_P4)
-                | (`$DPL_P3` << NRF_DYNPD_DPL_P3)
-                | (`$DPL_P2` << NRF_DYNPD_DPL_P2)
-                | (`$DPL_P1` << NRF_DYNPD_DPL_P1)
-                | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
-    `$INSTANCE_NAME`_writeRegister(NRF_FEATURE_REG,
-                (`$EN_DPL` << NRF_FEATURE_EN_DPL)
-                | (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) 
-                | (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
+                                   (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE) |
+                                       (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR) |
+                                       (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
+    `$INSTANCE_NAME`_writeRegister(
+        NRF_DYNPD_REG,
+        (`$DPL_P5` << NRF_DYNPD_DPL_P5) | (`$DPL_P4` << NRF_DYNPD_DPL_P4) |
+            (`$DPL_P3` << NRF_DYNPD_DPL_P3) | (`$DPL_P2` << NRF_DYNPD_DPL_P2) |
+            (`$DPL_P1` << NRF_DYNPD_DPL_P1) | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
+    `$INSTANCE_NAME`_writeRegister(
+        NRF_FEATURE_REG,
+        (`$EN_DPL` << NRF_FEATURE_EN_DPL) |
+            (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) |
+            (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
 }
 
 /**
@@ -115,7 +113,7 @@ void `$INSTANCE_NAME`_init(void)
  */
 void `$INSTANCE_NAME`_enable(void)
 {
-    // TODO    
+    // TODO
 }
 
 /**
@@ -208,7 +206,7 @@ void `$INSTANCE_NAME`_restoreConfig(void)
 void `$INSTANCE_NAME`_setMode(const NrfMode mode)
 {
     NRF_MODE_TX == mode ? `$INSTANCE_NAME`_setTxMode() :
-                            `$INSTANCE_NAME`_setRxMode() ;
+                            `$INSTANCE_NAME`_setRxMode();
 }
 
 /**
@@ -280,7 +278,7 @@ void `$INSTANCE_NAME`_setStandbyIIMode(void)
  * pin set high.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -297,7 +295,7 @@ void `$INSTANCE_NAME`_setRxMode(void)
  * in the TX FIFO and a high pulse on the CE for more than 10us.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -311,7 +309,7 @@ void `$INSTANCE_NAME`_setTxMode(void)
  *
  *
  * @param pipe: Enable AutoACK in the given pipe.
- * 
+ *
  * @return None.
  *
  */
@@ -325,7 +323,7 @@ void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe)
  *
  *
  * @param pipe: Disable AutoACK in the given pipe.
- * 
+ *
  * @return None.
  *
  */
@@ -339,18 +337,17 @@ void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe)
  *
  *
  * @param uint8_t channel: Channel where the radio will work.
- * 
+ *
  * @return None.
  *
  */
 void `$INSTANCE_NAME`_setChannel(uint8_t channel)
 {
     // There's only 125 channels available
-    if( 125 < channel )
-    {
+    if (125 < channel) {
         channel = 125;
     }
-    
+
     `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, channel);
 }
 
@@ -361,7 +358,7 @@ void `$INSTANCE_NAME`_setChannel(uint8_t channel)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
@@ -377,7 +374,7 @@ void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
  *
  * @param addr:
  * @param size:
- * 
+ *
  * @return None.
  *
  */
@@ -393,7 +390,7 @@ void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
  *
  * @param addr:
  * @param size:
- * 
+ *
  * @return None.
  *
  */
@@ -408,7 +405,7 @@ void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 2 of the radio.
  *
  * @param addr:
- * 
+ *
  * @return None.
  *
  */
@@ -423,7 +420,7 @@ void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr)
  * This function configure the address of the Rx Pipe 3 of the radio.
  *
  * @param addr:
- * 
+ *
  * @return None.
  *
  */
@@ -438,7 +435,7 @@ void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr)
  * This function configure the address of the Rx Pipe 4 of the radio.
  *
  * @param addr:
- * 
+ *
  * @return None.
  *
  */
@@ -453,7 +450,7 @@ void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr)
  * This function configure the address of the Rx Pipe 5 of the radio.
  *
  * @param const uint8_t* addr:
- * 
+ *
  * @return None.
  *
  */
@@ -468,7 +465,7 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
@@ -486,19 +483,17 @@ void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
  *
  * @param const NrfDataPipe pipe:
  * @param uint8_t size:
- * 
+ *
  * @return None.
  *
  */
 void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
 {
-    if( 32 < size )
-    {
+    if (32 < size) {
         size = 32;
     }
-    
-    switch (pipe)
-    {
+
+    switch (pipe) {
     case NRF_DATA_PIPE0:
         `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P0_REG, size);
         break;
@@ -527,14 +522,13 @@ void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
  *
  *
  * @param const NrfDataPipe pipe:
- * 
+ *
  * @return uint8_t:
  *
  */
 uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
 {
-    switch (pipe)
-    {
+    switch (pipe) {
     case NRF_DATA_PIPE0:
         return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P0_REG);
         break;
@@ -553,7 +547,7 @@ uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
     case NRF_DATA_PIPE5:
         return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P5_REG);
         break;
-    default: 
+    default:
         return 0;
     }
 }
@@ -565,7 +559,7 @@ uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
  * to transmit the last transmitted payload.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -580,7 +574,7 @@ void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void)
  *
  *
  * @param const NrfDataPipe pipe:
- * 
+ *
  * @return None.
  *
  */
@@ -597,7 +591,7 @@ void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe)
  *
  *
  * @param const NrfDataPipe pipe:
- * 
+ *
  * @return None.
  *
  */
@@ -606,7 +600,7 @@ void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe)
     `$INSTANCE_NAME`_clearBit(NRF_EN_AA_REG, pipe);
     `$INSTANCE_NAME`_clearBit(NRF_FEATURE_REG, NRF_FEATURE_EN_ACK_PAY);
     `$INSTANCE_NAME`_clearBit(NRF_FEATURE_REG, NRF_FEATURE_EN_DPL);
-    `$INSTANCE_NAME`_clearBit(NRF_DYNPD_REG, pipe);    
+    `$INSTANCE_NAME`_clearBit(NRF_DYNPD_REG, pipe);
 }
 
 /**
@@ -614,7 +608,7 @@ void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe)
  *
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -642,7 +636,7 @@ void `$INSTANCE_NAME`_disableDynamicPayloadLength(void)
  *
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -670,7 +664,7 @@ void `$INSTANCE_NAME`_disablePayloadWithACK(void)
  *
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -683,7 +677,7 @@ void `$INSTANCE_NAME`_enablePayloadWithNoACKCmd(void)
  * @brief Disable Payload with no ACK.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -699,7 +693,7 @@ void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void)
  * listening.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -715,7 +709,7 @@ void `$INSTANCE_NAME`_startListening(void)
  * this disable the radio for listening.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -731,7 +725,7 @@ void `$INSTANCE_NAME`_stopListening(void)
  * this pulse trigger a transmission of the content of the TX FIFO.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
@@ -748,7 +742,7 @@ void `$INSTANCE_NAME`_transmitPulse(void)
  *
  * @param const bool listen: If @listen is set to true, then the radio will
  * listen, if set to false the radio will stop listening.
- * 
+ *
  * @return None.
  *
  */
@@ -761,7 +755,7 @@ void `$INSTANCE_NAME`_listen(const bool listen)
  * @brief Get the STATUS register of the nRF24.
  *
  * @param None.
- * 
+ *
  * @return uint8_t: Content of the STATUS register of the radio.
  *
  */
@@ -775,7 +769,7 @@ uint8_t `$INSTANCE_NAME`_getStatus(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
@@ -791,7 +785,7 @@ uint8_t `$INSTANCE_NAME`_getRetransmissionsCount(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
@@ -811,7 +805,7 @@ uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void)
  *
  * @param const uint8_t* data:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
@@ -826,16 +820,16 @@ void `$INSTANCE_NAME`_fillTxFIFO(const uint8_t* data, size_t size)
  *
  * @param const uint8_t* data:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
 void `$INSTANCE_NAME`_txTransmit(const uint8_t* data, size_t size)
 {
-    if ( NULL == data ) {
+    if (NULL == data) {
         return;
     }
-    
+
     `$INSTANCE_NAME`_fillTxFIFO(data, size);
     `$INSTANCE_NAME`_transmitPulse();
 }
@@ -845,7 +839,7 @@ void `$INSTANCE_NAME`_txTransmit(const uint8_t* data, size_t size)
  *
  *
  * @param None.
- * 
+ *
  * @return bool:
  *
  */
@@ -855,11 +849,10 @@ bool `$INSTANCE_NAME`_isDataReady(void)
     // TODO: check if is correct using & and not &&
     return NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_getStatus();
 #else
-    if( NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_getStatus() )
-    {
+    if (NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_getStatus()) {
         return true;
-    }else{
-        return false;    
+    } else {
+        return false;
     }
 #endif
 }
@@ -870,7 +863,7 @@ bool `$INSTANCE_NAME`_isDataReady(void)
  *
  * @param uint8_t* data:
  * @param const size_t size:
- * 
+ *
  * @return None.
  *
  */
@@ -885,7 +878,7 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
  *
  * @param const uint8_t* data:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
@@ -902,11 +895,12 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size)
  * @param const NrfDataPipe pipe:
  * @param const uint8_t* data:
  * @param size_t size:
- * 
+ *
  * @return None.
  *
  */
-void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data, size_t size)
+void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data,
+                                     size_t size)
 {
     `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(pipe, data, size);
 }
@@ -916,7 +910,7 @@ void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data, size
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
@@ -932,7 +926,7 @@ uint8_t `$INSTANCE_NAME`_getDataPipeWithPayload(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
@@ -946,13 +940,14 @@ uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
 uint8_t `$INSTANCE_NAME`_isTXFIFOFull(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_TX_FULL);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
+                                    NRF_FIFO_STATUS_TX_FULL);
 }
 
 /**
@@ -960,13 +955,14 @@ uint8_t `$INSTANCE_NAME`_isTXFIFOFull(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
 uint8_t `$INSTANCE_NAME`_isTXFIFOEmpty(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_TX_EMPTY);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
+                                    NRF_FIFO_STATUS_TX_EMPTY);
 }
 
 /**
@@ -974,13 +970,14 @@ uint8_t `$INSTANCE_NAME`_isTXFIFOEmpty(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
 uint8_t `$INSTANCE_NAME`_isRXFIFOFull(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_RX_FULL);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
+                                    NRF_FIFO_STATUS_RX_FULL);
 }
 
 /**
@@ -988,33 +985,34 @@ uint8_t `$INSTANCE_NAME`_isRXFIFOFull(void)
  *
  *
  * @param None.
- * 
+ *
  * @return uint8_t:
  *
  */
 uint8_t `$INSTANCE_NAME`_isRXFIFOEmpty(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_RX_EMPTY);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
+                                    NRF_FIFO_STATUS_RX_EMPTY);
 }
 
 /**
  * @brief Clears any IRQ flag set.
  *
  * @param None.
- * 
+ *
  * @return None.
  *
  */
 void `$INSTANCE_NAME`_clearIRQs(void)
 {
     uint8_t sts = `$INSTANCE_NAME`_getStatus();
-    
-    if ( NRF_STATUS_RX_DR_MASK & sts) {
+
+    if (NRF_STATUS_RX_DR_MASK & sts) {
         `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_RX_DR);
-    } else if ( NRF_STATUS_TX_DS_MASK & sts ) {
+    } else if (NRF_STATUS_TX_DS_MASK & sts) {
         `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_TX_DS);
     } else {
-        `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_MAX_RT);    
+        `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_MAX_RT);
     }
 }
 
@@ -1022,7 +1020,7 @@ void `$INSTANCE_NAME`_clearIRQs(void)
  * @brief Clears the specific IRQ flag.
  *
  * @param NrfIRQ irq_flag:
- * 
+ *
  * @return None.
  *
  */
@@ -1035,7 +1033,7 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
  * @brief Get the IRQ flag that caused the interrupt.
  *
  * @param None.
- * 
+ *
  * @return NrfIRQ:
  *
  */
@@ -1043,15 +1041,15 @@ NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
     NrfIRQ flag = 0;
     uint8_t sts = `$INSTANCE_NAME`_getStatus();
-    
-    if ( NRF_STATUS_RX_DR_MASK & sts) {
+
+    if (NRF_STATUS_RX_DR_MASK & sts) {
         flag = NRF_RX_DR_IRQ;
-    } else if ( NRF_STATUS_TX_DS_MASK & sts ) {
+    } else if (NRF_STATUS_TX_DS_MASK & sts) {
         flag = NRF_TX_DS_IRQ;
-    } else if ( NRF_STATUS_MAX_RT_MASK & sts ) {
+    } else if (NRF_STATUS_MAX_RT_MASK & sts) {
         flag = NRF_MAX_RT_IRQ;
     }
-    
+
     return flag;
 }
 
