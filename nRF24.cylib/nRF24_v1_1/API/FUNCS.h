@@ -103,20 +103,11 @@ void `$INSTANCE_NAME`_disableDynamicPayloadLength(void);
 void `$INSTANCE_NAME`_disablePayloadWithACK(void);
 void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void);
 
-// Data transfer functions
-// TODO:
-// We need to somehow distinguish what functions belong to 
-// receiver and transmitter radios.
-// `$INSTANCE_NAME`_PRX_x for receiver radio
-// `$INSTANCE_NAME`_PTX_x for transmitter radio
-// Functions that can be used from both modes will not have that distinction.
-// Function naming must be clear enough to make documentation almost redundant,
-// anyways the functions will be documented on the component datasheet.
-
+/* General usage functions */
+void `$INSTANCE_NAME`_listen(const bool listen);
 void `$INSTANCE_NAME`_startListening(void);
 void `$INSTANCE_NAME`_stopListening(void);
 void `$INSTANCE_NAME`_transmitPulse(void);
-void `$INSTANCE_NAME`_listen(const bool listen);
 uint8_t `$INSTANCE_NAME`_getStatus(void);
 uint8_t `$INSTANCE_NAME`_getRetransmissionsCount(void);
 uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void);
