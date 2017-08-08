@@ -34,17 +34,6 @@ uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, uint8_t bit);
 void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit, const uint8_t value);
 void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit);
 void `$INSTANCE_NAME`_setBit(const NrfRegister reg, const uint8_t bit);
-void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd);
-void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void);
-void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_FlushRxCmd(void);
-void `$INSTANCE_NAME`_FlushTxCmd(void);
-uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void);
-void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
-                                const uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data, const size_t size);
-uint8_t `$INSTANCE_NAME`_NOPCmd(void);
 
 #endif /* `$INSTANCE_NAME`_HAL_SPI_H */
 

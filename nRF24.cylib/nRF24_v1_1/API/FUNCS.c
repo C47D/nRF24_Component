@@ -24,9 +24,10 @@
 	#include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
+#include "`$INSTANCE_NAME`_HAL_SPI.h"
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
-#include "`$INSTANCE_NAME`_HAL_SPI.h"
+#include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
@@ -1040,7 +1041,7 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
  */
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
-    NrfIRQ flag;
+    NrfIRQ flag = 0;
     uint8_t sts = `$INSTANCE_NAME`_getStatus();
     
     if ( NRF_STATUS_RX_DR_MASK & sts) {
