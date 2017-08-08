@@ -7,6 +7,7 @@ With PSoC6 you can use the component and PDL APIs (see [PSoC6 Components and PDL
 Tests for PSoC6 will be done when PSoC 4.1 and the PSoC6 are available.
 
 Current version: 1.1
+
 ![Component](img/v1_1.png)
 
 ## TODO for version 1.0
@@ -18,5 +19,7 @@ Current version: 1.1
 - [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO.
 - [ ] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
 - [ ] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
+
+## TODO
 - [ ] Check PSoC6 implementation.
 - [ ] Add a proper customizer using Visual Studio to design it.
