@@ -7,6 +7,7 @@ With PSoC6 you can use the component and PDL APIs (see [PSoC6 Components and PDL
 Tests for PSoC6 will be done when PSoC 4.1 and the PSoC6 are available.
 
 Current version: 1.1
+![Component](img/v1_1.png)
 
 ## TODO for version 1.0
 - [x] Finish the component configuration tab on the customizer.
@@ -19,6 +20,3 @@ Current version: 1.1
 - [ ] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
 - [ ] Check PSoC6 implementation.
 - [ ] Add a proper customizer using Visual Studio to design it.
-
-Notes:
-- [x] meaning fixed.
