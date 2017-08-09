@@ -48,9 +48,7 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(cmd);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -61,8 +59,7 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(cmd);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1)
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1){}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -140,8 +137,6 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
         return;
     }
 
-    uint8_t i, j; // declare in for loops, -std=c11
-
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
 
     `$SPI_INTERFACE`_ClearRxBuffer();
@@ -150,17 +145,17 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_R_RX_PAYLOAD_CMD);
 
-    for (i = size; i != 0; i--) {
+    for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
     }
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
-    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
-    for (j = 0; j < size; j++) {
+    // This is the STATUS Register
+    (void)`$SPI_INTERFACE`_ReadRxData();
+    // This is the data we want
+    for (size_t j = 0; j < size; j++) {
         data[j] = `$SPI_INTERFACE`_ReadRxData();
     }
 
@@ -172,16 +167,17 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_RX_PAYLOAD_CMD);
 
-    for (i = size; i != 0; i--) {
+    for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
     }
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)){}
     `$SS_PIN`_Write(1);
 
-    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
-    for (j = 0; j < size; j++) {
+    // This is the STATUS Register
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData();
+    // This is the data we want
+    for (size_t j = 0; j < size; j++) {
         data[j] = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
 
@@ -219,9 +215,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -233,8 +227,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)){}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -264,12 +257,12 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_RX_PL_WID_CMD);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
-    (void)`$SPI_INTERFACE`_ReadRxData(); // This is the STATUS Register
+    // This is the STATUS Register
+    (void)`$SPI_INTERFACE`_ReadRxData();
+    // This is the data we want
     width = `$SPI_INTERFACE`_ReadRxData();
 
     if (32 < width) {
@@ -287,11 +280,12 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_RX_PL_WID_CMD);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
 
-    //while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-    //    ;
+    while(`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 2){}
     `$SS_PIN`_Write(1);
 
-    (void)`$SPI_INTERFACE`_SpiUartReadRxData(); // This is the STATUS Register
+    // This is the STATUS Register
+    (void)`$SPI_INTERFACE`_SpiUartReadRxData();
+    // This is the data we want
     width = `$SPI_INTERFACE`_SpiUartReadRxData();
 
     if (32 < width) {
@@ -343,9 +337,7 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -358,8 +350,7 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)){}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -398,9 +389,7 @@ void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -413,8 +402,7 @@ void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size))
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)){}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -440,9 +428,7 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (0 ==
-           ( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE))
-        ;
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
     `$SS_PIN`_Write(1);
 
     return `$SPI_INTERFACE`_ReadRxData();
@@ -455,8 +441,7 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
 
-    while ( `$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1)
-        ;
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != 1){}
     `$SS_PIN`_Write(1);
 
     return `$SPI_INTERFACE`_SpiUartReadRxData();
