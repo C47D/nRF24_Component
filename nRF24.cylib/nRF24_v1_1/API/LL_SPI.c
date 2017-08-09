@@ -24,7 +24,7 @@
 #include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
-#include "`$INSTANCE_NAME`_HAL_SPI.h"
+#include "`$INSTANCE_NAME`_LL_SPI.h"
 
 /**
  * @brief Read the content of a nRF24 register.
@@ -45,7 +45,7 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
     // This is the STATUS Register
@@ -164,7 +164,7 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(data);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -213,7 +213,7 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (!( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block

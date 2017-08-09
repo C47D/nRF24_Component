@@ -16,8 +16,8 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
-#ifndef `$INSTANCE_NAME`_HAL_SPI_H
-#define `$INSTANCE_NAME`_HAL_SPI_H
+#ifndef `$INSTANCE_NAME`_LL_SPI_H
+#define `$INSTANCE_NAME`_LL_SPI_H
     
 #include <cytypes.h>
 #include <cyfitter.h>
@@ -35,6 +35,6 @@ void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit, const u
 void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit);
 void `$INSTANCE_NAME`_setBit(const NrfRegister reg, const uint8_t bit);
 
-#endif /* `$INSTANCE_NAME`_HAL_SPI_H */
+#endif /* `$INSTANCE_NAME`_LL_SPI_H */
 
 /* [] END OF FILE */

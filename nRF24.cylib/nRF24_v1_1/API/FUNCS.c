@@ -494,7 +494,7 @@ void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
 {
-    nRF24_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size-1);
+    nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size-1);
     addr[size-1] = nRF24_readRegister(NRF_RX_ADDR_P2_REG);
 }
 
@@ -524,7 +524,7 @@ void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
 {
-    nRF24_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size-1);
+    nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size-1);
     addr[size-1] = nRF24_readRegister(NRF_RX_ADDR_P3_REG);
 }
 
@@ -554,7 +554,7 @@ void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
 {
-    nRF24_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size-1);
+    nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size-1);
     addr[size-1] = nRF24_readRegister(NRF_RX_ADDR_P4_REG);
 }
 
@@ -584,7 +584,7 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
 {
-    nRF24_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size-1);
+    nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size-1);
     addr[size-1] = nRF24_readRegister(NRF_RX_ADDR_P5_REG);
 }
 

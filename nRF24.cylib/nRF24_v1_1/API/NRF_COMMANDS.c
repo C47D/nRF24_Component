@@ -48,7 +48,7 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(cmd);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -149,7 +149,7 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
         `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
     }
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
     // This is the STATUS Register
@@ -215,7 +215,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -257,7 +257,7 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_RX_PL_WID_CMD);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
     // This is the STATUS Register
@@ -332,7 +332,7 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -384,7 +384,7 @@ void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
 #else // SCB Block
@@ -423,7 +423,7 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_DONE)){}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){}
     `$SS_PIN`_Write(1);
 
     return `$SPI_INTERFACE`_ReadRxData();
