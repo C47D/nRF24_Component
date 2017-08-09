@@ -25,7 +25,7 @@
 #endif
 
 #include "`$INSTANCE_NAME`_FUNCS.h"
-#include "`$INSTANCE_NAME`_HAL_SPI.h"
+#include "`$INSTANCE_NAME`_LL_SPI.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
 
@@ -246,7 +246,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
  */
 uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
 {
-    uint8_t width;
+    uint8_t width = 0;
 
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
 
@@ -265,12 +265,6 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     // This is the data we want
     width = `$SPI_INTERFACE`_ReadRxData();
 
-    if (32 < width) {
-        `$INSTANCE_NAME`_FlushRxCmd();
-    }
-
-    return width;
-
 #else // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -287,14 +281,15 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     (void)`$SPI_INTERFACE`_SpiUartReadRxData();
     // This is the data we want
     width = `$SPI_INTERFACE`_SpiUartReadRxData();
+    
+#endif
 
+    // If width is greater than 32 then is garbage, we must flush the RX FIFO
     if (32 < width) {
         `$INSTANCE_NAME`_FlushRxCmd();
     }
 
     return width;
-
-#endif
 }
 
 /**

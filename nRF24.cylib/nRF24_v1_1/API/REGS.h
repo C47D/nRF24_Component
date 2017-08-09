@@ -122,11 +122,11 @@ enum {
 };
 
 // SETUP_AW: Setup of Address Widths(common for all data pipes)
-enum {
-    NRF_SETUP_AW_3BYTES = 3,
-    NRF_SETUP_AW_4BYTES = 4,
-    NRF_SETUP_AW_5BYTES = 1
-};
+typedef enum {
+    NRF_SETUP_AW_3BYTES = 1,
+    NRF_SETUP_AW_4BYTES = 2,
+    NRF_SETUP_AW_5BYTES = 3
+} NrfSetupAddressWidth;
 
 // SETUP_RETR: Setup of Automatic Retransmission
 enum {
