@@ -42,9 +42,9 @@
  */
 void `$INSTANCE_NAME`_start(void)
 {
-    CyDelay(`$INSTANCE_NAME`_POR_DELAY);
-    `$SPI_INTERFACE`_Start();
     `$SS_PIN`_Write(1);
+    `$SPI_INTERFACE`_Start();
+    CyDelay(`$INSTANCE_NAME`_POR_DELAY);
     `$INSTANCE_NAME`_init();
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
@@ -62,7 +62,8 @@ void `$INSTANCE_NAME`_init(void)
 {
     `$INSTANCE_NAME`_writeRegister(NRF_CONFIG_REG, (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) |
         (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) | (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) |
-        (`$EN_CRC` << NRF_CONFIG_EN_CRC) | (`$CRCO` << NRF_CONFIG_CRCO) | (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
+        (`$EN_CRC` << NRF_CONFIG_EN_CRC) | (`$CRCO` << NRF_CONFIG_CRCO) |
+        ( `$PWR_UP`<< NRF_CONFIG_PWR_UP ) | (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG, (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) |
         (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) | (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) |
         (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) | (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) |
@@ -1161,7 +1162,11 @@ void `$INSTANCE_NAME`_clearIRQs(void)
  */
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
 {
-    `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, irq_flag);
+    // Clear the flag writing a 1 to the interrupt flag
+    uint8_t temp = 1 << irq_flag;
+
+    // Write back to @reg
+    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, temp);
 }
 
 /**
