@@ -16,8 +16,8 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
-#ifndef `$INSTANCE_NAME`_REGS_H
-#define `$INSTANCE_NAME`_REGS_H
+#ifndef `$INSTANCE_NAME`_NRF_REGS_H
+#define `$INSTANCE_NAME`_NRF_REGS_H
 
 // nRF24L01P Registers
 typedef enum {
@@ -258,6 +258,6 @@ enum {
     NRF_FEATURE_EN_DPL      = 2
 };
 
-#endif /* `$INSTANCE_NAME`_REGS_H */
+#endif /* `$INSTANCE_NAME`_NRF_REGS_H */
 
 /* [] END OF FILE */

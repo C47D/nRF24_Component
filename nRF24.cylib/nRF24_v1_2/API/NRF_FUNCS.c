@@ -24,10 +24,10 @@
 #include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
-#include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_LL_SPI.h"
+#include "`$INSTANCE_NAME`_NRF_FUNCS.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
@@ -52,7 +52,7 @@ void `$INSTANCE_NAME`_start(void)
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
     // Clear IRQ flags
-    `INSTANCE_NAME`_clearAllIRQs();
+    `$INSTANCE_NAME`_clearAllIRQs();
 }
 
 /**

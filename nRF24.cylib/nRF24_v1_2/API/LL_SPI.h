@@ -24,7 +24,7 @@
     
 #include <string.h>
     
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg);
 void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data , const size_t size);

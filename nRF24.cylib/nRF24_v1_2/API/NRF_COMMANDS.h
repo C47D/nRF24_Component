@@ -25,7 +25,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd);
 void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void);

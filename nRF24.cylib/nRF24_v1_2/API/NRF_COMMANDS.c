@@ -24,10 +24,10 @@
 #include <`$SPI_INTERFACE`_SPI_UART.h>
 #endif
 
-#include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_LL_SPI.h"
+#include "`$INSTANCE_NAME`_NRF_FUNCS.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 /**
  * @brief

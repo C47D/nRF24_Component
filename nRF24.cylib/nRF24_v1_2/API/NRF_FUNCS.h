@@ -16,8 +16,8 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
-#ifndef `$INSTANCE_NAME`_FUNCS_H
-#define `$INSTANCE_NAME`_FUNCS_H
+#ifndef `$INSTANCE_NAME`_NRF_FUNCS_H
+#define `$INSTANCE_NAME`_NRF_FUNCS_H
 
 #include <cytypes.h>
 #include <cyfitter.h>
@@ -25,7 +25,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "`$INSTANCE_NAME`_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 // PSoC Component Functions
 void `$INSTANCE_NAME`_start(void);
@@ -131,6 +131,6 @@ void `$INSTANCE_NAME`_clearAllIRQs(void);
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag);
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void);
 
-#endif /* `$INSTANCE_NAME`_FUNCS_H */
+#endif /* `$INSTANCE_NAME`_NRF_FUNCS_H */
 
 /* [] END OF FILE */
