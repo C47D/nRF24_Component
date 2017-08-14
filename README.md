@@ -19,7 +19,7 @@ Current version: 1.1
 - [x] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
 - [x] Fix implementations on the IRQ handling functions.
 
-## TODO for version 1.1
+## TODO for version 1.2
 - [ ] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
 - [ ] If necessary write to all nRF24 registers in the x_init function, there are some missing initialization.
 
