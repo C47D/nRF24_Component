@@ -127,7 +127,7 @@ uint8_t `$INSTANCE_NAME`_isRXFIFOFull(void);
 uint8_t `$INSTANCE_NAME`_isRXFIFOEmpty(void);
 
 // IRQ Handle functions
-void `$INSTANCE_NAME`_clearIRQs(void);
+void `$INSTANCE_NAME`_clearAllIRQs(void);
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag);
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void);
 

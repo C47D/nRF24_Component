@@ -81,9 +81,9 @@ typedef enum{
 } NrfMode;
 
 typedef enum{
-    NRF_MAX_RT_IRQ  = 4,
-    NRF_TX_DS_IRQ   = 5,
-    NRF_RX_DR_IRQ   = 6
+    NRF_MAX_RT_IRQ  = 4, // 0x10
+    NRF_TX_DS_IRQ   = 5, // 0x20
+    NRF_RX_DR_IRQ   = 6, // 0x40
 } NrfIRQ;
 
 // CONFIG: Configuration Register

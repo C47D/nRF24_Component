@@ -1139,17 +1139,10 @@ uint8_t `$INSTANCE_NAME`_isRXFIFOEmpty(void)
  * @return None.
  *
  */
-void `$INSTANCE_NAME`_clearIRQs(void)
+void `$INSTANCE_NAME`_clearAllIRQs(void)
 {
-    uint8_t sts = `$INSTANCE_NAME`_getStatus();
-
-    if (NRF_STATUS_RX_DR_MASK & sts) {
-        `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_RX_DR);
-    } else if (NRF_STATUS_TX_DS_MASK & sts) {
-        `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_TX_DS);
-    } else {
-        `$INSTANCE_NAME`_setBit(NRF_STATUS_REG, NRF_STATUS_MAX_RT);
-    }
+    // Clear all IRQ Flags registers
+    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, 0x70);
 }
 
 /**
@@ -1162,11 +1155,8 @@ void `$INSTANCE_NAME`_clearIRQs(void)
  */
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
 {
-    // Clear the flag writing a 1 to the interrupt flag
-    uint8_t temp = 1 << irq_flag;
-
-    // Write back to @reg
-    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, temp);
+    // Clear the flag writing a 1 to the interrupt flag bit
+    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, (1 << irq_flag));
 }
 
 /**
@@ -1179,18 +1169,21 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
  */
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
-    NrfIRQ flag = 0;
     uint8_t sts = `$INSTANCE_NAME`_getStatus();
-
-    if (NRF_STATUS_RX_DR_MASK & sts) {
-        flag = NRF_RX_DR_IRQ;
-    } else if (NRF_STATUS_TX_DS_MASK & sts) {
-        flag = NRF_TX_DS_IRQ;
-    } else if (NRF_STATUS_MAX_RT_MASK & sts) {
-        flag = NRF_MAX_RT_IRQ;
+    switch(sts & 0x70) {
+    case NRF_STATUS_RX_DR_MASK:
+        return NRF_RX_DR_IRQ;
+        break;
+    case NRF_STATUS_TX_DS_MASK:
+        return NRF_TX_DS_IRQ;
+        break;
+    case NRF_STATUS_MAX_RT_MASK:
+        return NRF_MAX_RT_IRQ;
+        break;
+    default:
+        return 0;
+        break;
     }
-
-    return flag;
 }
 
 /* [] END OF FILE */
