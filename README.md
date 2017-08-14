@@ -6,9 +6,9 @@ The SPI, CS and CE pins necessary to control the nRF24 chip must be provided by 
 With PSoC6 you can use the component and PDL APIs (see [PSoC6 Components and PDL](http://www.cypress.com/blog/psoc-creator-news-and-information/psoc-6-components-and-pdl-drivers)), given that PSoC6 is more like a PSoC4 on steroids, it might be "easy" to port code from PSoC4 to the PSoC6.
 Tests for PSoC6 will be done when PSoC 4.1 and the PSoC6 are available.
 
-Current version: 1.1
+Current version: 1.2
 
-![Component](img/v1_1.png)
+![Component](img/v1_2.png)
 
 ## TODO for version 1.0
 - [x] Finish the component configuration tab on the customizer.
