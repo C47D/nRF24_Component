@@ -16,10 +16,14 @@ Current version: 1.1
 - [x] Improve set and clear bit functions, on WriteBit function we can check if the bit is already set to the value we want.
 
 ## TODO for version 1.1
-- [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs.
-- [ ] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
+- [x] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
+- [x] Fix implementations on the IRQ handling functions.
+
+## TODO for version 1.1
 - [ ] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
+- [ ] If necessary write to all nRF24 registers in the x_init function, there are some missing initialization.
 
 ## TODO
+- [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs.
 - [ ] Check PSoC6 implementation.
 - [ ] Add a proper customizer using Visual Studio to design it.
