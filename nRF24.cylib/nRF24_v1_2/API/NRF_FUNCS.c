@@ -90,6 +90,14 @@ void `$INSTANCE_NAME`_init(void)
         (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) | (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
     
     // Configuring data pipes
+#if (ENABLE_PIPE0 == 1)
+    // Set data pipe 0 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P0_REG, `@RX_PW_P0`);
+#endif
+#if (ENABLE_PIPE1 == 1)
+    // Set data pipe 1 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P1_REG, `@RX_PW_P1`);
+#endif
 #if (ENABLE_PIPE2 == 1)
     // Set data pipe 2 address (LSB)
     `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P2_REG, `@RX_ADDR_P2`);
