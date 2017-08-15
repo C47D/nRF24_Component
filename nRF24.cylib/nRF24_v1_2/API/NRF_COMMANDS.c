@@ -417,8 +417,8 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
 {
 #if !defined(CY_SCB_`$SPI_INTERFACE`_H) // UDB Block
 
-    //`$SPI_INTERFACE`_ClearRxBuffer();
-    //`$SPI_INTERFACE`_ClearTxBuffer();
+    `$SPI_INTERFACE`_ClearRxBuffer();
+    `$SPI_INTERFACE`_ClearTxBuffer();
 
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);

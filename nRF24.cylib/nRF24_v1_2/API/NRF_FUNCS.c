@@ -1178,6 +1178,8 @@ void `$INSTANCE_NAME`_clearAllIRQs(void)
 /**
  * @brief Clears the specific IRQ flag.
  *
+ * Clear the flag writing a 1 to the interrupt flag bit.
+ *
  * @param NrfIRQ irq_flag:
  *
  * @return None.
@@ -1185,7 +1187,6 @@ void `$INSTANCE_NAME`_clearAllIRQs(void)
  */
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
 {
-    // Clear the flag writing a 1 to the interrupt flag bit
     `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, (1 << irq_flag));
 }
 
