@@ -21,7 +21,7 @@ Current version: 1.2
 
 ## TODO for version 1.2
 - [x] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
-- [ ] If necessary write to all nRF24 registers in the x_init function, there are some missing initialization.
+- [x] If necessary write to all nRF24 registers in the x_init function, there are some missing initialization.
 
 ## TODO
 - [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs.

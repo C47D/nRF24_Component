@@ -28,6 +28,7 @@
 #include "`$INSTANCE_NAME`_NRF_FUNCS.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
+#include "`$INSTANCE_NAME`_NRF_CONFIG.h"
 
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
@@ -87,6 +88,32 @@ void `$INSTANCE_NAME`_init(void)
         (`$DPL_P0` << NRF_DYNPD_DPL_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_FEATURE_REG, (`$EN_DPL` << NRF_FEATURE_EN_DPL) |
         (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) | (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
+    
+    // Configuring data pipes
+#if (ENABLE_PIPE2 == 1)
+    // Set data pipe 2 address (LSB)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P2_REG, `@RX_ADDR_P2`);
+    // Set data pipe 2 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P2_REG, `@RX_PW_P2`);
+#endif
+#if (ENABLE_PIPE3 == 1)
+    // Set data pipe 3 address (LSB)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P3_REG, `@RX_ADDR_P3`);
+    // Set data pipe 3 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P3_REG, `@RX_PW_P3`);
+#endif
+#if (ENABLE_PIPE4 == 1)
+    // Set data pipe 4 address (LSB)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P4_REG, `@RX_ADDR_P4`);
+    // Set data pipe 4 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P4_REG, `@RX_PW_P4`);
+#endif
+#if (ENABLE_PIPE5 == 1)
+    // Set data pipe 5 address (LSB)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P5_REG, `@RX_ADDR_P5`);
+    // Set data pipe 5 bytes in rx payload
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P5_REG, `@RX_PW_P5`);
+#endif
 }
 
 /**
