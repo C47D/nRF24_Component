@@ -97,17 +97,10 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
  * @return None.
  *
  */
-void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data,
+void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
+                                        uint8_t* data,
                                        const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
-    if (5 < size) {
-        return;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -209,16 +202,9 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
  *
  */
 void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
-                                        const uint8_t* data, size_t size)
+                                        const uint8_t* data,
+                                        const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
-    if (5 < size) {
-        size = 5;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -262,7 +248,7 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
  * @return uint8_t:
  *
  */
-uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, uint8_t bit)
+uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
 {
     return (`$INSTANCE_NAME`_readRegister(reg) & (1 << bit)) != 0;
 }
@@ -278,7 +264,8 @@ uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, uint8_t bit)
  * @return None.
  *
  */
-void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
+void `$INSTANCE_NAME`_writeBit(const NrfRegister reg,
+                                const uint8_t bit,
                                const uint8_t value)
 {
     // Get the @reg content

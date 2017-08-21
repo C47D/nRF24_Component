@@ -142,7 +142,6 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
  */
 void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
 {
-
     if (NULL == data) {
         return;
     }

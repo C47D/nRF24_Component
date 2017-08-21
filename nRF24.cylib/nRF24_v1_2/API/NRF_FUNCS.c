@@ -452,6 +452,14 @@ uint8_t `$INSTANCE_NAME`_getPipesAddressWidth(void)
  */
 void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        size = 5;
+    }
+    
     `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -466,6 +474,14 @@ void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -482,6 +498,14 @@ void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        size = 5;
+    }
+    
     `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -496,6 +520,14 @@ void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -512,6 +544,14 @@ void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        size = 5;
+    }
+    
     `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
 }
 
@@ -526,6 +566,14 @@ void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
 }
 
@@ -555,6 +603,14 @@ void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P2_REG);
 }
@@ -585,6 +641,14 @@ void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P3_REG);
 }
@@ -615,6 +679,14 @@ void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P4_REG);
 }
@@ -645,6 +717,14 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb)
  */
 void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P5_REG);
 }
@@ -661,6 +741,14 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        size = 5;
+    }
+    
     `$INSTANCE_NAME`_writeLongRegister(NRF_TX_ADDR_REG, addr, size);
 }
 
@@ -676,6 +764,14 @@ void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
  */
 void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size)
 {
+    if (NULL == addr) {
+        return;
+    }
+
+    if (5 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_readLongRegister(NRF_TX_ADDR_REG, addr, size);
 }
 
