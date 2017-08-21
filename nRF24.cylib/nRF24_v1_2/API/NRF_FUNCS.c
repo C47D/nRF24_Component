@@ -16,6 +16,14 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
+/**
+* @file `$INSTANCE_NAME`_NRF_FUNCS.c
+*
+* @brief This file define all the functions
+* available to the user.
+* 
+*/
+
 #include <`$CE_PIN`.h>
 #include <`$SPI_INTERFACE`.h>
 #include <`$SS_PIN`.h>
@@ -1175,7 +1183,8 @@ uint8_t `$INSTANCE_NAME`_isRXFIFOEmpty(void)
 }
 
 /**
- * @brief Clear all IRQ flags.
+ * This function will write 1 to all the three IRQ "flag" bits on the
+ * STATUS register.
  *
  * @param None.
  *
@@ -1190,7 +1199,7 @@ void `$INSTANCE_NAME`_clearAllIRQs(void)
 /**
  * @brief Clears the specific IRQ flag.
  *
- * Clear the flag writing a 1 to the interrupt flag bit.
+ * Clear the flag by writing 1 to the interrupt flag bit.
  *
  * @param NrfIRQ irq_flag:
  *
@@ -1203,17 +1212,20 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
 }
 
 /**
- * @brief Get the IRQ flag that caused the interrupt.
+ * This method is used to get if any of the IRQ "flag" bits on the STATUS
+ * register is set to 1. This function returns 0 is none of the flag bits
+ * is not set to 1.
  *
  * @param None.
  *
  * @return NrfIRQ:
- *
  */
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
-    uint8_t sts = `$INSTANCE_NAME`_getStatus();
+    // Get the STATUS register
+    uint8_t sts = `$INSTANCE_NAME`_NOPCmd();
 
+    // We care if any of the bits 4, 5 and 6 are set
     switch (sts & 0x70) {
     case NRF_STATUS_RX_DR_MASK:
         return NRF_RX_DR_IRQ;

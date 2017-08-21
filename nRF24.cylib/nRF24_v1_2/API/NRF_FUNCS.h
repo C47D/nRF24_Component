@@ -16,6 +16,14 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
+/**
+* @file `$INSTANCE_NAME`_NRF_FUNCS.h
+*
+* @brief This file define all the functions
+* available to the user.
+* 
+*/
+
 #ifndef `$INSTANCE_NAME`_NRF_FUNCS_H
 #define `$INSTANCE_NAME`_NRF_FUNCS_H
 

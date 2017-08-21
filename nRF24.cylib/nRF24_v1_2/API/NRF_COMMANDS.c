@@ -16,6 +16,14 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
+/**
+* @file `$INSTANCE_NAME`_NRF_COMMANDS.c
+*
+* @brief The nRF24 radio is controlled via commands,
+* this file implement all the available commands.
+* 
+*/
+
 #include <`$CE_PIN`.h>
 #include <`$SPI_INTERFACE`.h>
 #include <`$SS_PIN`.h>

@@ -16,6 +16,15 @@
 * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ****************************************************************************/
 
+/**
+* @file `$INSTANCE_NAME`_LL_SPI.c
+*
+* @brief The nRF24 radio is controlled via SPI,
+* this file have all the SPI communication between the
+* PSoC and the nRF24 radio.
+* 
+*/
+
 #include <`$CE_PIN`.h>
 #include <`$SPI_INTERFACE`.h>
 #include <`$SS_PIN`.h>
