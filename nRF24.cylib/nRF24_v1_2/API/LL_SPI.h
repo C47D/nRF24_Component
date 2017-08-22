@@ -32,6 +32,7 @@
 #include <cyfitter.h>
     
 #include <string.h>
+#include <stdbool.h>
     
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
 
@@ -40,7 +41,7 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data , co
 void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data);
 void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* data, const size_t size);
 uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit);
-void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit, const uint8_t value);
+void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit, const bool value);
 void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit);
 void `$INSTANCE_NAME`_setBit(const NrfRegister reg, const uint8_t bit);
 

@@ -125,6 +125,8 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     }
 
 #else // UDB Block
+    
+    #if 1
 
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
@@ -146,6 +148,31 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     for (size_t j = 0; j < size; j++) {
         data[j] = `$SPI_INTERFACE`_ReadRxData();
     }
+    
+    #else
+
+    SPI_ClearFIFO();
+
+    SS_Write(0);
+    SPI_WriteTxData(NRF_R_REGISTER_CMD | reg);
+
+    // Wait for the byte to be sent
+    while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {}
+    // the first byte the nrf24 return is the STATUS Register,
+    // as we dont need it we clear the rxbuffer by reading it
+    (void)SPI_ReadRxData();
+    
+    // Now the FIFO RX buffer must be empty
+    
+    for (size_t i = 0; i < size; i++) {
+        SPI_WriteTxData(NRF_NOP_CMD);
+        while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {}
+        data[i] = SPI_ReadRxData();
+    }
+
+    SS_Write(1);
+
+    #endif
 
 #endif
 }
@@ -231,8 +258,7 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (
-        !( `$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)) {
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){
     }
     `$SS_PIN`_Write(1);
 
@@ -266,7 +292,7 @@ uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
  */
 void `$INSTANCE_NAME`_writeBit(const NrfRegister reg,
                                 const uint8_t bit,
-                               const uint8_t value)
+                               const bool value)
 {
     // Get the @reg content
     uint8_t temp = `$INSTANCE_NAME`_readRegister(reg);
