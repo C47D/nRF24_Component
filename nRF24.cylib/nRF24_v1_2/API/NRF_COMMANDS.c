@@ -456,8 +456,7 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)) {
-    }
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)){}
     `$SS_PIN`_Write(1);
 
     return `$SPI_INTERFACE`_ReadRxData();
