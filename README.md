@@ -2,25 +2,18 @@
 
 The SPI Master component, CS and CE pins nedeed to control the nRF24 chip must be provided by the user on the project schematic. This component only provide the functions to control the nRF24 radio.
 
-Current version: 1.2
+Current version: 1.3
 
-![Component](img/v1_2.png)
-
-## TODO for version 1.0
-- [x] Finish the component configuration tab on the customizer.
-- [x] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
-- [x] Improve set and clear bit functions, on WriteBit function we can check if the bit is already set to the value we want.
-
-## TODO for version 1.1
-- [x] Check SCB SPI version, it fails on some transfers, (workaround) this was solved using a separated CS (chip select) pin, need to solve it to use the SS embedded into the SCB component.
-- [x] Fix implementations on the IRQ handling functions.
+![Component](img/v1_3.png)
 
 ## TODO for version 1.2
 - [x] PSoC 4.1 adds some features when implementing the custom component customizer, update the customizer.
 - [x] If necessary write to all nRF24 registers in the x_init function, there are some missing initialization.
 
+## TODO for version 1.3
+- [x] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs. - in test -.
+
 ## TODO
-- [ ] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs.
 - [ ] PSoC6 support.
 - [ ] Design a customizer using Visual Studio.
 
