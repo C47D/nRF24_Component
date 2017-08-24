@@ -12,6 +12,9 @@ Current version: 1.3
 
 ## TODO for version 1.3
 - [x] Improve the SPI data transactions, reading bytes as they arrive to the RX FIFO, workaround for now is using the SPI component with a 38 bytes deep TX and RX FIFOs. - in test -.
+- [ ] Update documentation.
+- [ ] Finish the API.
+- [ ] Component Datasheet.
 
 ## TODO
 - [ ] PSoC6 support.
