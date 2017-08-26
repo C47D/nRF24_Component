@@ -53,7 +53,8 @@ void `$INSTANCE_NAME`_start(void)
     // Recommended delay to start using the nRF24
     CyDelay(`$INSTANCE_NAME`_POR_DELAY);
     
-    // Set `$SS_PIN` to logic 1 and Start the `$SPI_INTERFACE`
+    // Set `$SS_PIN` to logic 1, `$CE_PIN` to logic 0 and Start the `$SPI_INTERFACE`
+    `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
     `$SPI_INTERFACE`_Start();
 
