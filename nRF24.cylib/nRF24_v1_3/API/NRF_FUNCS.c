@@ -50,18 +50,22 @@
  */
 void `$INSTANCE_NAME`_start(void)
 {
-    `$SS_PIN`_Write(1);
-    `$SPI_INTERFACE`_Start();
     // Recommended delay to start using the nRF24
     CyDelay(`$INSTANCE_NAME`_POR_DELAY);
-    // Configure the nRF24 with the configuration
-    // taken from the customizer.
+    
+    // Set `$SS_PIN` to logic 1 and Start the `$SPI_INTERFACE`
+    `$SS_PIN`_Write(1);
+    `$SPI_INTERFACE`_Start();
+
+    // Configure the nRF24 with the data from the customizer
     `$INSTANCE_NAME`_init();
+    
+    // Clear IRQ flags
+    `$INSTANCE_NAME`_clearAllIRQs();
+    
     // Flush both nRF24 FIFOs
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
-    // Clear IRQ flags
-    `$INSTANCE_NAME`_clearAllIRQs();
 }
 
 /**
@@ -73,46 +77,33 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
-    `$INSTANCE_NAME`_writeRegister(
-        NRF_CONFIG_REG,
-        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) |
-            (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
-            (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) |
-            (`$EN_CRC` << NRF_CONFIG_EN_CRC) | (`$CRCO` << NRF_CONFIG_CRCO) |
-            ( `$PWR_UP`<< NRF_CONFIG_PWR_UP) |
-            (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
+    `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG,
+        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
+        (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
+        (`$CRCO` << NRF_CONFIG_CRCO) | ( `$PWR_UP`<< NRF_CONFIG_PWR_UP) |
+        (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG,
-                                   (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) |
-                                       (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
-                                       (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) |
-                                       (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
-                                       (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) |
-                                       (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
+        (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
+        (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
+        (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) | (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_RXADDR_REG,
-                                   (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5) |
-                                       (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4) |
-                                       (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3) |
-                                       (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2) |
-                                       (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1) |
-                                       (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
+        (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5) | (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4) |
+        (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3) | (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2) |
+        (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1) | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, `$AW`);
-    `$INSTANCE_NAME`_writeRegister(
-        NRF_SETUP_RETR_REG, (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT) | `$ARC`);
+    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_RETR_REG,
+        (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT) | `$ARC`);
     `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, `$RF_CH`);
     `$INSTANCE_NAME`_writeRegister(NRF_RF_SETUP_REG,
-                                   (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE) |
-                                       (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR) |
-                                       (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
-    `$INSTANCE_NAME`_writeRegister(
-        NRF_DYNPD_REG,
+        (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE) | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR) |
+        (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
+    `$INSTANCE_NAME`_writeRegister(NRF_DYNPD_REG,
         (`$DPL_P5` << NRF_DYNPD_DPL_P5) | (`$DPL_P4` << NRF_DYNPD_DPL_P4) |
-            (`$DPL_P3` << NRF_DYNPD_DPL_P3) | (`$DPL_P2` << NRF_DYNPD_DPL_P2) |
-            (`$DPL_P1` << NRF_DYNPD_DPL_P1) | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
-    `$INSTANCE_NAME`_writeRegister(
-        NRF_FEATURE_REG,
-        (`$EN_DPL` << NRF_FEATURE_EN_DPL) |
-            (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) |
-            (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
+        (`$DPL_P3` << NRF_DYNPD_DPL_P3) | (`$DPL_P2` << NRF_DYNPD_DPL_P2) |
+        (`$DPL_P1` << NRF_DYNPD_DPL_P1) | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
+    `$INSTANCE_NAME`_writeRegister(NRF_FEATURE_REG,
+        (`$EN_DPL` << NRF_FEATURE_EN_DPL) | (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) |
+        (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
 
 // Configuring data pipes
 #if (ENABLE_PIPE0 == 1)
@@ -611,6 +602,7 @@ void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
         return;
     }
     
+    // The pipe2 address is the same as the pipe1 address except the LSB
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P2_REG);
 }
@@ -649,6 +641,7 @@ void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
         return;
     }
     
+    // The pipe3 address is the same as the pipe1 address except the LSB
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P3_REG);
 }
@@ -687,6 +680,7 @@ void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
         return;
     }
     
+    // The pipe4 address is the same as the pipe1 address except the LSB
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P4_REG);
 }
@@ -725,6 +719,7 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
         return;
     }
     
+    // The pipe5 address is the same as the pipe1 address except the LSB
     nRF24_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_readRegister(NRF_RX_ADDR_P5_REG);
 }
