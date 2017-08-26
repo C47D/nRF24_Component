@@ -268,18 +268,18 @@ enum {
 
 // return status, based in cyret
 enum {
-    CYRET_SUCCESS           = 0x00, // Successful
-    CYRET_BAD_PARAM         = 0x01, // One or more invalid parameters
-    CYRET_INVALID_OBJECT    = 0x02, // Invalid object specified
-    CYRET_MEMORY            = 0x03, // Memory related failure
-    CYRET_LOCKED            = 0x04, // Resource lock failure
-    CYRET_EMPTY             = 0x05, // No more objects available
-    CYRET_BAD_DATA          = 0x06, // Bad data received (CRC or other error check)
-    CYRET_STARTED           = 0x07, // Operation started, but not necessarily completed yet
-    CYRET_FINISHED          = 0x08, // Operation completed
-    CYRET_CANCELED          = 0x09, // Operation canceled
-    CYRET_TIMEOUT           = 0x0A, // Operation timed out
-    CYRET_INVALID_STATE     = 0x0B, // Operation not setup or is in an improper state
+    RET_SUCCESS           = 0x00, // Successful
+    RET_BAD_PARAM         = 0x01, // One or more invalid parameters
+    RET_INVALID_OBJECT    = 0x02, // Invalid object specified
+    RET_MEMORY            = 0x03, // Memory related failure
+    RET_LOCKED            = 0x04, // Resource lock failure
+    RET_EMPTY             = 0x05, // No more objects available
+    RET_BAD_DATA          = 0x06, // Bad data received (CRC or other error check)
+    RET_STARTED           = 0x07, // Operation started, but not necessarily completed yet
+    RET_FINISHED          = 0x08, // Operation completed
+    RET_CANCELED          = 0x09, // Operation canceled
+    RET_TIMEOUT           = 0x0A, // Operation timed out
+    RET_INVALID_STATE     = 0x0B, // Operation not setup or is in an improper state
 };
 
 #endif /* `$INSTANCE_NAME`_NRF_REGS_H */

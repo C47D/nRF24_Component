@@ -42,7 +42,7 @@
 #define `$INSTANCE_NAME`_POR_DELAY 100
 
 /**
- * @brief Configure the radio and clear TX and RX FIFOs.
+ * @brief Configure the radio and clear IRQs, TX and RX FIFOs.
  *
  * @param None.
  *
@@ -69,7 +69,7 @@ void `$INSTANCE_NAME`_start(void)
 }
 
 /**
- * @brief Configure the nRF24 registers with the data of the customizer.
+ * @brief Configure the nRF24 registers with the data from the customizer.
  *
  * @param None.
  *
