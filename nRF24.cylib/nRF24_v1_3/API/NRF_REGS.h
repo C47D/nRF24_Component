@@ -19,8 +19,8 @@
 /**
 * @file `$INSTANCE_NAME`_NRF_REGS.h
 *
-* @brief This file contains all the nRF24 radio
-* registers, commands and usefull enum types.
+* @brief This file contains all the nRF24 radio registers, commands and
+* usefull enum types.
 * 
 */
 

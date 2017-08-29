@@ -19,8 +19,8 @@
 /**
 * @file `$INSTANCE_NAME`_NRF_COMMANDS.c
 *
-* @brief The nRF24 radio is controlled via commands,
-* this file implement all the available commands.
+* @brief The nRF24 radio is controlled via commands, this file implement all
+* the available commands.
 * 
 */
 
@@ -38,13 +38,11 @@
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 /**
- * @brief
+ * Send a command to the nRF24 radio.
  *
+ * @param const NrfCmd cmd: Command to send to the nRF24 radio.
  *
- * @param const NrfCmd cmd:
- *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
 {
@@ -84,10 +82,9 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
  * TX payload reuse must not be activated or deactivated during package
  * transmission.
  *
- * @param None.
+ * @param
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void)
 {
@@ -101,10 +98,9 @@ void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void)
  * Flush RX FIFO. Should be not executed during transmission of acknowledge,
  * that is, acknowledge package will not be completed.
  *
- * @param None.
+ * @param
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_FlushRxCmd(void)
 {
@@ -114,12 +110,12 @@ void `$INSTANCE_NAME`_FlushRxCmd(void)
 /**
  * @brief Flush TX FIFO.
  *
- * Used in TX mode. Flush TX FIFO.
+ * Used in TX mode.
+ * Flush TX FIFO.
  *
- * @param None.
+ * @param
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_FlushTxCmd(void)
 {
@@ -130,15 +126,13 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
  * @brief Read RX payload.
  *
  * Used in RX mode.
- * Read RX payload: 1 - 32 bytes.
- * A read operation always starts at byte 0.
+ * Read RX payload: 1 - 32 bytes. A read operation always starts at byte 0.
  * Payload is deleted from FIFO after it is read.
  *
  * @param uint8_t* data:
  * @param const size_t size:
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
 {
@@ -204,8 +198,7 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
  * @param const uint8_t* data:
  * @param const size_t size:
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
 {
@@ -252,10 +245,9 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
  * Read RX payload width for the top R_RX_PAYLOAD in the RX FIFO.
  * Note: Flush RX FIFO if the read value is larger than 32 bytes.
  *
- * @param None.
+ * @param
  *
  * @return uint8_t: width of the payload on the top of the RX FIFO.
- *
  */
 uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
 {
@@ -322,8 +314,7 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
  * @param const uint8_t* data:
  * @param const size_t size
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
                                              const uint8_t* data,
@@ -377,8 +368,7 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
  * @param const uint8_t* data:
  * @param const size_t size:
  *
- * @return None.
- *
+ * @return
  */
 void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
                                           const size_t size)
@@ -427,10 +417,9 @@ void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
  *
  * Send NOP (No OPeration) Command. Might be used to read the STATUS register.
  *
- * @param None.
+ * @param
  *
  * @return uint8_t: Content of the nRF24 STATUS register.
- *
  */
 uint8_t `$INSTANCE_NAME`_NOPCmd(void)
 {

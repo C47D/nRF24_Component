@@ -19,9 +19,8 @@
 /**
 * @file `$INSTANCE_NAME`_NRF_COMMANDS.h
 *
-* @brief The nRF24 radio is controlled via commands,
-* this file implement all the available commands.
-* 
+* @brief The nRF24 radio is controlled via commands, this file implement all
+* the available commands.
 */
 
 #ifndef `$INSTANCE_NAME`_NRF_COMMANDS_H

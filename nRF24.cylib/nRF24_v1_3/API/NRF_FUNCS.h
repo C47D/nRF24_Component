@@ -19,9 +19,7 @@
 /**
 * @file `$INSTANCE_NAME`_NRF_FUNCS.h
 *
-* @brief This file define all the functions
-* available to the user.
-* 
+* @brief This file define all the functions available to the user. 
 */
 
 #ifndef `$INSTANCE_NAME`_NRF_FUNCS_H
@@ -54,6 +52,8 @@ void `$INSTANCE_NAME`_setStandbyIMode(void);
 void `$INSTANCE_NAME`_setStandbyIIMode(void);
 void `$INSTANCE_NAME`_setRxMode(void);
 void `$INSTANCE_NAME`_setTxMode(void);
+
+// Functions related to registers
 
 // CONFIG Reg
 // EN_AA_Reg
@@ -92,12 +92,7 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size);
 // TX_ADDR Reg
 void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size);
 void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size);
-// RX_PW_P0 Reg
-// RX_PW_P1 Reg
-// RX_PW_P2 Reg
-// RX_PW_P3 Reg
-// RX_PW_P4 Reg
-// RX_PW_P5 Reg
+// RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
 void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size);
 uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe);
 // FIFO_STATUS Reg
@@ -113,7 +108,7 @@ void `$INSTANCE_NAME`_disableDynamicPayloadLength(void);
 void `$INSTANCE_NAME`_disablePayloadWithACK(void);
 void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void);
 
-/* General usage functions */
+/* General purpose functions */
 void `$INSTANCE_NAME`_listen(const bool listen);
 void `$INSTANCE_NAME`_startListening(void);
 void `$INSTANCE_NAME`_stopListening(void);
@@ -129,10 +124,10 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size);
 void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data, size_t size);
 uint8_t `$INSTANCE_NAME`_getDataPipeWithPayload(void);
 uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void);
-uint8_t `$INSTANCE_NAME`_isTXFIFOFull(void);
-uint8_t `$INSTANCE_NAME`_isTXFIFOEmpty(void);
-uint8_t `$INSTANCE_NAME`_isRXFIFOFull(void);
-uint8_t `$INSTANCE_NAME`_isRXFIFOEmpty(void);
+bool `$INSTANCE_NAME`_isTXFIFOFull(void);
+bool `$INSTANCE_NAME`_isTXFIFOEmpty(void);
+bool `$INSTANCE_NAME`_isRXFIFOFull(void);
+bool `$INSTANCE_NAME`_isRXFIFOEmpty(void);
 
 // IRQ Handle functions
 void `$INSTANCE_NAME`_clearAllIRQs(void);

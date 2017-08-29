@@ -19,9 +19,8 @@
 /**
 * @file `$INSTANCE_NAME`_LL_SPI.h
 *
-* @brief The nRF24 radio is controlled via SPI,
-* this file have all the SPI communication between the
-* PSoC and the nRF24 radio.
+* @brief The nRF24 radio is controlled via SPI, this file have all the SPI
+* communication between the PSoC and the nRF24 radio.
 * 
 */
 
@@ -40,7 +39,7 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg);
 void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data , const size_t size);
 void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data);
 void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* data, const size_t size);
-uint8_t `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit);
+bool `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit);
 void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit, const bool value);
 void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit);
 void `$INSTANCE_NAME`_setBit(const NrfRegister reg, const uint8_t bit);
