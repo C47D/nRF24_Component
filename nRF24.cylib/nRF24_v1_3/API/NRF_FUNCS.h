@@ -91,7 +91,7 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb);
 void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size);
 // TX_ADDR Reg
 void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size);
-void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size);
+void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size);
 // RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
 void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size);
 uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe);
@@ -116,17 +116,15 @@ void `$INSTANCE_NAME`_transmitPulse(void);
 uint8_t `$INSTANCE_NAME`_getStatus(void);
 uint8_t `$INSTANCE_NAME`_getRetransmissionsCount(void);
 uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void);
-void `$INSTANCE_NAME`_fillTxFIFO(const uint8_t* data, size_t size);
-void `$INSTANCE_NAME`_txTransmit(const uint8_t* data, size_t size);
+void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, const size_t size);
 bool `$INSTANCE_NAME`_isDataReady(void);
 void `$INSTANCE_NAME`_getRxPayload(uint8_t* payload, const size_t size);
-void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size);
-void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data, size_t size);
+void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data, const size_t size);
 uint8_t `$INSTANCE_NAME`_getDataPipeWithPayload(void);
 uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void);
 bool `$INSTANCE_NAME`_isTXFIFOFull(void);
-bool `$INSTANCE_NAME`_isTXFIFOEmpty(void);
-bool `$INSTANCE_NAME`_isRXFIFOFull(void);
 bool `$INSTANCE_NAME`_isRXFIFOEmpty(void);
 
 // IRQ Handle functions

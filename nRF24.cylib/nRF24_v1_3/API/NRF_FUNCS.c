@@ -713,11 +713,9 @@ void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
  * @brief Get the TX Address of the radio.
  *
  * @param const uint8_t* addr:
- * @param size_t size:
- *
- * @return
+ * @param const size_t size:
  */
-void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size)
+void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size)
 {
     if (NULL == addr) {
         return;
@@ -810,10 +808,6 @@ uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
  *
  * This function issue the command ReuseTxPayload and then toggle the CE pin
  * to transmit the last transmitted payload.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void)
 {
@@ -825,8 +819,6 @@ void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void)
  * @brief Enable dynamic payload on the given pipe.
  *
  * @param const NrfDataPipe pipe:
- *
- * @return
  */
 void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe)
 {
@@ -840,8 +832,6 @@ void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe)
  * @brief Disable dynamic payload on the given pipe.
  *
  * @param const NrfDataPipe pipe:
- *
- * @return
  */
 void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe)
 {
@@ -853,10 +843,6 @@ void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe)
 
 /**
  * @brief Enable dinamic payload length.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_enableDynamicPayloadLength(void)
 {
@@ -865,10 +851,6 @@ void `$INSTANCE_NAME`_enableDynamicPayloadLength(void)
 
 /**
  * @brief Disable dynamic payload length.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_disableDynamicPayloadLength(void)
 {
@@ -877,10 +859,6 @@ void `$INSTANCE_NAME`_disableDynamicPayloadLength(void)
 
 /**
  * @brief Enable payload with ACK.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_enablePayloadWithACK(void)
 {
@@ -889,10 +867,6 @@ void `$INSTANCE_NAME`_enablePayloadWithACK(void)
 
 /**
  * @brief Disable Payload with ACK.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_disablePayloadWithACK(void)
 {
@@ -901,10 +875,6 @@ void `$INSTANCE_NAME`_disablePayloadWithACK(void)
 
 /**
  * @brief Enable dynamic payload length.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_enablePayloadWithNoACKCmd(void)
 {
@@ -913,10 +883,6 @@ void `$INSTANCE_NAME`_enablePayloadWithNoACKCmd(void)
 
 /**
  * @brief Disable Payload with no ACK.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void)
 {
@@ -928,8 +894,6 @@ void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void)
  *
  * @param const bool listen: If @listen is set to true, then the radio will
  * listen, if set to false the radio will stop listening.
- *
- * @return
  */
 void `$INSTANCE_NAME`_listen(const bool listen)
 {
@@ -941,10 +905,6 @@ void `$INSTANCE_NAME`_listen(const bool listen)
  *
  * This function set the pin CE to logic high, this enable the radio for
  * listening.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_startListening(void) {
     `$INSTANCE_NAME`_listen(true); }
@@ -954,10 +914,6 @@ void `$INSTANCE_NAME`_startListening(void) {
  *
  * This function the pin CE of the nRF24 radio will be set to logic low,
  * this disable the radio for listening.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_stopListening(void) {
     `$INSTANCE_NAME`_listen(false); }
@@ -967,10 +923,6 @@ void `$INSTANCE_NAME`_stopListening(void) {
  *
  * With this function the CE pin of the nRF24 radio will have a pulse of 15us,
  * this pulse trigger a transmission of the content of the TX FIFO.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_transmitPulse(void)
 {
@@ -1017,43 +969,34 @@ uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void)
 }
 
 /**
- * @brief
- *
- * @todo The nRF24 have a 3 level FIFO, with this function we only handle
- * 1 level of the FIFO.
+ * Put data into the TX FIFO wihout sending it.
  *
  * @param const uint8_t* data:
- * @param size_t size:
- *
- * @return
+ * @param const size_t size:
  */
-void `$INSTANCE_NAME`_fillTxFIFO(const uint8_t* data, size_t size)
+void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
 {
     `$INSTANCE_NAME`_WriteTXPayloadCmd(data, size);
 }
 
 /**
- * @brief
+ * Put data in TX FIFO and transmit it.
  *
  * @param const uint8_t* data:
- * @param size_t size:
- *
- * @return
+ * @param const size_t size:
  */
-void `$INSTANCE_NAME`_txTransmit(const uint8_t* data, size_t size)
+void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, const size_t size)
 {
     if (NULL == data) {
         return;
     }
 
-    `$INSTANCE_NAME`_fillTxFIFO(data, size);
+    `$INSTANCE_NAME`_putInTXFIFO(data, size);
     `$INSTANCE_NAME`_transmitPulse();
 }
 
 /**
  * @brief
- *
- * @param
  *
  * @return bool: True if there's data ready.
  */
@@ -1067,8 +1010,6 @@ bool `$INSTANCE_NAME`_isDataReady(void)
  *
  * @param uint8_t* data:
  * @param const size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
 {
@@ -1080,10 +1021,8 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
  *
  * @param const uint8_t* data:
  * @param size_t size:
- *
- * @return
  */
-void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size)
+void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size)
 {
     `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(data, size);
     `$INSTANCE_NAME`_transmitPulse();
@@ -1096,14 +1035,14 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size)
  * @param const uint8_t* data:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, uint8_t* data,
-                                     size_t size)
+void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data,
+                                     const size_t size)
 {
     `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(pipe, data, size);
 }
 
 /**
- * @brief
+ * Return the pipe number with data.
  *
  * @return uint8_t:
  */
@@ -1124,9 +1063,8 @@ uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void)
 }
 
 /**
- * @brief
- *
- * @return bool:
+ * @return bool: true if the TX FIFO is full, false if it have available
+ * locations.
  */
 bool `$INSTANCE_NAME`_isTXFIFOFull(void)
 {
@@ -1135,31 +1073,7 @@ bool `$INSTANCE_NAME`_isTXFIFOFull(void)
 }
 
 /**
- * @brief
- *
- * @return bool:
- */
-bool `$INSTANCE_NAME`_isTXFIFOEmpty(void)
-{
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
-                                    NRF_FIFO_STATUS_TX_EMPTY);
-}
-
-/**
- * @brief
- *
- * @return bool:
- */
-bool `$INSTANCE_NAME`_isRXFIFOFull(void)
-{
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
-                                    NRF_FIFO_STATUS_RX_FULL);
-}
-
-/**
- * @brief
- *
- * @return bool:
+ * @return bool: true if the RX FIFO es empty, false if any pipe have data.
  */
 bool `$INSTANCE_NAME`_isRXFIFOEmpty(void)
 {
@@ -1181,7 +1095,7 @@ void `$INSTANCE_NAME`_clearAllIRQs(void)
  *
  * Clear the flag by writing 1 to the interrupt flag bit.
  *
- * @param NrfIRQ irq_flag:
+ * @param NrfIRQ irq_flag: Interrupt flag to clear.
  */
 void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
 {
@@ -1193,14 +1107,15 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
  * register is set to 1. This function returns 0 is none of the flag bits
  * is not set to 1.
  *
- * @return NrfIRQ:
+ * @return NrfIRQ: Asserted bit of the interrupt flags.
  */
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
     // Get the STATUS register
     uint8_t sts = `$INSTANCE_NAME`_NOPCmd();
 
-    // We care if any of the bits 4, 5 and 6 are set
+    // We only care if any of the bits 4, 5 and 6 are set, so we mask
+    // the STATUS register with 0x0111_0000
     switch (sts & 0x70) {
     case NRF_STATUS_RX_DR_MASK:
         return NRF_RX_DR_IRQ;
