@@ -41,10 +41,6 @@
 
 /**
  * @brief Configure the radio and clear IRQs, TX and RX FIFOs.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_start(void)
 {
@@ -69,10 +65,6 @@ void `$INSTANCE_NAME`_start(void)
 
 /**
  * @brief Configure the nRF24 registers with the data from the customizer.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_init(void)
 {
@@ -143,10 +135,6 @@ void `$INSTANCE_NAME`_init(void)
  * @brief Enable the nRF24 radio.
  *
  * @todo Implement this function
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_enable(void)
 {
@@ -157,10 +145,6 @@ void `$INSTANCE_NAME`_enable(void)
  * @brief Stop the nRF24 radio.
  *
  * @todo Implement this function
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_stop(void)
 {
@@ -171,10 +155,6 @@ void `$INSTANCE_NAME`_stop(void)
  * @brief Put the nRF24 radio on Sleep mode.
  *
  * @todo Implement this function.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_sleep(void)
 {
@@ -185,10 +165,6 @@ void `$INSTANCE_NAME`_sleep(void)
  * @brief Wakeup the nRF24 radio, and restore the configuration.
  *
  * @todo Implement this function.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_wakeup(void)
 {
@@ -199,10 +175,6 @@ void `$INSTANCE_NAME`_wakeup(void)
  * @brief Save the nRF24 radio configuration.
  *
  * @todo Implement this function.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_saveConfig(void)
 {
@@ -213,10 +185,6 @@ void `$INSTANCE_NAME`_saveConfig(void)
  * @brief Restore the nRF24 radio configuration.
  *
  * @todo Implement this function.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_restoreConfig(void)
 {
@@ -228,8 +196,6 @@ void `$INSTANCE_NAME`_restoreConfig(void)
  *
  * @param const NrfMode mode: The radio can be configured as Receiver (PRX)
  * or Transmitter (PTX).
- *
- * @return
  */
 void `$INSTANCE_NAME`_setMode(const NrfMode mode)
 {
@@ -246,10 +212,6 @@ void `$INSTANCE_NAME`_setMode(const NrfMode mode)
  * registers.
  * Power down mode is entered by setting the PWR_UP bit in the CONFIG register
  * low.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_setPowerDownMode(void)
 {
@@ -265,10 +227,6 @@ void `$INSTANCE_NAME`_setPowerDownMode(void)
  * In this mode only part of the crystal oscillator is active. Change to
  * active modes only happens if CE is set high and when CE is set low,
  * the nRF24 returns to standby-I mode from both the TX and RX modes.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_setStandbyIMode(void)
 {
@@ -284,10 +242,6 @@ void `$INSTANCE_NAME`_setStandbyIMode(void)
  * on a TX device with an empty TX FIFO.
  * If a new packet is uploaded to the TX FIFO, the PLL immediately starts and
  * the packet is transmitted after the normal PLL settling  delay (130us).
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_setStandbyIIMode(void)
 {
@@ -301,10 +255,6 @@ void `$INSTANCE_NAME`_setStandbyIIMode(void)
  * RX mode is an active mode where the nRF24 radio is used as receiver. To
  * enter this mode, the nRF24 must have the PWR_UP bit, PRIM_RX bit and the CE
  * pin set high.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxMode(void)
 {
@@ -317,10 +267,6 @@ void `$INSTANCE_NAME`_setRxMode(void)
  * TX mode is an active mode for transmitting packets. To enter this mode,
  * the nRF24 must have the PWR_UP bit set high, PRIM_RX bit set low, a payload
  * in the TX FIFO and a high pulse on the CE for more than 10us.
- *
- * @param
- *
- * @return
  */
 void `$INSTANCE_NAME`_setTxMode(void)
 {
@@ -331,8 +277,6 @@ void `$INSTANCE_NAME`_setTxMode(void)
  * @brief Enable AutoACK in the given pipe.
  *
  * @param pipe: Enable AutoACK in the given pipe.
- *
- * @return
  */
 void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe)
 {
@@ -343,8 +287,6 @@ void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe)
  * @brief Disable AutoACK in the given pipe.
  *
  * @param pipe: Disable AutoACK in the given pipe.
- *
- * @return
  */
 void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe)
 {
@@ -355,8 +297,6 @@ void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe)
  * @brief Set the channel where the radio will work.
  *
  * @param uint8_t channel: Channel where the radio will work.
- *
- * @return
  */
 void `$INSTANCE_NAME`_setChannel(uint8_t channel)
 {
@@ -372,8 +312,6 @@ void `$INSTANCE_NAME`_setChannel(uint8_t channel)
  * @brief Set the address width common for all the pipes.
  *
  * @param const NrfSetupAddressWidth addr_width:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setPipesAddressWidth(
     const NrfSetupAddressWidth addr_width)
@@ -383,8 +321,6 @@ void `$INSTANCE_NAME`_setPipesAddressWidth(
 
 /**
  * @brief Get the address width common for all the pipes.
- *
- * @param
  *
  * @return NrfSetupAddressWidth:
  */
@@ -415,8 +351,6 @@ uint8_t `$INSTANCE_NAME`_getPipesAddressWidth(void)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
 {
@@ -436,8 +370,6 @@ void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size)
 {
@@ -459,8 +391,6 @@ void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
 {
@@ -468,6 +398,10 @@ void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
         return;
     }
 
+    // 5 bytes is the maximum address width, here we are limiting the
+    // size of the address to 5 bytes but the radio can be configured
+    // with 3, 4 or 5 bytes.
+    // Add a way to get the address width from the radio configuration?
     if (5 < size) {
         size = 5;
     }
@@ -480,8 +414,6 @@ void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size)
 {
@@ -502,9 +434,7 @@ void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 1 of the radio.
  *
  * @param const uint8_t* addr:
- * @param size_t:
- *
- * @return
+ * @param size_t size:
  */
 void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
 {
@@ -524,8 +454,6 @@ void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
 {
@@ -546,8 +474,6 @@ void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 2 of the radio.
  *
  * @param const uint8_t addr_lsb:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr_lsb)
 {
@@ -559,8 +485,6 @@ void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr_lsb)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
 {
@@ -583,8 +507,6 @@ void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 3 of the radio.
  *
  * @param const uint8_t addr_lsb:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr_lsb)
 {
@@ -596,8 +518,6 @@ void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr_lsb)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
 {
@@ -620,8 +540,6 @@ void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 4 of the radio.
  *
  * @param const uint8_t addr_lsb:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr_lsb)
 {
@@ -633,8 +551,6 @@ void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr_lsb)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
 {
@@ -657,8 +573,6 @@ void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
  * This function configure the address of the Rx Pipe 5 of the radio.
  *
  * @param const uint8_t addr_lsb:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb)
 {
@@ -670,8 +584,6 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb)
  *
  * @param uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
 {
@@ -693,8 +605,6 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
  *
  * @param const uint8_t* addr:
  * @param size_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
 {
@@ -737,8 +647,6 @@ void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size)
  *
  * @param const NrfDataPipe pipe:
  * @param uint8_t size:
- *
- * @return
  */
 void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
 {
@@ -934,16 +842,14 @@ void `$INSTANCE_NAME`_transmitPulse(void)
 /**
  * @brief Get the STATUS register of the nRF24.
  *
- * @param
- *
  * @return uint8_t: STATUS register of the nRF24.
  */
-uint8_t `$INSTANCE_NAME`_getStatus(void) { return `$INSTANCE_NAME`_NOPCmd(); }
+uint8_t `$INSTANCE_NAME`_getStatus(void) {
+    return `$INSTANCE_NAME`_NOPCmd();
+}
 
 /**
  * @brief Get the number of retransmissions.
- *
- * @param
  *
  * @return uint8_t: Retransmissions count.
  */
@@ -951,13 +857,10 @@ uint8_t `$INSTANCE_NAME`_getRetransmissionsCount(void)
 {
     uint8_t count = `$INSTANCE_NAME`_readRegister(NRF_OBSERVE_TX_REG);
     return count & NRF_OBSERVE_TX_ARC_CNT_MASK;
-    ;
 }
 
 /**
  * @brief Get the number of lost packets.
- *
- * @param
  *
  * @return uint8_t: Lost packets.
  */
