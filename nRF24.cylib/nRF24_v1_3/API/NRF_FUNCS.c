@@ -844,7 +844,8 @@ void `$INSTANCE_NAME`_transmitPulse(void)
  *
  * @return uint8_t: STATUS register of the nRF24.
  */
-uint8_t `$INSTANCE_NAME`_getStatus(void) {
+uint8_t `$INSTANCE_NAME`_getStatus(void)
+{
     return `$INSTANCE_NAME`_NOPCmd();
 }
 
