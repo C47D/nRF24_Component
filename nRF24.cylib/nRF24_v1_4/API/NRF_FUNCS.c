@@ -47,20 +47,24 @@ void `$INSTANCE_NAME`_start(void)
     // Recommended delay to start using the nRF24
     CyDelay(`$INSTANCE_NAME`_POR_DELAY);
     
+    // Now the radio is in Power Down mode
+    
     // Set `$SS_PIN` to logic 1, `$CE_PIN` to logic 0 and Start the `$SPI_INTERFACE`
     `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
     `$SPI_INTERFACE`_Start();
 
-    // Configure the nRF24 with the data from the customizer
-    `$INSTANCE_NAME`_init();
-    
-    // Clear IRQ flags
-    `$INSTANCE_NAME`_clearAllIRQs();
-    
     // Flush both nRF24 FIFOs
     `$INSTANCE_NAME`_FlushRxCmd();
     `$INSTANCE_NAME`_FlushTxCmd();
+    // Clear IRQ flags
+    `$INSTANCE_NAME`_clearAllIRQs();
+    
+    // Configure the nRF24 with the data from the customizer
+    `$INSTANCE_NAME`_init();
+    
+    // After PWR_UP = 1 the radio is in Standby-I mode, 130us of delay for settling
+    CyDelayUs(150);
 }
 
 /**
@@ -68,11 +72,6 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
-    `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG,
-        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
-        (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
-        (`$CRCO` << NRF_CONFIG_CRCO) | ( `$PWR_UP`<< NRF_CONFIG_PWR_UP) |
-        (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG,
         (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
         (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
@@ -129,6 +128,12 @@ void `$INSTANCE_NAME`_init(void)
     // Set data pipe 5 bytes in rx payload
     `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P5_REG, `@RX_PW_P5`);
 #endif
+
+    `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG,
+        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
+        (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
+        (`$CRCO` << NRF_CONFIG_CRCO) | ( `$PWR_UP`<< NRF_CONFIG_PWR_UP) |
+        (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
 }
 
 /**
