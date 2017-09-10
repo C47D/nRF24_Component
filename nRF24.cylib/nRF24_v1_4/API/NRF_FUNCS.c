@@ -132,7 +132,7 @@ void `$INSTANCE_NAME`_init(void)
     `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG,
         (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
         (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
-        (`$CRCO` << NRF_CONFIG_CRCO) | ( `$PWR_UP`<< NRF_CONFIG_PWR_UP) |
+        (`$CRCO` << NRF_CONFIG_CRCO) | (`$PWR_UP`<< NRF_CONFIG_PWR_UP) |
         (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
 }
 
@@ -204,8 +204,7 @@ void `$INSTANCE_NAME`_restoreConfig(void)
  */
 void `$INSTANCE_NAME`_setMode(const NrfMode mode)
 {
-    NRF_MODE_TX == mode ? `$INSTANCE_NAME`_setTxMode() :
-                            `$INSTANCE_NAME`_setRxMode();
+    mode ? `$INSTANCE_NAME`_setRxMode() : `$INSTANCE_NAME`_setTxMode();
 }
 
 /**
@@ -318,8 +317,7 @@ void `$INSTANCE_NAME`_setChannel(uint8_t channel)
  *
  * @param const NrfSetupAddressWidth addr_width:
  */
-void `$INSTANCE_NAME`_setPipesAddressWidth(
-    const NrfSetupAddressWidth addr_width)
+void `$INSTANCE_NAME`_setPipesAddressWidth(const NrfSetupAddressWidth addr_width)
 {
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, (uint8_t)addr_width);
 }
@@ -820,7 +818,8 @@ void `$INSTANCE_NAME`_listen(const bool listen)
  * listening.
  */
 void `$INSTANCE_NAME`_startListening(void) {
-    `$INSTANCE_NAME`_listen(true); }
+    `$INSTANCE_NAME`_listen(true);
+}
 
 /**
  * @brief The nRF24 radio will stop listening.
@@ -829,7 +828,8 @@ void `$INSTANCE_NAME`_startListening(void) {
  * this disable the radio for listening.
  */
 void `$INSTANCE_NAME`_stopListening(void) {
-    `$INSTANCE_NAME`_listen(false); }
+    `$INSTANCE_NAME`_listen(false);
+}
 
 /**
  * @brief Transmit pulse on the CE pin.
@@ -911,7 +911,7 @@ void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, const size_t size)
  */
 bool `$INSTANCE_NAME`_isDataReady(void)
 {
-    return NRF_STATUS_DATA_IS_RDY & `$INSTANCE_NAME`_getStatus();
+    return NRF_STATUS_RX_DR_MASK & `$INSTANCE_NAME`_getStatus();
 }
 
 /**
@@ -979,8 +979,7 @@ uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void)
  */
 bool `$INSTANCE_NAME`_isTXFIFOFull(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
-                                    NRF_FIFO_STATUS_TX_FULL);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_TX_FULL);
 }
 
 /**
@@ -988,8 +987,7 @@ bool `$INSTANCE_NAME`_isTXFIFOFull(void)
  */
 bool `$INSTANCE_NAME`_isRXFIFOEmpty(void)
 {
-    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG,
-                                    NRF_FIFO_STATUS_RX_EMPTY);
+    return `$INSTANCE_NAME`_readBit(NRF_FIFO_STATUS_REG, NRF_FIFO_STATUS_RX_EMPTY);
 }
 
 /**

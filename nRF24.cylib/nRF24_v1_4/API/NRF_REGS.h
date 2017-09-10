@@ -203,7 +203,6 @@ enum {
     NRF_STATUS_RX_DR_MASK   = 0x40,
     NRF_STATUS_TX_DS_MASK   = 0x20,
     NRF_STATUS_MAX_RT_MASK  = 0x10,
-    NRF_STATUS_DATA_IS_RDY  = 0x40
 };
 
 enum {
