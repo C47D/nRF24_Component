@@ -885,6 +885,14 @@ uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void)
  */
 void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
 {
+    if (NULL == data) {
+        return;
+    }
+
+    if (32 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_WriteTXPayloadCmd(data, size);
 }
 
@@ -897,6 +905,10 @@ void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
 void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, const size_t size)
 {
     if (NULL == data) {
+        return;
+    }
+    
+    if (32 < size) {
         return;
     }
 
@@ -922,6 +934,10 @@ bool `$INSTANCE_NAME`_isDataReady(void)
  */
 void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
 {
+    if (NULL == data) {
+        return;
+    }
+    
     `$CE_PIN`_Write(0);
     `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(data, size);
     `$CE_PIN`_Write(1);
@@ -935,6 +951,14 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
  */
 void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size)
 {
+    if (NULL == data) {
+        return;
+    }
+
+    if (32 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(data, size);
     `$INSTANCE_NAME`_transmitPulse();
 }
@@ -949,6 +973,14 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size
 void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data,
                                      const size_t size)
 {
+    if (NULL == data) {
+        return;
+    }
+
+    if (32 < size) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(pipe, data, size);
 }
 

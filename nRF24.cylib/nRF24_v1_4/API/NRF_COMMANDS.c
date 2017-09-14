@@ -116,10 +116,6 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
  */
 void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -178,14 +174,6 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
  */
 void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
-    if (32 < size) {
-        return;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -290,14 +278,6 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
                                              const uint8_t* data,
                                              const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
-    if (32 < size) {
-        return;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
@@ -339,14 +319,6 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
 void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
                                           const size_t size)
 {
-    if (NULL == data) {
-        return;
-    }
-
-    if (32 < size) {
-        return;
-    }
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
