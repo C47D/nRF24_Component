@@ -313,38 +313,40 @@ void `$INSTANCE_NAME`_setChannel(uint8_t channel)
 }
 
 /**
- * @brief Set the address width common for all the pipes.
+ * @brief Set the data pipes address width.
  *
  * @param const NrfSetupAddressWidth addr_width:
  */
-void `$INSTANCE_NAME`_setPipesAddressWidth(const NrfSetupAddressWidth addr_width)
+void `$INSTANCE_NAME`_setAddressWidth(const NrfSetupAddressWidth addr_width)
 {
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, (uint8_t)addr_width);
 }
 
 /**
- * @brief Get the address width common for all the pipes.
+ * @brief Get the data pipes address width.
  *
- * @return NrfSetupAddressWidth:
+ * @return uint8_t: Address width in bytes.
  */
-uint8_t `$INSTANCE_NAME`_getPipesAddressWidth(void)
+uint8_t `$INSTANCE_NAME`_getAddressWidth(void)
 {
+    uint8_t addr_width = 0;
     uint8_t reg = `$INSTANCE_NAME`_readRegister(NRF_SETUP_AW_REG);
 
     switch (reg) {
     case NRF_SETUP_AW_3BYTES:
-        return 3;
+        addr_width = 3;
         break;
     case NRF_SETUP_AW_4BYTES:
-        return 4;
+        addr_width = 4;
         break;
     case NRF_SETUP_AW_5BYTES:
-        return 5;
+        addr_width = 5;
         break;
     default:
-        return 0;
         break;
     }
+    
+    return addr_width;
 }
 
 /**
