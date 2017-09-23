@@ -292,34 +292,30 @@ bool `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
  * Set (logic 1) or clear (logic 0) a given bit of a given nRF24 register.
  *
  * @param const NrfRegister reg: Register to be written.
- * @param const uint8_t bit: Bit to be written.
- * @param const bool value: Logic 1 or 0 to write into the bit.
+ * @param const uint8_t bit: Position of the bit to be written.
+ * @param const bool value: Value (Logic 1 or 0) to write into the bit.
  */
-void `$INSTANCE_NAME`_writeBit(const NrfRegister reg,
-                                const uint8_t bit,
+void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
                                const bool value)
 {
-    // Get the NrfRegister
     uint8_t temp = `$INSTANCE_NAME`_readRegister(reg);
 
-    // Check if the bit of interest is set (logic 1)
+    // Check if the bit of interest is set
     if ((temp & (1 << bit)) != 0) {
-        // If we wanted to set it and it's already set we return early,
-        // continue if we wanted to clear it.
-        if (value)
+        // Return if we wanted to set it, continue if we wanted to clear it.
+        if (value) {
             return;
+        }
     }
 
-    // Calculate the new value of the NrfRegister, if @value is != 0, then
-    // we set the bit, if @value == 0, then we clear the bit
+    // Calculate the new value to be written in the register
     temp = value ? temp | (1 << bit) : temp & ~(1 << bit);
 
-    // Write the new value to NrfRegister
     `$INSTANCE_NAME`_writeRegister(reg, temp);
 }
 
 /**
- * Set a given bit of a given nRF24 register to logic 0.
+ * Clear (logic 0) a given bit of a given nRF24 register.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
@@ -330,7 +326,7 @@ void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit)
 }
 
 /**
- * Set a given bit of a given nRF24 register to logic 1.
+ * Set (logic 1) a given bit of a given nRF24 register.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
