@@ -82,6 +82,16 @@ typedef enum{
     NRF_DATA_PIPE5  = 0x05
 } NrfDataPipe;
 
+// Rx data pipes addresses
+typedef enum {
+    NRF_P0_ADDR = NRF_RX_ADDR_P0_REG,
+    NRF_P1_ADDR = NRF_RX_ADDR_P1_REG,
+    NRF_P2_ADDR = NRF_RX_ADDR_P2_REG,
+    NRF_P3_ADDR = NRF_RX_ADDR_P3_REG,
+    NRF_P4_ADDR = NRF_RX_ADDR_P4_REG,
+    NRF_P5_ADDR = NRF_RX_ADDR_P5_REG,
+} NrfRxPipeAddress;
+
 // nRF24 Modes
 typedef enum{
     NRF_MODE_TX     = 0,
@@ -267,18 +277,19 @@ enum {
 
 // return status, based in cyret
 enum {
-    RET_SUCCESS           = 0x00, // Successful
-    RET_BAD_PARAM         = 0x01, // One or more invalid parameters
-    RET_INVALID_OBJECT    = 0x02, // Invalid object specified
-    RET_MEMORY            = 0x03, // Memory related failure
-    RET_LOCKED            = 0x04, // Resource lock failure
-    RET_EMPTY             = 0x05, // No more objects available
-    RET_BAD_DATA          = 0x06, // Bad data received (CRC or other error check)
-    RET_STARTED           = 0x07, // Operation started, but not necessarily completed yet
-    RET_FINISHED          = 0x08, // Operation completed
-    RET_CANCELED          = 0x09, // Operation canceled
-    RET_TIMEOUT           = 0x0A, // Operation timed out
-    RET_INVALID_STATE     = 0x0B, // Operation not setup or is in an improper state
+    RET_SUCCESS         = 0x00, // Successful
+    RET_BAD_PARAM       = 0x01, // One or more invalid parameters
+    RET_INVALID_OBJECT  = 0x02, // Invalid object specified
+    RET_MEMORY          = 0x03, // Memory related failure
+    RET_LOCKED          = 0x04, // Resource lock failure
+    RET_EMPTY           = 0x05, // No more objects available
+    RET_BAD_DATA        = 0x06, // Bad data received (CRC or other error check)
+    RET_STARTED         = 0x07, // Operation started, but not necessarily completed yet
+    RET_FINISHED        = 0x08, // Operation completed
+    RET_CANCELED        = 0x09, // Operation canceled
+    RET_TIMEOUT         = 0x0A, // Operation timed out
+    RET_INVALID_STATE   = 0x0B, // Operation not setup or is in an improper state
+    RET_NULL_PTR        = 0x0C, // NULL pointer was used as an parameter.
 };
 
 #endif /* `$INSTANCE_NAME`_NRF_REGS_H */

@@ -473,10 +473,98 @@ void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
 }
 
+#if 0
 /**
- * @brief Set the address of the RX Pipe 2 in the radio.
+ * Set the least significant byte of the addresses of pipe 2, 3, 4 and 5.
  *
- * This function configure the address of the Rx Pipe 2 of the radio.
+ * @param const NrfPipeAddress pipe:
+ * @param const uint8_t addr_lsb:
+ * @return RET_SUCESS in case of reading sucesfully the address, RET_PARAM in
+ * case of an invalid parameter.
+ */
+uint8_t `$INSTANCE_NAME`_setRxAddress(const NrfRxPipeAddress pipe, const uint8_t* addr,
+                                        const size_t size)
+{
+    uint8_t ret = RET_SUCCESS;
+    
+    if (NULL == addr) {
+        ret = RET_NULL_PTR;
+    }
+    
+    if (!(`$INSTANCE_NAME`_is_valid_rx_pipe_address(pipe))) {
+        ret = RET_BAD_PARAM;    
+    }
+    
+    // Check if it's trying to set the address of the data pipes 0 or 1.
+    if ((NRF_P0_ADDR == pipe) || (NRF_P1_ADDR == pipe)) {
+        
+        // if so we can set their address to a size of 3, 4 or 5 bytes
+        if (`$INSTANCE_NAME`_addr_width < size) {
+            ret = RET_BAD_PARAM;
+        }
+        
+        `$INSTANCE_NAME`_writeLongRegister(pipe, addr, size);
+        
+    } else {
+        
+        // We can only set the least significant byte of the address of the
+        // data pipes 2, 3, 4 and 5.
+        if (1 < size) {
+            ret = RET_BAD_PARAM;
+        } else {
+            // Write addr to pipe in case of a valid size
+            `$INSTANCE_NAME`_writeRegister(pipe, addr[0]);
+        }
+    }
+    
+    return ret;
+}
+
+/**
+ * @brief Get the address of Rx data pipe 2, 3, 4, 5.
+ *
+ * @param const NrfPipeAddress pipe:
+ * @param uint8_t* addr:
+ * @param size_t size:
+ */
+uint8_t `$INSTANCE_NAME`_getRxAddress(const NrfPipeAddress pipe, uint8_t* addr, size_t size)
+{
+    uint8_t ret = RET_SUCCESS;
+    
+    if (NULL == addr) {
+        ret = RET_NULL_PTR;
+    }
+
+    if (`$INSTANCE_NAME`_addr_width < size) {
+        ret = RET_BAD_PARAM;
+    }
+    
+    if (!(`$INSTANCE_NAME`_is_valid_rx_pipe_address(pipe))) {
+        ret = RET_BAD_PARAM;    
+    }
+    
+    // Read the pipe if it's trying to get the address of the data pipes 0 or 1.
+    if ((NRF_P0_ADDR == pipe) || (NRF_P1_ADDR == pipe)) {
+        `$INSTANCE_NAME`_readLongRegister(pipe, addr, size);
+    } else {
+        // The pipe2,3,4,5 addresses are the same as the pipe1 address except the LSB
+        nRF24_readLongRegister(NRF_P1_ADDR, addr, size - 1);
+        addr[size - 1] = nRF24_readRegister(pipe);
+    }
+    
+    return ret;
+}
+
+// return 1 if pipe is a NrfPipeAddress, 0 if it's not.
+uint8_t `$INSTANCE_NAME`_is_valid_rx_pipe_address(const NrfPipeAddress pipe)
+{
+    // check if pipe value is between NRF_P0_ADDR and NRF_P5_ADDR range.
+    return ((NRF_P0_ADDR <= pipe) && (NRF_P5_ADDR >= pipe)) ? 1 : 0;
+}
+#endif
+
+/**
+ * Set the address of the least significant byte of the Rx Pipe 2 in the radio.
  *
  * @param const uint8_t addr_lsb:
  */
@@ -486,7 +574,7 @@ void `$INSTANCE_NAME`_setRxPipe2Address(const uint8_t addr_lsb)
 }
 
 /**
- * @brief Get the address of the RX Pipe 2 in the radio.
+ * Get the address of the Rx Pipe 2.
  *
  * @param uint8_t* addr:
  * @param size_t size:
@@ -507,9 +595,7 @@ void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
 }
 
 /**
- * @brief Set the address of the RX Pipe 3 in the radio.
- *
- * This function configure the address of the Rx Pipe 3 of the radio.
+ * Set the address of the least significant byte of the Rx Pipe 3 in the radio.
  *
  * @param const uint8_t addr_lsb:
  */
@@ -519,7 +605,7 @@ void `$INSTANCE_NAME`_setRxPipe3Address(const uint8_t addr_lsb)
 }
 
 /**
- * @brief Get the address of the RX Pipe 3 in the radio.
+ * Get the address of the Rx Pipe 3.
  *
  * @param uint8_t* addr:
  * @param size_t size:
@@ -540,9 +626,7 @@ void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
 }
 
 /**
- * @brief Set the address of the RX Pipe 4 in the radio.
- *
- * This function configure the address of the Rx Pipe 4 of the radio.
+ * Set the address of the least significant byte of the Rx Pipe 4 in the radio.
  *
  * @param const uint8_t addr_lsb:
  */
@@ -552,7 +636,7 @@ void `$INSTANCE_NAME`_setRxPipe4Address(const uint8_t addr_lsb)
 }
 
 /**
- * @brief Get the address of the RX Pipe 4 in the radio.
+ * Get the address of the Rx Pipe 4.
  *
  * @param uint8_t* addr:
  * @param size_t size:
@@ -573,9 +657,7 @@ void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
 }
 
 /**
- * @brief Set the address of the RX Pipe 5 in the radio.
- *
- * This function configure the address of the Rx Pipe 5 of the radio.
+ * Set the address of the least significant byte of the Rx Pipe 5 in the radio.
  *
  * @param const uint8_t addr_lsb:
  */
@@ -585,7 +667,7 @@ void `$INSTANCE_NAME`_setRxPipe5Address(const uint8_t addr_lsb)
 }
 
 /**
- * @brief Get the address of the RX Pipe 5 in the radio.
+ * Get the address of the Rx Pipe 5.
  *
  * @param uint8_t* addr:
  * @param size_t size:
@@ -646,9 +728,7 @@ void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size)
 /**
  * @brief Set the payload size of the given pipe.
  *
- * Every pipe can have up to 32 bytes of payload, this function configure the
- * payload size of the given pipe.
- * It also checks that the parameter @size is not larger than 32 bytes.
+ * Configure the payload size of the given pipe.
  *
  * @param const NrfDataPipe pipe:
  * @param uint8_t size:
@@ -684,11 +764,11 @@ void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
 }
 
 /**
- * @brief Get the payload size of the given pipe.
+ * Get the payload size of the given pipe.
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfDataPipe pipe: Pipe to be read.
  *
- * @return uint8_t:
+ * @return uint8_t: Configured payload size of the given pipe.
  */
 uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
 {
