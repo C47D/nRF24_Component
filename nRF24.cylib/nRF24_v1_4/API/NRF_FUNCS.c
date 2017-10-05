@@ -36,6 +36,10 @@
 #include "`$INSTANCE_NAME`_NRF_FUNCS.h"
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
 
+#define `$INSTANCE_NAME`_VERSION_MAJOR  `=$CY_MAJOR_VERSION`
+#define `$INSTANCE_NAME`_VERSION_MINOR  `=$CY_MINOR_VERSION`
+#define `$INSTANCE_NAME`_VERSION        `=$CY_MAJOR_VERSION`.`=$CY_MINOR_VERSION`
+
 // nRF24 Power-on-reset delay
 #define `$INSTANCE_NAME`_POR_DELAY 100
 
@@ -82,7 +86,7 @@ void `$INSTANCE_NAME`_init(void)
         (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1) | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, `$AW`);
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_RETR_REG,
-        (`$ARD` << NRF_SETUP_RETR_ARD_SHIFT) | `$ARC`);
+        (`$ARD` << NRF_SETUP_RETR_ARD) | (`$ARC` << NRF_SETUP_RETR_ARC));
     `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, `$RF_CH`);
     `$INSTANCE_NAME`_writeRegister(NRF_RF_SETUP_REG,
         (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE) | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR) |
@@ -956,7 +960,7 @@ uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void)
 {
     uint8_t lostPackets = `$INSTANCE_NAME`_readRegister(NRF_OBSERVE_TX_REG);
     lostPackets = lostPackets & NRF_OBSERVE_TX_PLOS_CNT_MASK;
-    return lostPackets >> NRF_OBSERVE_TX_PLOS_CNT_POS;
+    return lostPackets >> NRF_OBSERVE_TX_PLOS_CNT;
 }
 
 /**

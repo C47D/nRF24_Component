@@ -112,7 +112,7 @@ enum {
     NRF_CONFIG_EN_CRC       = 3,
     NRF_CONFIG_MASK_MAX_RT  = 4,
     NRF_CONFIG_MASK_TX_DS   = 5,
-    NRF_CONFIG_MASK_RX_DR   = 6
+    NRF_CONFIG_MASK_RX_DR   = 6,
 };
     
 // EN_AA: Enable Enhanced ShockBurst
@@ -123,8 +123,6 @@ enum {
     NRF_EN_AA_ENAA_P3   = 3,
     NRF_EN_AA_ENAA_P4   = 4,
     NRF_EN_AA_ENAA_P5   = 5,
-    NRF_EN_AA_ENAA_ALL  = 0x3F,
-    NRF_EN_AA_ENAA_NONE = 0
 };
     
 // EN_RXADDR: Enabled RX Addresses
@@ -135,8 +133,6 @@ enum {
     NRF_EN_RXADDR_ERX_P3    = 3,
     NRF_EN_RXADDR_ERX_P4    = 4,
     NRF_EN_RXADDR_ERX_P5    = 5,
-    NRF_EN_RXADDR_ERX_ALL   = 0x3F,
-    NRF_EN_RXADDR_ERX_NONE  = 0
 };
 
 // SETUP_AW: Setup of Address Widths(common for all data pipes)
@@ -148,7 +144,8 @@ typedef enum {
 
 // SETUP_RETR: Setup of Automatic Retransmission
 enum {
-    NRF_SETUP_RETR_ARD_SHIFT    = 4
+    NRF_SETUP_RETR_ARC  = 0,
+    NRF_SETUP_RETR_ARD  = 4,
 };
 
 enum {
@@ -193,22 +190,36 @@ enum {
 
 // RF_SETUP: RF Setup Register
 enum {
+    NRF_RF_SETUP_RF_PWR     = 1,
     NRF_RF_SETUP_RF_DR      = 3,
     NRF_RF_SETUP_RF_DR_HIGH = 3,
     NRF_RF_SETUP_PLL_LOCK   = 4,
     NRF_RF_SETUP_RF_DR_LOW  = 5,
     NRF_RF_SETUP_CONT_WAVE  = 7,
+};
+
+enum {
     NRF_RF_SETUP_RF_DR_250  = 0x20,
     NRF_RF_SETUP_RF_DR_1000 = 0,
     NRF_RF_SETUP_RF_DR_2000 = 8,
-    NRF_RF_SETUP_RF_PWR     = 1,
+};
+
+enum {
     NRF_RF_SETUP_RF_PWR_0   = 6,
     NRF_RF_SETUP_RF_PWR_6   = 4,
     NRF_RF_SETUP_RF_PWR_12  = 2,
-    NRF_RF_SETUP_RF_PWR_18  = 0    
+    NRF_RF_SETUP_RF_PWR_18  = 0,
 };
 
 // STATUS: Status Register
+enum {
+    NRF_STATUS_TX_FULL  = 0,
+    NRF_STATUS_RX_P_NO  = 1,
+    NRF_STATUS_MAX_RT   = 4,
+    NRF_STATUS_TX_DS    = 5,
+    NRF_STATUS_RX_DR    = 6,
+};
+
 enum {
     NRF_STATUS_RX_DR_MASK   = 0x40,
     NRF_STATUS_TX_DS_MASK   = 0x20,
@@ -216,37 +227,40 @@ enum {
 };
 
 enum {
-    NRF_STATUS_TX_FULL = 0,
-    NRF_STATUS_TX_FIFO_FULL = 1,
-    NRF_STATUS_TX_FIFO_AV_LOC = 0,
-    NRF_STATUS_MAX_RT = 4,
-    NRF_STATUS_TX_DS = 5,
-    NRF_STATUS_RX_DR = 6,
-    NRF_STATUS_RX_P_NO_RX_FIFO_NOT_EMPTY = 0x0E,
-    NRF_STATUS_RX_P_NO_UNUSED = 0x0C,
-    NRF_STATUS_RX_P_NO_5 = 0x0A,
-    NRF_STATUS_RX_P_NO_4 = 8,
-    NRF_STATUS_RX_P_NO_3 = 6,
-    NRF_STATUS_RX_P_NO_2 = 4,
-    NRF_STATUS_RX_P_NO_1 = 2,
-    NRF_STATUS_RX_P_NO_0 = 0
+    NRF_STATUS_TXFIFO_NOTFULL   = 0,
+    NRF_STATUS_TXFIFO_FULL      = 1,
+};
+
+enum {
+    NRF_STATUS_RX_P_NO_0 = 0,
+    NRF_STATUS_RX_P_NO_1 = 1,
+    NRF_STATUS_RX_P_NO_2 = 2,
+    NRF_STATUS_RX_P_NO_3 = 3,
+    NRF_STATUS_RX_P_NO_4 = 4,
+    NRF_STATUS_RX_P_NO_5 = 5,
+    NRF_STATUS_RX_P_NO_UNUSED   = 0x0C,
+    NRF_STATUS_RX_P_NO_EMPTY    = 0x0E,
 };
 
 // OBSERVE TX: Transmit observe register
 enum {
+    NRF_OBSERVE_TX_ARC_CNT  = 0,
+    NRF_OBSERVE_TX_PLOS_CNT = 4,
+};
+
+enum {
+    NRF_OBSERVE_TX_ARC_CNT_MASK     = 0x0F,
     NRF_OBSERVE_TX_PLOS_CNT_MASK    = 0xF0,
-    NRF_OBSERVE_TX_PLOS_CNT_POS     = 4,
-    NRF_OBSERVE_TX_ARC_CNT_MASK     = 0x0F    
 };
 
 // RPD: Received Power Detector
 enum {
-    NRF_RPD_RPD = 0
+    NRF_RPD_RPD = 0,
 };
 
 // SETUP_AW: Setup of Address Widths(common for all data pipes)
 enum {
-    NRF_RX_PW_MASK  = 0x3F
+    NRF_RX_PW_MASK  = 0x3F,
 };
 
 // FIFO_STATUS: FIFO Status Register
@@ -255,7 +269,7 @@ enum {
     NRF_FIFO_STATUS_RX_FULL     = 1,
     NRF_FIFO_STATUS_TX_EMPTY    = 4,
     NRF_FIFO_STATUS_TX_FULL     = 5,
-    NRF_FIFO_STATUS_TX_REUSE    = 6
+    NRF_FIFO_STATUS_TX_REUSE    = 6,
 };
 
 // DYNPD: Enable dynamic payload length
@@ -265,14 +279,14 @@ enum {
     NRF_DYNPD_DPL_P2    = 2,
     NRF_DYNPD_DPL_P3    = 3,
     NRF_DYNPD_DPL_P4    = 4,
-    NRF_DYNPD_DPL_P5    = 5
+    NRF_DYNPD_DPL_P5    = 5,
 };
 
 // FEATURE: Feature Register
 enum {
     NRF_FEATURE_EN_DYN_ACK  = 0,
     NRF_FEATURE_EN_ACK_PAY  = 1,
-    NRF_FEATURE_EN_DPL      = 2
+    NRF_FEATURE_EN_DPL      = 2,
 };
 
 // return status, based in cyret
