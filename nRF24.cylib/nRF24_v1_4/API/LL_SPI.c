@@ -69,8 +69,7 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)) {
-    }
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
     `$SS_PIN`_Write(1);
 
     // This is the STATUS Register
@@ -120,75 +119,48 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     
     #else
         
-    SPI_SpiUartClearRxBuffer();
-    SPI_SpiUartClearTxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearRxBuffer();
+    `$SPI_INTERFACE`_SpiUartClearTxBuffer();
     
-    SS_Write(0);
+    `$SS_PIN`_Write(0);
     
-    SPI_SpiUartWriteTxData(NRF_R_REGISTER_CMD | NRF_RX_ADDR_P4_REG);
-    while (SPI_SpiUartGetRxBufferSize() == 0){}
+    `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | NRF_RX_ADDR_P4_REG);
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
     
     // Read the status register, just to clear the rx fifo
-    SPI_SpiUartReadRxData();
+    `$SPI_INTERFACE`_SpiUartReadRxData();
     //SPI_SpiUartClearRxBuffer();
     
     for (size_t i = 0; i < size; i++) {
-        SPI_SpiUartWriteTxData(NRF_NOP_CMD);
-        while (SPI_SpiUartGetRxBufferSize() == 0){}
-        data[i] = SPI_SpiUartReadRxData();
+        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
+        while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
+        data[i] = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
 
-    SS_Write(1);
+    `$SS_PIN`_Write(1);
         
     #endif
 
 #else // UDB Block
     
-    #if 0
-
-    `$SPI_INTERFACE`_ClearRxBuffer();
-    `$SPI_INTERFACE`_ClearTxBuffer();
+    `$SPI_INTERFACE`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_R_REGISTER_CMD | reg);
 
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
-    }
-
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)) {
-    }
-    `$SS_PIN`_Write(1);
-
-    // This is the STATUS Register
-    (void)`$SPI_INTERFACE`_ReadRxData();
-    // This is the data we want
-    for (size_t j = 0; j < size; j++) {
-        data[j] = `$SPI_INTERFACE`_ReadRxData();
-    }
-    
-    #else
-
-    SPI_ClearFIFO();
-
-    SS_Write(0);
-    SPI_WriteTxData(NRF_R_REGISTER_CMD | reg);
-
     // Wait for the byte to be sent
-    while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
 
     // Read the status register, just to clear the rx fifo
-    SPI_ReadRxData();
+    `$SPI_INTERFACE`_ReadRxData();
     
     for (size_t i = 0; i < size; i++) {
-        SPI_WriteTxData(NRF_NOP_CMD);
-        while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {}
-        data[i] = SPI_ReadRxData();
+        `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
+        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+        data[i] = `$SPI_INTERFACE`_ReadRxData();
     }
 
-    SS_Write(1);
-
-    #endif
+    `$SS_PIN`_Write(1);
 
 #endif
 }
@@ -223,8 +195,7 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_WriteTxData(data);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)) {
-    }
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -251,9 +222,9 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
-    // Wait for the RxBuffer to have dataSize + 1 bytes,
-    // dataSize + 1 because we need to count the Command + Register
-    // byte at the beginning of the transaction.
+    // Wait for the RxBuffer to have size + 1 bytes (W_REGISTER_CMD + data)
+    // we're not using the SS pin embedded on the SCB component, so can't
+    // rely on using the SPI_Status function.
     while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)) {
     }
     `$SS_PIN`_Write(1);
@@ -267,8 +238,7 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     `$SPI_INTERFACE`_WriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_PutArray(data, size);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_SPI_IDLE)){
-    }
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
     `$SS_PIN`_Write(1);
 
 #endif
@@ -305,6 +275,10 @@ void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
         // Return if we wanted to set it, continue if we wanted to clear it.
         if (value) {
             return;
+        }
+    } else { // the bit is clear
+        if (!value) {
+            return; // return if we wantes to clear the bit
         }
     }
 
