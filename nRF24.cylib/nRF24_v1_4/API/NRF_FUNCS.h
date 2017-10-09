@@ -70,8 +70,6 @@ void `$INSTANCE_NAME`_setChannel(uint8_t channel);
 void `$INSTANCE_NAME`_setPipesAddressWidth(const NrfSetupAddressWidth addr_width);
 uint8_t `$INSTANCE_NAME`_getPipesAddressWidth(void);
 // RX ADDR P0 Reg
-void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size);
-void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size);
 void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size);
 void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size);
 // RX ADDR P1 Reg

@@ -59,8 +59,8 @@ void `$INSTANCE_NAME`_start(void)
     `$SPI_INTERFACE`_Start();
 
     // Flush both nRF24 FIFOs
-    `$INSTANCE_NAME`_FlushRxCmd();
-    `$INSTANCE_NAME`_FlushTxCmd();
+    `$INSTANCE_NAME`_flushRxCmd();
+    `$INSTANCE_NAME`_flushTxCmd();
     // Clear IRQ flags
     `$INSTANCE_NAME`_clearAllIRQs();
     
@@ -72,7 +72,7 @@ void `$INSTANCE_NAME`_start(void)
 }
 
 /**
- * @brief Configure the nRF24 registers with the data from the customizer.
+ * Write data from the customizer to the nRF radio.
  */
 void `$INSTANCE_NAME`_init(void)
 {
@@ -141,67 +141,61 @@ void `$INSTANCE_NAME`_init(void)
 }
 
 /**
- * @brief Enable the nRF24 radio.
+ * Enable the nRF24 radio.
  *
  * @todo Implement this function
  */
 void `$INSTANCE_NAME`_enable(void)
 {
-    // TODO
 }
 
 /**
- * @brief Stop the nRF24 radio.
+ * Stop the nRF24 radio.
  *
  * @todo Implement this function
  */
 void `$INSTANCE_NAME`_stop(void)
 {
-    // TODO
 }
 
 /**
- * @brief Put the nRF24 radio on Sleep mode.
+ * Put the nRF24 radio on Sleep mode.
  *
  * @todo Implement this function.
  */
 void `$INSTANCE_NAME`_sleep(void)
 {
-    // TODO
 }
 
 /**
- * @brief Wakeup the nRF24 radio, and restore the configuration.
+ * Wakeup the nRF24 radio, and restore the configuration.
  *
  * @todo Implement this function.
  */
 void `$INSTANCE_NAME`_wakeup(void)
 {
-    // TODO
 }
 
 /**
- * @brief Save the nRF24 radio configuration.
+ * Save the nRF24 radio configuration.
  *
  * @todo Implement this function.
  */
 void `$INSTANCE_NAME`_saveConfig(void)
 {
-    // TODO
 }
 
 /**
- * @brief Restore the nRF24 radio configuration.
+ * Restore the nRF24 radio configuration.
  *
  * @todo Implement this function.
  */
 void `$INSTANCE_NAME`_restoreConfig(void)
 {
-    // TODO
 }
 
 /**
- * @brief Configure the radio as Receiver or Transmitter.
+ * Configure the radio as Receiver or Transmitter.
  *
  * @param const NrfMode mode: The radio can be configured as Receiver (PRX)
  * or Transmitter (PTX).
@@ -354,46 +348,6 @@ uint8_t `$INSTANCE_NAME`_getAddressWidth(void)
 }
 
 /**
- * @brief Set the Rx Address of the radio.
- *
- * This function configure the address of the Rx Pipe 0 of the radio.
- *
- * @param const uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_setRxAddress(const uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (5 < size) {
-        size = 5;
-    }
-    
-    `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
-}
-
-/**
- * @brief Get the Rx Address of the radio.
- *
- * @param const uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_getRxAddress(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (5 < size) {
-        return;
-    }
-    
-    `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
-}
-
-/**
  * @brief Set the address of the RX Pipe 0 in the radio.
  *
  * This function configure the address of the Rx Pipe 0 of the radio.
@@ -476,96 +430,6 @@ void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
     
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
 }
-
-#if 0
-/**
- * Set the least significant byte of the addresses of pipe 2, 3, 4 and 5.
- *
- * @param const NrfPipeAddress pipe:
- * @param const uint8_t addr_lsb:
- * @return RET_SUCESS in case of reading sucesfully the address, RET_PARAM in
- * case of an invalid parameter.
- */
-uint8_t `$INSTANCE_NAME`_setRxAddress(const NrfRxPipeAddress pipe, const uint8_t* addr,
-                                        const size_t size)
-{
-    uint8_t ret = RET_SUCCESS;
-    
-    if (NULL == addr) {
-        ret = RET_NULL_PTR;
-    }
-    
-    if (!(`$INSTANCE_NAME`_is_valid_rx_pipe_address(pipe))) {
-        ret = RET_BAD_PARAM;    
-    }
-    
-    // Check if it's trying to set the address of the data pipes 0 or 1.
-    if ((NRF_P0_ADDR == pipe) || (NRF_P1_ADDR == pipe)) {
-        
-        // if so we can set their address to a size of 3, 4 or 5 bytes
-        if (`$INSTANCE_NAME`_addr_width < size) {
-            ret = RET_BAD_PARAM;
-        }
-        
-        `$INSTANCE_NAME`_writeLongRegister(pipe, addr, size);
-        
-    } else {
-        
-        // We can only set the least significant byte of the address of the
-        // data pipes 2, 3, 4 and 5.
-        if (1 < size) {
-            ret = RET_BAD_PARAM;
-        } else {
-            // Write addr to pipe in case of a valid size
-            `$INSTANCE_NAME`_writeRegister(pipe, addr[0]);
-        }
-    }
-    
-    return ret;
-}
-
-/**
- * @brief Get the address of Rx data pipe 2, 3, 4, 5.
- *
- * @param const NrfPipeAddress pipe:
- * @param uint8_t* addr:
- * @param size_t size:
- */
-uint8_t `$INSTANCE_NAME`_getRxAddress(const NrfPipeAddress pipe, uint8_t* addr, size_t size)
-{
-    uint8_t ret = RET_SUCCESS;
-    
-    if (NULL == addr) {
-        ret = RET_NULL_PTR;
-    }
-
-    if (`$INSTANCE_NAME`_addr_width < size) {
-        ret = RET_BAD_PARAM;
-    }
-    
-    if (!(`$INSTANCE_NAME`_is_valid_rx_pipe_address(pipe))) {
-        ret = RET_BAD_PARAM;    
-    }
-    
-    // Read the pipe if it's trying to get the address of the data pipes 0 or 1.
-    if ((NRF_P0_ADDR == pipe) || (NRF_P1_ADDR == pipe)) {
-        `$INSTANCE_NAME`_readLongRegister(pipe, addr, size);
-    } else {
-        // The pipe2,3,4,5 addresses are the same as the pipe1 address except the LSB
-        nRF24_readLongRegister(NRF_P1_ADDR, addr, size - 1);
-        addr[size - 1] = nRF24_readRegister(pipe);
-    }
-    
-    return ret;
-}
-
-// return 1 if pipe is a NrfPipeAddress, 0 if it's not.
-uint8_t `$INSTANCE_NAME`_is_valid_rx_pipe_address(const NrfPipeAddress pipe)
-{
-    // check if pipe value is between NRF_P0_ADDR and NRF_P5_ADDR range.
-    return ((NRF_P0_ADDR <= pipe) && (NRF_P5_ADDR >= pipe)) ? 1 : 0;
-}
-#endif
 
 /**
  * Set the address of the least significant byte of the Rx Pipe 2 in the radio.
@@ -808,7 +672,7 @@ uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
  */
 void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void)
 {
-    `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd();
+    `$INSTANCE_NAME`_reuseTxPayloadCmd();
     `$INSTANCE_NAME`_transmitPulse();
 }
 
@@ -979,7 +843,7 @@ void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
         return;
     }
     
-    `$INSTANCE_NAME`_WriteTXPayloadCmd(data, size);
+    `$INSTANCE_NAME`_writeTXPayloadCmd(data, size);
 }
 
 /**
@@ -1025,7 +889,7 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
     }
     
     `$CE_PIN`_Write(0);
-    `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(data, size);
+    `$INSTANCE_NAME`_readRXPayloadCmd(data, size);
     `$CE_PIN`_Write(1);
 }
 
@@ -1045,7 +909,7 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size
         return;
     }
     
-    `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(data, size);
+    `$INSTANCE_NAME`_noACKPayloadCmd(data, size);
     `$INSTANCE_NAME`_transmitPulse();
 }
 
@@ -1067,7 +931,7 @@ void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data
         return;
     }
     
-    `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(pipe, data, size);
+    `$INSTANCE_NAME`_writeACKPayloadCmd(pipe, data, size);
 }
 
 /**

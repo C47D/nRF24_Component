@@ -64,7 +64,8 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(cmd);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+    }
     `$SS_PIN`_Write(1);
 
 #endif
@@ -79,7 +80,7 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
  * TX payload reuse must not be activated or deactivated during package
  * transmission.
  */
-void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void)
+void `$INSTANCE_NAME`_reuseTxPayloadCmd(void)
 {
     `$INSTANCE_NAME`_sendCommand(NRF_REUSE_TX_PL_CMD);
 }
@@ -91,7 +92,7 @@ void `$INSTANCE_NAME`_PTX_ReuseTxPayloadCmd(void)
  * Flush RX FIFO. Should be not executed during transmission of acknowledge,
  * that is, acknowledge package will not be completed.
  */
-void `$INSTANCE_NAME`_FlushRxCmd(void)
+void `$INSTANCE_NAME`_flushRxCmd(void)
 {
     `$INSTANCE_NAME`_sendCommand(NRF_FLUSH_RX_CMD);
 }
@@ -100,7 +101,7 @@ void `$INSTANCE_NAME`_FlushRxCmd(void)
  * Used in TX mode.
  * Flush TX FIFO.
  */
-void `$INSTANCE_NAME`_FlushTxCmd(void)
+void `$INSTANCE_NAME`_flushTxCmd(void)
 {
     `$INSTANCE_NAME`_sendCommand(NRF_FLUSH_TX_CMD);
 }
@@ -113,7 +114,7 @@ void `$INSTANCE_NAME`_FlushTxCmd(void)
  * @param uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_readRXPayloadCmd(uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
@@ -122,13 +123,15 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
 
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_RX_PAYLOAD_CMD);
-    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
+    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){
+    }
     // Read the status register, just to clear the rx fifo
     `$SPI_INTERFACE`_SpiUartReadRxData();
 
     for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-        while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
+        while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){
+        }
         data[i] = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
     `$SS_PIN`_Write(1);
@@ -142,14 +145,16 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_RX_PAYLOAD_CMD);
 
     // Wait for the byte to be sent
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+    }
 
     // Read the status register, just to clear the rx fifo
     `$SPI_INTERFACE`_ReadRxData();
     
     for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+        }
         data[i] = `$SPI_INTERFACE`_ReadRxData();
     }
     `$SS_PIN`_Write(1);
@@ -164,7 +169,7 @@ void `$INSTANCE_NAME`_PRX_ReadRXPayloadCmd(uint8_t* data, const size_t size)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
@@ -189,7 +194,8 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
 
     for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+        }
     }
     `$SS_PIN`_Write(1);
 
@@ -202,7 +208,7 @@ void `$INSTANCE_NAME`_WriteTXPayloadCmd(const uint8_t* data, const size_t size)
  *
  * @return uint8_t: width of the payload on the top of the RX FIFO.
  */
-uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
+uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
 {
     uint8_t width = 0;
 
@@ -233,7 +239,8 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
     `$SPI_INTERFACE`_WriteTxData(NRF_R_RX_PL_WID_CMD);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+    }
     `$SS_PIN`_Write(1);
 
     // This is the STATUS Register
@@ -245,7 +252,7 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
 
     // If width is greater than 32 then is garbage, we must flush the RX FIFO
     if (32 < width) {
-        `$INSTANCE_NAME`_FlushRxCmd();
+        `$INSTANCE_NAME`_flushRxCmd();
     }
 
     return width;
@@ -266,7 +273,7 @@ uint8_t `$INSTANCE_NAME`_ReadPayloadWidthCmd(void)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
+void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfDataPipe pipe,
                                              const uint8_t* data,
                                              const size_t size)
 {
@@ -295,7 +302,8 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
 
     for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+        }
     }
     `$SS_PIN`_Write(1);
 
@@ -309,7 +317,7 @@ void `$INSTANCE_NAME`_PRX_WriteACKPayloadCmd(const NrfDataPipe pipe,
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
+void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data,
                                           const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
@@ -337,7 +345,8 @@ void `$INSTANCE_NAME`_PTX_NoACKPayloadCmd(const uint8_t* data,
 
     for (size_t i = 0; i < size; i++) {
         `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+        }
     }
     `$SS_PIN`_Write(1);
 
@@ -373,7 +382,8 @@ uint8_t `$INSTANCE_NAME`_NOPCmd(void)
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_NOP_CMD);
 
-    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {}
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
+    }
     `$SS_PIN`_Write(1);
 
     return `$SPI_INTERFACE`_ReadRxData();
