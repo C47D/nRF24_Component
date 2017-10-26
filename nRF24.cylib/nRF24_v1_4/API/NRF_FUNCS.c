@@ -1005,22 +1005,24 @@ NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
     // Get the STATUS register
     uint8_t sts = `$INSTANCE_NAME`_NOPCmd();
 
-    // We only care if any of the bits 4, 5 and 6 are set, so we mask
-    // the STATUS register with 0x0111_0000
+    NrfIRQ irq = NRF_NONE_IRQ;
+    
+    // We only care if bits 4, 5 or 6 are set, so we mask the STATUS with 0x0111_0000
     switch (sts & 0x70) {
     case NRF_STATUS_RX_DR_MASK:
-        return NRF_RX_DR_IRQ;
+        irq = NRF_RX_DR_IRQ;
         break;
     case NRF_STATUS_TX_DS_MASK:
-        return NRF_TX_DS_IRQ;
+        irq = NRF_TX_DS_IRQ;
         break;
     case NRF_STATUS_MAX_RT_MASK:
-        return NRF_MAX_RT_IRQ;
+        irq = NRF_MAX_RT_IRQ;
         break;
     default:
-        return 0;
         break;
     }
+    
+    return irq;
 }
 
 /* [] END OF FILE */
