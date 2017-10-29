@@ -307,6 +307,18 @@ enum {
     RET_NULL_PTR        = 0x0C, // NULL pointer was used as an parameter.
 };
 
+// MISC enums
+enum {
+    NRF_MAX_ADDR_SIZE       = 5,
+    NRF_MAX_PAYLOAD_SIZE    = 32,
+    NRF_CE_PULSE_WIDTH      = 15,
+    NRF_POWER_UP_DELAY      = 100,
+    NRF_MAX_RF_CHANNEL      = 125,
+    NRF_ALL_IRQ_MASK        = 0x70,
+    NRF_STATUS_PIPES_MASK   = 0x0E,
+    NRF_STATUS_PIPES_SHIFT  = 1,
+};
+
 #endif /* `$INSTANCE_NAME`_NRF_REGS_H */
 
 /* [] END OF FILE */

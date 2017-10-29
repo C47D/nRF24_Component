@@ -49,7 +49,7 @@
 void `$INSTANCE_NAME`_start(void)
 {
     // Recommended delay to start using the nRF24
-    CyDelay(`$INSTANCE_NAME`_POR_DELAY);
+    CyDelay(NRF_POWER_UP_DELAY);
     
     // Now the radio is in Power Down mode
     
@@ -302,9 +302,8 @@ void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe)
  */
 void `$INSTANCE_NAME`_setChannel(uint8_t channel)
 {
-    // There's only 125 channels available
-    if (125 < channel) {
-        channel = 125;
+    if (NRF_MAX_RF_CHANNEL < channel) {
+        channel = NRF_MAX_RF_CHANNEL;
     }
 
     `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, channel);
@@ -361,12 +360,9 @@ void `$INSTANCE_NAME`_setRxPipe0Address(const uint8_t* addr, size_t size)
         return;
     }
 
-    // 5 bytes is the maximum address width, here we are limiting the
-    // size of the address to 5 bytes but the radio can be configured
-    // with 3, 4 or 5 bytes.
-    // Add a way to get the address width from the radio configuration?
-    if (5 < size) {
-        size = 5;
+    // TODO: Replace NRF_MAX_ADDR_SIZE with ADD_WIDTH
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
@@ -384,8 +380,8 @@ void `$INSTANCE_NAME`_getRxPipe0Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P0_REG, addr, size);
@@ -405,8 +401,8 @@ void `$INSTANCE_NAME`_setRxPipe1Address(const uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        size = 5;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_writeLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
@@ -424,8 +420,8 @@ void `$INSTANCE_NAME`_getRxPipe1Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_readLongRegister(NRF_RX_ADDR_P1_REG, addr, size);
@@ -453,8 +449,8 @@ void `$INSTANCE_NAME`_getRxPipe2Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     // The pipe2 address is the same as the pipe1 address except the LSB
@@ -484,8 +480,8 @@ void `$INSTANCE_NAME`_getRxPipe3Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     // The pipe3 address is the same as the pipe1 address except the LSB
@@ -515,8 +511,8 @@ void `$INSTANCE_NAME`_getRxPipe4Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     // The pipe4 address is the same as the pipe1 address except the LSB
@@ -546,8 +542,8 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     // The pipe5 address is the same as the pipe1 address except the LSB
@@ -567,8 +563,8 @@ void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
         return;
     }
 
-    if (5 < size) {
-        size = 5;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_writeLongRegister(NRF_TX_ADDR_REG, addr, size);
@@ -580,14 +576,14 @@ void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size)
  * @param const uint8_t* addr:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size)
+void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size)
 {
     if (NULL == addr) {
         return;
     }
 
-    if (5 < size) {
-        return;
+    if (NRF_MAX_ADDR_SIZE < size) {
+        size = NRF_MAX_ADDR_SIZE;
     }
     
     `$INSTANCE_NAME`_readLongRegister(NRF_TX_ADDR_REG, addr, size);
@@ -603,8 +599,8 @@ void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, const size_t size)
  */
 void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
 {
-    if (32 < size) {
-        size = 32;
+    if (NRF_MAX_PAYLOAD_SIZE < size) {
+        size = NRF_MAX_PAYLOAD_SIZE;
     }
 
     switch (pipe) {
@@ -640,28 +636,32 @@ void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
  */
 uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
 {
+    uint8_t payloadSize = 0;
+    
     switch (pipe) {
     case NRF_DATA_PIPE0:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P0_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P0_REG);
         break;
     case NRF_DATA_PIPE1:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P1_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P1_REG);
         break;
     case NRF_DATA_PIPE2:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P2_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P2_REG);
         break;
     case NRF_DATA_PIPE3:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P3_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P3_REG);
         break;
     case NRF_DATA_PIPE4:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P4_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P4_REG);
         break;
     case NRF_DATA_PIPE5:
-        return `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P5_REG);
+        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P5_REG);
         break;
     default:
-        return 0;
+        payloadSize = 0;
     }
+    
+    return payloadSize;
 }
 
 /**
@@ -790,7 +790,7 @@ void `$INSTANCE_NAME`_stopListening(void) {
 void `$INSTANCE_NAME`_transmitPulse(void)
 {
     `$CE_PIN`_Write(1);
-    CyDelayUs(15);
+    CyDelayUs(NRF_CE_PULSE_WIDTH);
     `$CE_PIN`_Write(0);
 }
 
@@ -833,14 +833,14 @@ uint8_t `$INSTANCE_NAME`_getLostPacketsCount(void)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, size_t size)
 {
     if (NULL == data) {
         return;
     }
 
-    if (32 < size) {
-        return;
+    if (NRF_MAX_PAYLOAD_SIZE < size) {
+        size = NRF_MAX_PAYLOAD_SIZE;
     }
     
     `$INSTANCE_NAME`_writeTXPayloadCmd(data, size);
@@ -852,14 +852,14 @@ void `$INSTANCE_NAME`_putInTXFIFO(const uint8_t* data, const size_t size)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, size_t size)
 {
     if (NULL == data) {
         return;
     }
     
-    if (32 < size) {
-        return;
+    if (NRF_MAX_PAYLOAD_SIZE < size) {
+        size = NRF_MAX_PAYLOAD_SIZE;
     }
 
     `$INSTANCE_NAME`_putInTXFIFO(data, size);
@@ -899,13 +899,13 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
  * @param const uint8_t* data:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size)
 {
     if (NULL == data) {
         return;
     }
 
-    if (32 < size) {
+    if (NRF_MAX_PAYLOAD_SIZE < size) {
         return;
     }
     
@@ -921,14 +921,14 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, const size_t size
  * @param size_t size:
  */
 void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data,
-                                     const size_t size)
+                                     size_t size)
 {
     if (NULL == data) {
         return;
     }
 
-    if (32 < size) {
-        return;
+    if (NRF_MAX_PAYLOAD_SIZE < size) {
+        size = NRF_MAX_PAYLOAD_SIZE;
     }
     
     `$INSTANCE_NAME`_writeACKPayloadCmd(pipe, data, size);
@@ -942,7 +942,7 @@ void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data
 uint8_t `$INSTANCE_NAME`_getDataPipeWithPayload(void)
 {
     uint8_t pipe = `$INSTANCE_NAME`_readRegister(NRF_STATUS_REG);
-    return (pipe & 0x0Eu) >> 1;
+    return (pipe & NRF_STATUS_PIPES_MASK) >> NRF_STATUS_PIPES_SHIFT;
 }
 
 /**
@@ -978,7 +978,7 @@ bool `$INSTANCE_NAME`_isRXFIFOEmpty(void)
  */
 void `$INSTANCE_NAME`_clearAllIRQs(void)
 {
-    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, 0x70);
+    `$INSTANCE_NAME`_writeRegister(NRF_STATUS_REG, NRF_ALL_IRQ_MASK);
 }
 
 /**
@@ -1002,13 +1002,13 @@ void `$INSTANCE_NAME`_clearIRQFlag(const NrfIRQ irq_flag)
  */
 NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
 {
-    // Get the STATUS register
-    uint8_t sts = `$INSTANCE_NAME`_NOPCmd();
-
     NrfIRQ irq = NRF_NONE_IRQ;
     
+    // Get the STATUS register
+    uint8_t sts = `$INSTANCE_NAME`_NOPCmd();
+    
     // We only care if bits 4, 5 or 6 are set, so we mask the STATUS with 0x0111_0000
-    switch (sts & 0x70) {
+    switch (sts & NRF_ALL_IRQ_MASK) {
     case NRF_STATUS_RX_DR_MASK:
         irq = NRF_RX_DR_IRQ;
         break;
@@ -1019,6 +1019,7 @@ NrfIRQ `$INSTANCE_NAME`_getIRQFlag(void)
         irq = NRF_MAX_RT_IRQ;
         break;
     default:
+        irq = NRF_ALL_IRQ_MASK;
         break;
     }
     
