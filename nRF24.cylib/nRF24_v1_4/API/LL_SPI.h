@@ -21,10 +21,10 @@
     
 #include <cytypes.h>
 #include <cyfitter.h>
-    
-#include <string.h>
+
 #include <stdbool.h>
-    
+#include <stddef.h>
+
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
 
 uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg);

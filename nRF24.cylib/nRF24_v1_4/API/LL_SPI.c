@@ -101,22 +101,6 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
 
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_R_REGISTER_CMD | reg);
-#if 0
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_NOP_CMD);
-    }
-
-    while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)) {
-    }
-    `$SS_PIN`_Write(1);
-
-    // This is the STATUS Register
-    (void)`$SPI_INTERFACE`_SpiUartReadRxData();
-    // This is the data we want
-    for (size_t j = 0; j < size; j++) {
-        data[j] = `$SPI_INTERFACE`_SpiUartReadRxData();
-    }
-#else
     while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
     
     // Read the status register, just to clear the rx fifo
@@ -128,7 +112,6 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
         while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() == 0){}
         data[i] = `$SPI_INTERFACE`_SpiUartReadRxData();
     }
-#endif
     `$SS_PIN`_Write(1);
 
 #else // UDB Block
