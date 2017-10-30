@@ -41,7 +41,7 @@ void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_flushRxCmd(void);
 void `$INSTANCE_NAME`_flushTxCmd(void);
 uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void);
-void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfDataPipe pipe,
+void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe,
                                 const uint8_t* data, const size_t size);
 void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size);
 uint8_t `$INSTANCE_NAME`_NOPCmd(void);

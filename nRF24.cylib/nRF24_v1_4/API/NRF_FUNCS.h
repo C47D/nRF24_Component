@@ -57,8 +57,8 @@ void `$INSTANCE_NAME`_setTxMode(void);
 
 // CONFIG Reg
 // EN_AA_Reg
-void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe);
-void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe);
+void `$INSTANCE_NAME`_enableAutoACK(const NrfPipe pipe);
+void `$INSTANCE_NAME`_disableAutoACK(const NrfPipe pipe);
 // EN_RXADDR Reg
 // SETUP_AW Reg
 // SETUP_RETR Reg
@@ -90,14 +90,16 @@ void `$INSTANCE_NAME`_getRxPipe5Address(uint8_t* addr, size_t size);
 // TX_ADDR Reg
 void `$INSTANCE_NAME`_setTxAddress(const uint8_t* addr, size_t size);
 void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size);
+
 // RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
-void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size);
-uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe);
+void `$INSTANCE_NAME`_setPayloadSize(const NrfPipePayloadSize pipe, uint8_t size);
+uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfPipePayloadSize pipe);
+
 // FIFO_STATUS Reg
 void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void);
 // DYNPD Reg
-void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe);
-void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe);
+void `$INSTANCE_NAME`_enableDynamicPayload(const NrfPipe pipe);
+void `$INSTANCE_NAME`_disableDynamicPayload(const NrfPipe pipe);
 // FEATURE Reg
 void `$INSTANCE_NAME`_enableDynamicPayloadLength(void);
 void `$INSTANCE_NAME`_enablePayloadWithACK(void);
@@ -119,7 +121,7 @@ void `$INSTANCE_NAME`_PTX_Transmit(const uint8_t* data, size_t size);
 bool `$INSTANCE_NAME`_isDataReady(void);
 void `$INSTANCE_NAME`_getRxPayload(uint8_t* payload, const size_t size);
 void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size);
-void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data, size_t size);
+void `$INSTANCE_NAME`_rxWritePayload(const NrfPipe pipe, const uint8_t* data, size_t size);
 uint8_t `$INSTANCE_NAME`_getDataPipeWithPayload(void);
 uint8_t `$INSTANCE_NAME`_PRX_receivedPowerDetector(void);
 bool `$INSTANCE_NAME`_isTXFIFOFull(void);

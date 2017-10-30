@@ -269,11 +269,11 @@ uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
  * Write payload: 1 - 32 bytes.
  * A write operation always starts at byte 0.
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfPipe pipe:
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfDataPipe pipe,
+void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe,
                                              const uint8_t* data,
                                              const size_t size)
 {

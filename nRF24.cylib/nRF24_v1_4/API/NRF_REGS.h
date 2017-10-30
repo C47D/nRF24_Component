@@ -74,23 +74,32 @@ typedef enum{
 
 // Data pipes
 typedef enum{
-    NRF_DATA_PIPE0  = 0x00,
-    NRF_DATA_PIPE1  = 0x01,
-    NRF_DATA_PIPE2  = 0x02,
-    NRF_DATA_PIPE3  = 0x03,
-    NRF_DATA_PIPE4  = 0x04,
-    NRF_DATA_PIPE5  = 0x05
-} NrfDataPipe;
+    NRF_PIPE0   = 0x00,
+    NRF_PIPE1   = 0x01,
+    NRF_PIPE2   = 0x02,
+    NRF_PIPE3   = 0x03,
+    NRF_PIPE4   = 0x04,
+    NRF_PIPE5   = 0x05
+} NrfPipe;
 
 // Rx data pipes addresses
 typedef enum {
-    NRF_P0_ADDR = NRF_RX_ADDR_P0_REG,
-    NRF_P1_ADDR = NRF_RX_ADDR_P1_REG,
-    NRF_P2_ADDR = NRF_RX_ADDR_P2_REG,
-    NRF_P3_ADDR = NRF_RX_ADDR_P3_REG,
-    NRF_P4_ADDR = NRF_RX_ADDR_P4_REG,
-    NRF_P5_ADDR = NRF_RX_ADDR_P5_REG,
+    NRF_PIPE0_ADDR = NRF_RX_ADDR_P0_REG,
+    NRF_PIPE1_ADDR = NRF_RX_ADDR_P1_REG,
+    NRF_PIPE2_ADDR = NRF_RX_ADDR_P2_REG,
+    NRF_PIPE3_ADDR = NRF_RX_ADDR_P3_REG,
+    NRF_PIPE4_ADDR = NRF_RX_ADDR_P4_REG,
+    NRF_PIPE5_ADDR = NRF_RX_ADDR_P5_REG,
 } NrfRxPipeAddress;
+
+typedef enum {
+    NRF_PIPE0_PAYLOAD_SIZE = NRF_RX_PW_P0_REG,
+    NRF_PIPE1_PAYLOAD_SIZE = NRF_RX_PW_P1_REG,
+    NRF_PIPE2_PAYLOAD_SIZE = NRF_RX_PW_P2_REG,
+    NRF_PIPE3_PAYLOAD_SIZE = NRF_RX_PW_P3_REG,
+    NRF_PIPE4_PAYLOAD_SIZE = NRF_RX_PW_P4_REG,
+    NRF_PIPE5_PAYLOAD_SIZE = NRF_RX_PW_P5_REG,
+} NrfPipePayloadSize;
 
 // nRF24 Modes
 typedef enum{

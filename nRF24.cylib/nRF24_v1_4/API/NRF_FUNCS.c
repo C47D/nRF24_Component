@@ -280,7 +280,7 @@ void `$INSTANCE_NAME`_setTxMode(void)
  *
  * @param pipe: Enable AutoACK in the given pipe.
  */
-void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe)
+void `$INSTANCE_NAME`_enableAutoACK(const NrfPipe pipe)
 {
     `$INSTANCE_NAME`_setBit(NRF_EN_AA_REG, pipe);
 }
@@ -290,7 +290,7 @@ void `$INSTANCE_NAME`_enableAutoACK(const NrfDataPipe pipe)
  *
  * @param pipe: Disable AutoACK in the given pipe.
  */
-void `$INSTANCE_NAME`_disableAutoACK(const NrfDataPipe pipe)
+void `$INSTANCE_NAME`_disableAutoACK(const NrfPipe pipe)
 {
     `$INSTANCE_NAME`_clearBit(NRF_EN_AA_REG, pipe);
 }
@@ -594,74 +594,28 @@ void `$INSTANCE_NAME`_getTxAddress(uint8_t* addr, size_t size)
  *
  * Configure the payload size of the given pipe.
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfPipe pipe:
  * @param uint8_t size:
  */
-void `$INSTANCE_NAME`_setPayloadSize(const NrfDataPipe pipe, uint8_t size)
+void `$INSTANCE_NAME`_setPayloadSize(const NrfPipePayloadSize pipe, uint8_t size)
 {
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         size = NRF_MAX_PAYLOAD_SIZE;
     }
-
-    switch (pipe) {
-    case NRF_DATA_PIPE0:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P0_REG, size);
-        break;
-    case NRF_DATA_PIPE1:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P1_REG, size);
-        break;
-    case NRF_DATA_PIPE2:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P2_REG, size);
-        break;
-    case NRF_DATA_PIPE3:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P3_REG, size);
-        break;
-    case NRF_DATA_PIPE4:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P4_REG, size);
-        break;
-    case NRF_DATA_PIPE5:
-        `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P5_REG, size);
-        break;
-    default:
-        break;
-    }
+    
+    `$INSTANCE_NAME`_writeRegister(pipe, size);
 }
 
 /**
  * Get the payload size of the given pipe.
  *
- * @param const NrfDataPipe pipe: Pipe to be read.
+ * @param const NrfPipe pipe: Pipe to be read.
  *
  * @return uint8_t: Configured payload size of the given pipe.
  */
-uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfDataPipe pipe)
+uint8_t `$INSTANCE_NAME`_getPayloadSize(const NrfPipePayloadSize pipe)
 {
-    uint8_t payloadSize = 0;
-    
-    switch (pipe) {
-    case NRF_DATA_PIPE0:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P0_REG);
-        break;
-    case NRF_DATA_PIPE1:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P1_REG);
-        break;
-    case NRF_DATA_PIPE2:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P2_REG);
-        break;
-    case NRF_DATA_PIPE3:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P3_REG);
-        break;
-    case NRF_DATA_PIPE4:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P4_REG);
-        break;
-    case NRF_DATA_PIPE5:
-        payloadSize = `$INSTANCE_NAME`_readRegister(NRF_RX_PW_P5_REG);
-        break;
-    default:
-        payloadSize = 0;
-    }
-    
-    return payloadSize;
+    return `$INSTANCE_NAME`_readRegister(pipe);
 }
 
 /**
@@ -679,9 +633,9 @@ void `$INSTANCE_NAME`_PTX_reuseLastTransmittedPayload(void)
 /**
  * @brief Enable dynamic payload on the given pipe.
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfPipe pipe:
  */
-void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe)
+void `$INSTANCE_NAME`_enableDynamicPayload(const NrfPipe pipe)
 {
     `$INSTANCE_NAME`_setBit(NRF_EN_AA_REG, pipe);
     `$INSTANCE_NAME`_setBit(NRF_FEATURE_REG, NRF_FEATURE_EN_ACK_PAY);
@@ -692,9 +646,9 @@ void `$INSTANCE_NAME`_enableDynamicPayload(const NrfDataPipe pipe)
 /**
  * @brief Disable dynamic payload on the given pipe.
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfPipe pipe:
  */
-void `$INSTANCE_NAME`_disableDynamicPayload(const NrfDataPipe pipe)
+void `$INSTANCE_NAME`_disableDynamicPayload(const NrfPipe pipe)
 {
     `$INSTANCE_NAME`_clearBit(NRF_EN_AA_REG, pipe);
     `$INSTANCE_NAME`_clearBit(NRF_FEATURE_REG, NRF_FEATURE_EN_ACK_PAY);
@@ -916,11 +870,11 @@ void `$INSTANCE_NAME`_txTransmitWaitNoACK(const uint8_t* data, size_t size)
 /**
  * @brief
  *
- * @param const NrfDataPipe pipe:
+ * @param const NrfPipe pipe:
  * @param const uint8_t* data:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_rxWritePayload(const NrfDataPipe pipe, const uint8_t* data,
+void `$INSTANCE_NAME`_rxWritePayload(const NrfPipe pipe, const uint8_t* data,
                                      size_t size)
 {
     if (NULL == data) {
