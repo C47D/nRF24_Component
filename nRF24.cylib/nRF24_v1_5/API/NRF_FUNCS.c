@@ -40,9 +40,6 @@
 #define `$INSTANCE_NAME`_VERSION_MINOR  `=$CY_MINOR_VERSION`
 #define `$INSTANCE_NAME`_VERSION        `=$CY_MAJOR_VERSION`.`=$CY_MINOR_VERSION`
 
-// nRF24 Power-on-reset delay
-#define `$INSTANCE_NAME`_POR_DELAY 100
-
 /**
  * @brief Configure the radio and clear IRQs, TX and RX FIFOs.
  */
