@@ -191,11 +191,9 @@ void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size)
 
     `$SS_PIN`_Write(0);
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
-
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
-        }
+    `$SPI_INTERFACE`_PutArray(data, size);
+    
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
     }
     `$SS_PIN`_Write(1);
 
@@ -273,9 +271,8 @@ uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe,
-                                             const uint8_t* data,
-                                             const size_t size)
+void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe, const uint8_t* data,
+                                        const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
@@ -299,11 +296,9 @@ void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe,
     `$SS_PIN`_Write(0);
 
     `$SPI_INTERFACE`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
-
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
-        }
+    `$SPI_INTERFACE`_PutArray(data, size);
+    
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
     }
     `$SS_PIN`_Write(1);
 
@@ -317,8 +312,7 @@ void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe,
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data,
-                                          const size_t size)
+void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
 
@@ -342,11 +336,9 @@ void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data,
     `$SS_PIN`_Write(0);
 
     `$SPI_INTERFACE`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
-
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_INTERFACE`_WriteTxData(data[i]);
-        while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
-        }
+    `$SPI_INTERFACE`_PutArray(data, size);
+    
+    while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
     }
     `$SS_PIN`_Write(1);
 
