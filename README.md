@@ -4,14 +4,14 @@ The SPI Master component, CS and CE pins nedeed to control the nRF24 chip must b
 
 Current version: 1.5
 
-![Component](img/v1_3.png)
+![Component](img/v1_5.png)
 
 ## TODO for version 1.5 [WIP]
 - [ ] Update functions documentation.
 - [ ] Component Datasheet.
 
 ## TODO for version 2.0 [WIP]
-- [] API compatible with the nRF24 component of Erich Styger (mcuoneclipse)
+- [ ] API compatible with the nRF24 component of Erich Styger (mcuoneclipse)
 
 ## TODO
 - [ ] PSoC6 support.
