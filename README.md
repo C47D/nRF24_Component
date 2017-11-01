@@ -2,7 +2,7 @@
 
 The SPI Master component, CS and CE pins needed to control the nRF24 chip must be provided by the user on the project schematic. This component only provide the functions to control the nRF24 radio.
 
-See ![nRF24 Example Projects](github.com/C47D/nRF24_Example_Projects) for multiple example projects using this component.
+See ![nRF24 Example Projects](https://github.com/C47D/nRF24_Example_Projects) for multiple example projects using this component.
 
 Current version: 1.5
 
