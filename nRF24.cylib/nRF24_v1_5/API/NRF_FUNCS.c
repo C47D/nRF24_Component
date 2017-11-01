@@ -73,6 +73,7 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
+#if 0
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG,
         (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
         (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
@@ -135,6 +136,42 @@ void `$INSTANCE_NAME`_init(void)
         (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
         (`$CRCO` << NRF_CONFIG_CRCO) | (`$PWR_UP`<< NRF_CONFIG_PWR_UP) |
         (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
+#else
+    `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG, CUSTOMIZER_EN_AA);
+    `$INSTANCE_NAME`_writeRegister(NRF_EN_RXADDR_REG, CUSTOMIZER_EN_RXADDR);
+    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, CUSTOMIZER_SETUP_AW);
+    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_RETR_REG, CUSTOMIZER_SETUP_RETR);
+    `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, CUSTOMIZER_RF_CH);
+    `$INSTANCE_NAME`_writeRegister(NRF_RF_SETUP_REG, CUSTOMIZER_RF_SETUP);
+    `$INSTANCE_NAME`_writeRegister(NRF_DYNPD_REG, CUSTOMIZER_DYNPD);
+    `$INSTANCE_NAME`_writeRegister(NRF_FEATURE_REG, CUSTOMIZER_FEATURE);
+
+// Configuring data pipes
+#if (ENABLE_PIPE0 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P0_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+#if (ENABLE_PIPE1 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P1_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+#if (ENABLE_PIPE2 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P2_REG, CUSTOMIZER_RX_ADDR_P2);
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P2_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+#if (ENABLE_PIPE3 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P3_REG, CUSTOMIZER_RX_ADDR_P3);
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P3_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+#if (ENABLE_PIPE4 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P4_REG, CUSTOMIZER_RX_ADDR_P4);
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P4_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+#if (ENABLE_PIPE5 == 1)
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P5_REG, CUSTOMIZER_RX_ADDR_P5);
+    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P5_REG, CUSTOMIZER_RX_PW_P0);
+#endif
+
+    `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
+#endif
 }
 
 /**
