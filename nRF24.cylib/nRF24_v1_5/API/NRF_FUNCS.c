@@ -73,70 +73,6 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
-#if 0
-    `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG,
-        (`$ENAA_P5` << NRF_EN_AA_ENAA_P5) | (`$ENAA_P4` << NRF_EN_AA_ENAA_P4) |
-        (`$ENAA_P3` << NRF_EN_AA_ENAA_P3) | (`$ENAA_P2` << NRF_EN_AA_ENAA_P2) |
-        (`$ENAA_P1` << NRF_EN_AA_ENAA_P1) | (`$ENAA_P0` << NRF_EN_AA_ENAA_P0));
-    `$INSTANCE_NAME`_writeRegister(NRF_EN_RXADDR_REG,
-        (`$ERX_P5` << NRF_EN_RXADDR_ERX_P5) | (`$ERX_P4` << NRF_EN_RXADDR_ERX_P4) |
-        (`$ERX_P3` << NRF_EN_RXADDR_ERX_P3) | (`$ERX_P2` << NRF_EN_RXADDR_ERX_P2) |
-        (`$ERX_P1` << NRF_EN_RXADDR_ERX_P1) | (`$ERX_P0` << NRF_EN_RXADDR_ERX_P0));
-    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, `$AW`);
-    `$INSTANCE_NAME`_writeRegister(NRF_SETUP_RETR_REG,
-        (`$ARD` << NRF_SETUP_RETR_ARD) | (`$ARC` << NRF_SETUP_RETR_ARC));
-    `$INSTANCE_NAME`_writeRegister(NRF_RF_CH_REG, `$RF_CH`);
-    `$INSTANCE_NAME`_writeRegister(NRF_RF_SETUP_REG,
-        (`$CONT_WAVE` << NRF_RF_SETUP_CONT_WAVE) | (`$RF_DATA_RATE` << NRF_RF_SETUP_RF_DR) |
-        (`$RF_PWR` << NRF_RF_SETUP_RF_PWR));
-    `$INSTANCE_NAME`_writeRegister(NRF_DYNPD_REG,
-        (`$DPL_P5` << NRF_DYNPD_DPL_P5) | (`$DPL_P4` << NRF_DYNPD_DPL_P4) |
-        (`$DPL_P3` << NRF_DYNPD_DPL_P3) | (`$DPL_P2` << NRF_DYNPD_DPL_P2) |
-        (`$DPL_P1` << NRF_DYNPD_DPL_P1) | (`$DPL_P0` << NRF_DYNPD_DPL_P0));
-    `$INSTANCE_NAME`_writeRegister(NRF_FEATURE_REG,
-        (`$EN_DPL` << NRF_FEATURE_EN_DPL) | (`$EN_ACK_PAY` << NRF_FEATURE_EN_ACK_PAY) |
-        (`$EN_DYN_ACK` << NRF_FEATURE_EN_DYN_ACK));
-
-// Configuring data pipes
-#if (ENABLE_PIPE0 == 1)
-    // Set data pipe 0 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P0_REG, `@RX_PW_P0`);
-#endif
-#if (ENABLE_PIPE1 == 1)
-    // Set data pipe 1 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P1_REG, `@RX_PW_P1`);
-#endif
-#if (ENABLE_PIPE2 == 1)
-    // Set data pipe 2 address (LSB)
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P2_REG, `@RX_ADDR_P2`);
-    // Set data pipe 2 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P2_REG, `@RX_PW_P2`);
-#endif
-#if (ENABLE_PIPE3 == 1)
-    // Set data pipe 3 address (LSB)
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P3_REG, `@RX_ADDR_P3`);
-    // Set data pipe 3 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P3_REG, `@RX_PW_P3`);
-#endif
-#if (ENABLE_PIPE4 == 1)
-    // Set data pipe 4 address (LSB)
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P4_REG, `@RX_ADDR_P4`);
-    // Set data pipe 4 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P4_REG, `@RX_PW_P4`);
-#endif
-#if (ENABLE_PIPE5 == 1)
-    // Set data pipe 5 address (LSB)
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_ADDR_P5_REG, `@RX_ADDR_P5`);
-    // Set data pipe 5 bytes in rx payload
-    `$INSTANCE_NAME`_writeRegister(NRF_RX_PW_P5_REG, `@RX_PW_P5`);
-#endif
-
-    `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG,
-        (`$MASK_RX_DR` << NRF_CONFIG_MASK_RX_DR) | (`$MASK_TX_DS` << NRF_CONFIG_MASK_TX_DS) |
-        (`$MASK_MAX_RT` << NRF_CONFIG_MASK_MAX_RT) | (`$EN_CRC` << NRF_CONFIG_EN_CRC) |
-        (`$CRCO` << NRF_CONFIG_CRCO) | (`$PWR_UP`<< NRF_CONFIG_PWR_UP) |
-        (`$PRIM_RX` << NRF_CONFIG_PRIM_RX));
-#else
     `$INSTANCE_NAME`_writeRegister(NRF_EN_AA_REG, CUSTOMIZER_EN_AA);
     `$INSTANCE_NAME`_writeRegister(NRF_EN_RXADDR_REG, CUSTOMIZER_EN_RXADDR);
     `$INSTANCE_NAME`_writeRegister(NRF_SETUP_AW_REG, CUSTOMIZER_SETUP_AW);
@@ -171,7 +107,6 @@ void `$INSTANCE_NAME`_init(void)
 #endif
 
     `$INSTANCE_NAME`_writeRegister( NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
-#endif
 }
 
 /**
