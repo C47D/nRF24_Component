@@ -18,10 +18,13 @@
 
 #ifndef `$INSTANCE_NAME`_LL_SPI_H
 #define `$INSTANCE_NAME`_LL_SPI_H
-    
+
+#if 0
 #include <cytypes.h>
 #include <cyfitter.h>
+#endif
 
+#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 

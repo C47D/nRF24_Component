@@ -22,23 +22,11 @@
 * @brief This file define all the functions available to the user.
 */
 
-#include <`$CE_PIN`.h>
-#include <`$SPI_INTERFACE`.h>
-#include <`$SS_PIN`.h>
-
-#if defined(CY_SCB_`$SPI_INTERFACE`_H)
-#include <`$SPI_INTERFACE`_SPI_UART.h>
-#endif
-
+#include "`$INSTANCE_NAME`_NRF_CONFIG.h"
 #include "`$INSTANCE_NAME`_LL_SPI.h"
 #include "`$INSTANCE_NAME`_NRF_COMMANDS.h"
-#include "`$INSTANCE_NAME`_NRF_CONFIG.h"
 #include "`$INSTANCE_NAME`_NRF_FUNCS.h"
 #include "`$INSTANCE_NAME`_NRF_REGS.h"
-
-#define `$INSTANCE_NAME`_VERSION_MAJOR  `=$CY_MAJOR_VERSION`
-#define `$INSTANCE_NAME`_VERSION_MINOR  `=$CY_MINOR_VERSION`
-#define `$INSTANCE_NAME`_VERSION        `=$CY_MAJOR_VERSION`.`=$CY_MINOR_VERSION`
 
 /**
  * @brief Configure the radio and clear IRQs, TX and RX FIFOs.
@@ -51,8 +39,13 @@ void `$INSTANCE_NAME`_start(void)
     // Now the radio is in Power Down mode
     
     // Set `$SS_PIN` to logic 1, `$CE_PIN` to logic 0 and Start the `$SPI_INTERFACE`
+#if defined(CY_GPIO_H)
+    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+#else
     `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
+#endif
     `$SPI_INTERFACE`_Start();
 
     // Flush both nRF24 FIFOs
@@ -681,7 +674,12 @@ void `$INSTANCE_NAME`_disablePayloadWithNoACKCmd(void)
  */
 void `$INSTANCE_NAME`_listen(const bool listen)
 {
+#if defined(CY_GPIO_H)
+    listen ? Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM) : 
+            Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+#else
     listen ? `$CE_PIN`_Write(1) : `$CE_PIN`_Write(0);
+#endif
 }
 
 /**
@@ -712,9 +710,15 @@ void `$INSTANCE_NAME`_stopListening(void) {
  */
 void `$INSTANCE_NAME`_transmitPulse(void)
 {
+#if defined(CY_GPIO_H)
+    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+    CyDelayUs(NRF_CE_PULSE_WIDTH);
+    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+#else
     `$CE_PIN`_Write(1);
     CyDelayUs(NRF_CE_PULSE_WIDTH);
     `$CE_PIN`_Write(0);
+#endif
 }
 
 /**
@@ -810,10 +814,15 @@ void `$INSTANCE_NAME`_getRxPayload(uint8_t* data, const size_t size)
     if (NULL == data) {
         return;
     }
-    
+#if defined(CY_GPIO_H)
+    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+    `$INSTANCE_NAME`_readRXPayloadCmd(data, size);
+    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+#else
     `$CE_PIN`_Write(0);
     `$INSTANCE_NAME`_readRXPayloadCmd(data, size);
     `$CE_PIN`_Write(1);
+#endif
 }
 
 /**

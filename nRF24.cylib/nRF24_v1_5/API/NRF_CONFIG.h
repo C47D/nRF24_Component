@@ -19,6 +19,30 @@
 #ifndef `$INSTANCE_NAME`_NRF_CONFIG_H
 #define `$INSTANCE_NAME`_NRF_CONFIG_H
 
+#include "project.h"
+
+// GPIO headers
+#if defined(CY_GPIO_H)
+#include "gpio/cy_gpio.h"
+#else
+#include "`$CE_PIN`.h"
+#include "`$SS_PIN`.h"
+#endif
+
+// SPI headers
+#include "`$SPI_INTERFACE`.h"
+#if defined(CY_SCB_`$SPI_INTERFACE`_H)
+#if !defined(`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H)
+#include "`$SPI_INTERFACE`_SPI_UART.h"
+#endif
+#endif
+
+// Component version info
+#define `$INSTANCE_NAME`_VERSION_MAJOR  `=$CY_MAJOR_VERSION`
+#define `$INSTANCE_NAME`_VERSION_MINOR  `=$CY_MINOR_VERSION`
+#define `$INSTANCE_NAME`_VERSION        `=$CY_MAJOR_VERSION`.`=$CY_MINOR_VERSION`
+
+// Data from customizer
 #define ENABLE_PIPE0    `@ERX_P0`
 #define ENABLE_PIPE1    `@ERX_P1`
 #define ENABLE_PIPE2    `@ERX_P2`

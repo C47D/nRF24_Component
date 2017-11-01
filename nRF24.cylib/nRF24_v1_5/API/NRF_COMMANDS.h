@@ -26,9 +26,12 @@
 #ifndef `$INSTANCE_NAME`_NRF_COMMANDS_H
 #define `$INSTANCE_NAME`_NRF_COMMANDS_H
 
+#if 0
 #include <cytypes.h>
 #include <cyfitter.h>
+#endif
 
+#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 
