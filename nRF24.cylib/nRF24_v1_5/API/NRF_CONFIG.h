@@ -37,12 +37,14 @@
 #endif
 #endif
 
+#if 0
 #ifdef (CY_SCB_`$SPI_INTERFACE`_H)
 #define NRF_PSOC4_SCB   1
 #endif
 
 #ifdef (`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H)
 #define NRF_PSOC6       1
+#endif
 #endif
 
 // Component version info
