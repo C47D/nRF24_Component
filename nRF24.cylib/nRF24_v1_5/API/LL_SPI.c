@@ -36,11 +36,8 @@
 uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
 {
     uint8_t data = 0;
-
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
-
 #if defined(`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H) // PSoC6
-    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     
     Cy_SCB_SPI_Write(`$SPI_INTERFACE`_HW, NRF_R_REGISTER_CMD | reg);
@@ -53,7 +50,6 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
     
     (void)Cy_SCB_SPI_Read(`$SPI_INTERFACE`_HW);
     data = Cy_SCB_SPI_Read(`$SPI_INTERFACE`_HW);
-    
 #else // PSoC4
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
@@ -71,9 +67,7 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
     // This is the data we want
     data = `$SPI_INTERFACE`_SpiUartReadRxData();
 #endif
-
 #else // UDB Block
-
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
 
@@ -89,7 +83,6 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
     (void)`$SPI_INTERFACE`_ReadRxData();
     // This is the data we want
     data = `$SPI_INTERFACE`_ReadRxData();
-
 #endif
     return data;
 }
@@ -103,14 +96,11 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
  * @param size_t size: Size of the register, larger register hold 5 bytes of
  * data.
  */
-void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
-                                        uint8_t* data,
+void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data,
                                        const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
-
 #if defined(`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H) // PSoC6
-    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_INTERFACE`_HW, NRF_R_REGISTER_CMD | reg);
     while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_INTERFACE`_HW) == 0) {
@@ -124,7 +114,6 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     }
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-    
 #else // PSoC4
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
@@ -146,7 +135,6 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     `$SS_PIN`_Write(1);
 #endif
 #else // UDB Block
-    
     `$SPI_INTERFACE`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
@@ -165,7 +153,6 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
     }
 
     `$SS_PIN`_Write(1);
-
 #endif
 }
 
@@ -178,9 +165,7 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg,
 void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
-
 #if defined(`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H) // PSoC6
-    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_INTERFACE`_HW, NRF_W_REGISTER_CMD | reg);
     Cy_SCB_SPI_Write(`$SPI_INTERFACE`_HW, data);
@@ -189,7 +174,6 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
     }
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-    
 #else // PSoC4
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
@@ -203,7 +187,6 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
     `$SS_PIN`_Write(1);
 #endif
 #else // UDB Block
-
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
 
@@ -214,7 +197,6 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
     while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
     }
     `$SS_PIN`_Write(1);
-
 #endif
 }
 
@@ -225,14 +207,11 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
  * @param const uint8_t* data: Data to write into the register.
  * @param size_t size: Size (in bytes) of the data to be written.
  */
-void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
-                                        const uint8_t* data,
+void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* data,
                                         const size_t size)
 {
 #if defined(CY_SCB_`$SPI_INTERFACE`_H) // SCB Block
-
 #if defined(`$SPI_INTERFACE`_CY_SCB_SPI_PDL_H) // PSoC6
-    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_INTERFACE`_HW, NRF_W_REGISTER_CMD | reg);
     Cy_SCB_SPI_WriteArray(`$SPI_INTERFACE`_HW, data, size);
@@ -241,7 +220,6 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     }
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-    
 #else // PSoC4
     `$SPI_INTERFACE`_SpiUartClearRxBuffer();
     `$SPI_INTERFACE`_SpiUartClearTxBuffer();
@@ -259,7 +237,6 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     `$SS_PIN`_Write(1);
 #endif
 #else // UDB Block
-
     `$SPI_INTERFACE`_ClearRxBuffer();
     `$SPI_INTERFACE`_ClearTxBuffer();
 
@@ -270,7 +247,6 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg,
     while (!(`$SPI_INTERFACE`_ReadTxStatus() & `$SPI_INTERFACE`_STS_BYTE_COMPLETE)) {
     }
     `$SS_PIN`_Write(1);
-
 #endif
 }
 
