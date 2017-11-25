@@ -39,10 +39,10 @@ void `$INSTANCE_NAME`_start(void)
     // Now the radio is in Power Down mode
     
     // Set `$SS_PIN` to logic 1, `$CE_PIN` to logic 0 and Start the `$SPI_INTERFACE`
-#if defined(CY_GPIO_H)
+#if defined(CY_GPIO_H) // PSoC6
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-#else
+#else // PSoC 4 and 5LP
     `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
 #endif
@@ -62,7 +62,7 @@ void `$INSTANCE_NAME`_start(void)
 }
 
 /**
- * Write data from the customizer to the nRF radio.
+ * Configure the nRF radio with the data from the customizer.
  */
 void `$INSTANCE_NAME`_init(void)
 {
@@ -121,12 +121,11 @@ void `$INSTANCE_NAME`_stop(void)
 }
 
 /**
- * Put the nRF24 radio on Sleep mode.
- *
- * @todo Implement this function.
+ * Put the nRF24 radio on Standby-I mode.
  */
 void `$INSTANCE_NAME`_sleep(void)
 {
+    `$INSTANCE_NAME`_setStandbyIMode();
 }
 
 /**
@@ -195,7 +194,7 @@ void `$INSTANCE_NAME`_setPowerDownMode(void)
 void `$INSTANCE_NAME`_setStandbyIMode(void)
 {
     `$INSTANCE_NAME`_listen(false);
-    `$INSTANCE_NAME`_clearBit(NRF_CONFIG_REG, NRF_CONFIG_PWR_UP);
+    `$INSTANCE_NAME`_setBit(NRF_CONFIG_REG, NRF_CONFIG_PWR_UP);
 }
 
 /**
@@ -282,7 +281,7 @@ void `$INSTANCE_NAME`_setAddressWidth(const NrfSetupAddressWidth addr_width)
 }
 
 /**
- * @brief Get the data pipes address width.
+ * @brief Get the address width of the data pipes.
  *
  * @return uint8_t: Address width in bytes.
  */
