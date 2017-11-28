@@ -122,9 +122,11 @@ void `$INSTANCE_NAME`_stop(void)
 
 /**
  * Put the nRF24 radio on Standby-I mode.
+ * This function doesn't put the SPI, MCU nor pins to sleep
  */
 void `$INSTANCE_NAME`_sleep(void)
 {
+    // is standby.I the lowest power mode?
     `$INSTANCE_NAME`_setStandbyIMode();
 }
 
@@ -135,6 +137,10 @@ void `$INSTANCE_NAME`_sleep(void)
  */
 void `$INSTANCE_NAME`_wakeup(void)
 {
+    // after leaving standby-I mode the radio need a time to
+    // return to TX or RX Mode
+    `$INSTANCE_NAME`_setBit(NRF_CONFIG_REG, NRF_CONFIG_PWR_UP);
+    CyDelay(5);
 }
 
 /**
@@ -173,8 +179,7 @@ void `$INSTANCE_NAME`_setMode(const NrfMode mode)
  * All register values available are maintained and the SPI is kept active,
  * enabling change of configuration and the uploading/downloading of data
  * registers.
- * Power down mode is entered by setting the PWR_UP bit in the CONFIG register
- * low.
+ * Power down mode is entered by setting the PWR_UP bit (CONFIG register) to 0.
  */
 void `$INSTANCE_NAME`_setPowerDownMode(void)
 {

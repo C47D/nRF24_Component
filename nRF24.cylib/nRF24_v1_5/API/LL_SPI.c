@@ -27,7 +27,7 @@
 #include "`$INSTANCE_NAME`_LL_SPI.h"
 
 /**
- * Read 1byte of an nRF24 register.
+ * Read a (1 byte long) nRF24 register.
  *
  * @param const NrfRegister reg: Register to be read.
  *
@@ -88,7 +88,7 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
 }
 
 /**
- * Read more than 1byte of a nRF24 register.
+ * Read a (multi byte long) nRF24 register.
  *
  * @param const NrfRegister reg: Register to be read.
  * @param uint8_t* data: Pointer to where the content of the register
@@ -157,7 +157,7 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data,
 }
 
 /**
- * Write 1byte to a nRF24 Register.
+ * Write one byte to a nRF24 Register.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t data: Data to be written into the register.
@@ -201,7 +201,7 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
 }
 
 /**
- * Write more than 1byte to a nRF24 Register, larger register is 5 bytes.
+ * Write one or more bytes to a nRF24 Register, larger register is 5 bytes.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t* data: Data to write into the register.
@@ -229,9 +229,9 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* da
     `$SPI_INTERFACE`_SpiUartWriteTxData(NRF_W_REGISTER_CMD | reg);
     `$SPI_INTERFACE`_SpiUartPutArray(data, size);
 
-    // Wait for the RxBuffer to have size + 1 bytes (W_REGISTER_CMD + data)
-    // we're not using the SS pin embedded on the SCB component, so can't
-    // rely on using the SPI_Status function.
+    // we're not using the embedded SS pin on the SCB component, can't use the
+    // SPI_Status function, we have to count the bytes on the RxBuffer to know
+    // when the transition is done, size + 1 bytes == W_REGISTER_CMD + data
     while (`$SPI_INTERFACE`_SpiUartGetRxBufferSize() != (1 + size)) {
     }
     `$SS_PIN`_Write(1);
@@ -251,7 +251,7 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* da
 }
 
 /**
- * Read the bit state of a NrfRegister.
+ * Read a bit of a NrfRegister.
  *
  * @param const NrfRegister reg: Register to be read.
  * @param uint8_t bit: Bit to be read.
@@ -266,6 +266,9 @@ bool `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
 
 /**
  * Set (logic 1) or clear (logic 0) a given bit of a given nRF24 register.
+ *
+ * Before setting the value we want to write to the bit we first check it's value,
+ * if the bit have the value we wanted already, we exit the function early.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t bit: Position of the bit to be written.
@@ -284,7 +287,7 @@ void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
         }
     } else { // the bit is clear
         if (!value) {
-            return; // return if we wantes to clear the bit
+            return; // return if we wanted to clear the bit
         }
     }
 
@@ -295,7 +298,7 @@ void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
 }
 
 /**
- * Clear (logic 0) a given bit of a given nRF24 register.
+ * Clear (set to 0) a given bit of a given nRF24 register.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
@@ -306,7 +309,7 @@ void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit)
 }
 
 /**
- * Set (logic 1) a given bit of a given nRF24 register.
+ * Set (set to 1) a given bit of a given nRF24 register.
  *
  * @param const NrfRegister reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.

@@ -75,9 +75,8 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
  *
  * Used for a PTX device.
  * Reuse last transmitted payload. TX payload reuse is active until
- * W_TX_PAYLOAD or FLUSH_TX is executed.
- * TX payload reuse must not be activated or deactivated during package
- * transmission.
+ * W_TX_PAYLOAD or FLUSH_TX is executed, TX payload reuse must not be
+ * activated or deactivated during package transmission.
  */
 void `$INSTANCE_NAME`_reuseTxPayloadCmd(void)
 {
@@ -291,7 +290,7 @@ uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
  *
  * Used in RX mode.
  * Write Payload to be transmitted together with ACK packet on PIPE PPP
- * (PPP valid in the range from 000 to 101). Maximum three ACK  packet
+ * (PPP valid in the range from 000 to 101). Maximum three ACK packet
  * payloads can be pending. Payloads with same PPP are handled using
  * first in - first out principle.
  * Write payload: 1 - 32 bytes.
@@ -391,7 +390,7 @@ void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size)
 }
 
 /**
- * Send NOP (No OPeration) Command. Might be used to read the STATUS register.
+ * NOP (No OPeration) Command. Might be used to read the STATUS register.
  *
  * @return uint8_t: STATUS register.
  */
