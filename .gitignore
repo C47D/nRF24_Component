@@ -8,6 +8,7 @@ nRF24_tests_scb.cydsn
 nRF24_UDB_Tx.cydsn
 test_P6.cydsn
 docs/*
+nRF24.cylib/nRF24_v2_0/*
 
 # Ignore Archive directory, project bundles there
 Archive/*
