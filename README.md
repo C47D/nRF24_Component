@@ -4,20 +4,21 @@ The SPI Master component, CS and CE pins needed to control the nRF24 chip must b
 
 See ![nRF24 Example Projects](https://github.com/C47D/nRF24_Example_Projects) for multiple example projects using this component.
 
-Current version: 1.5
+Current version: 1.6
 
 ![Component](img/v1_5.png)
 
-## TODO for version 1.5 [WIP]
-- [ ] Update functions documentation.
+## TODO for version 1.6 [WiP]
+- [ ] Update documentation.
 - [ ] Component Datasheet.
-- [ ] PSoC6 support.
+- [x] PSoC6 support (WiP).
 
-## TODO for version 2.0 [WIP]
+## TODO for version 2.0 [WiP]
 - [ ] API compatible with the nRF24 component of Erich Styger (mcuoneclipse)
 
 ## TODO
 - [ ] Design a customizer using Visual Studio.
 
-## PSoC6 support
-With PSoC6 you can use the component and PDL APIs (see [PSoC6 Components and PDL](http://www.cypress.com/blog/psoc-creator-news-and-information/psoc-6-components-and-pdl-drivers)), given that PSoC6 is like a PSoC4 on steroids, it might be "easy" to port code from PSoC4 to the PSoC6.
+## Code style [WiP]
+
+The code style in the v2.0 will be similar to the ![Linux kernel coding style](https://www.kernel.org/doc/html/v4.10/process/coding-style.html), for this the tool clang-format is used, the repo contains the .clang-format file.
