@@ -29,11 +29,11 @@
 /**
  * Read a (1 byte long) nRF24 register.
  *
- * @param const NrfRegister reg: Register to be read.
+ * @param const nrf_register reg: Register to be read.
  *
  * @return uint8_t: Content of the register.
  */
-uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
+uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 {
     uint8_t data = 0;
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
@@ -90,13 +90,13 @@ uint8_t `$INSTANCE_NAME`_readRegister(const NrfRegister reg)
 /**
  * Read a (multi byte long) nRF24 register.
  *
- * @param const NrfRegister reg: Register to be read.
+ * @param const nrf_register reg: Register to be read.
  * @param uint8_t* data: Pointer to where the content of the register
  * will be stored.
  * @param size_t size: Size of the register, larger register hold 5 bytes of
  * data.
  */
-void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data,
+void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data,
                                        const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
@@ -159,10 +159,10 @@ void `$INSTANCE_NAME`_readLongRegister(const NrfRegister reg, uint8_t* data,
 /**
  * Write one byte to a nRF24 Register.
  *
- * @param const NrfRegister reg: Register to be written.
+ * @param const nrf_register reg: Register to be written.
  * @param const uint8_t data: Data to be written into the register.
  */
-void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
+void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
 #if defined(`$SPI_MASTER`_CY_SCB_SPI_PDL_H) // PSoC6
@@ -203,11 +203,11 @@ void `$INSTANCE_NAME`_writeRegister(const NrfRegister reg, const uint8_t data)
 /**
  * Write one or more bytes to a nRF24 Register, larger register is 5 bytes.
  *
- * @param const NrfRegister reg: Register to be written.
+ * @param const nrf_register reg: Register to be written.
  * @param const uint8_t* data: Data to write into the register.
  * @param size_t size: Size (in bytes) of the data to be written.
  */
-void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* data,
+void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t* data,
                                         const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
@@ -251,17 +251,17 @@ void `$INSTANCE_NAME`_writeLongRegister(const NrfRegister reg, const uint8_t* da
 }
 
 /**
- * Read a bit of a NrfRegister.
+ * Read a bit of a nrf_register.
  *
- * @param const NrfRegister reg: Register to be read.
+ * @param const nrf_register reg: Register to be read.
  * @param uint8_t bit: Bit to be read.
  *
  * @return bool: Return 1 if bit is set (logic 1), return 0 if the bit
  * is clear (logic 0).
  */
-bool `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
+bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit)
 {
-    return (`$INSTANCE_NAME`_readRegister(reg) & (1 << bit)) != 0;
+    return (`$INSTANCE_NAME`_read_register(reg) & (1 << bit)) != 0;
 }
 
 /**
@@ -270,14 +270,14 @@ bool `$INSTANCE_NAME`_readBit(const NrfRegister reg, const uint8_t bit)
  * Before setting the value we want to write to the bit we first check it's value,
  * if the bit have the value we wanted already, we exit the function early.
  *
- * @param const NrfRegister reg: Register to be written.
+ * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Position of the bit to be written.
  * @param const bool value: Value (Logic 1 or 0) to write into the bit.
  */
-void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
+void `$INSTANCE_NAME`_write_bit(const nrf_register reg, const uint8_t bit,
                                const bool value)
 {
-    uint8_t temp = `$INSTANCE_NAME`_readRegister(reg);
+    uint8_t temp = `$INSTANCE_NAME`_read_register(reg);
 
     // Check if the bit of interest is set
     if ((temp & (1 << bit)) != 0) {
@@ -294,29 +294,29 @@ void `$INSTANCE_NAME`_writeBit(const NrfRegister reg, const uint8_t bit,
     // Calculate the new value to be written in the register
     temp = value ? temp | (1 << bit) : temp & ~(1 << bit);
 
-    `$INSTANCE_NAME`_writeRegister(reg, temp);
+    `$INSTANCE_NAME`_write_register(reg, temp);
 }
 
 /**
  * Clear (set to 0) a given bit of a given nRF24 register.
  *
- * @param const NrfRegister reg: Register to be written.
+ * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
  */
-void `$INSTANCE_NAME`_clearBit(const NrfRegister reg, const uint8_t bit)
+void `$INSTANCE_NAME`_clear_bit(const nrf_register reg, const uint8_t bit)
 {
-    `$INSTANCE_NAME`_writeBit(reg, bit, 0);
+    `$INSTANCE_NAME`_write_bit(reg, bit, 0);
 }
 
 /**
  * Set (set to 1) a given bit of a given nRF24 register.
  *
- * @param const NrfRegister reg: Register to be written.
+ * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
  */
-void `$INSTANCE_NAME`_setBit(const NrfRegister reg, const uint8_t bit)
+void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit)
 {
-    `$INSTANCE_NAME`_writeBit(reg, bit, 1);
+    `$INSTANCE_NAME`_write_bit(reg, bit, 1);
 }
 
 /* [] END OF FILE */

@@ -33,9 +33,9 @@
 /**
  * Send a command to the nRF24 radio.
  *
- * @param const NrfCmd cmd: Command to send to the nRF24 radio.
+ * @param const nrf_cmd cmd: Command to send to the nRF24 radio.
  */
-void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
+void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
 #if defined(`$SPI_MASTER`_CY_SCB_SPI_PDL_H) // PSoC6
@@ -78,9 +78,9 @@ void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd)
  * W_TX_PAYLOAD or FLUSH_TX is executed, TX payload reuse must not be
  * activated or deactivated during package transmission.
  */
-void `$INSTANCE_NAME`_reuseTxPayloadCmd(void)
+void `$INSTANCE_NAME`_reuse_tx_payload_cmd(void)
 {
-    `$INSTANCE_NAME`_sendCommand(NRF_REUSE_TX_PL_CMD);
+    `$INSTANCE_NAME`_send_command(NRF_REUSE_TX_PL_CMD);
 }
 
 /**
@@ -90,18 +90,18 @@ void `$INSTANCE_NAME`_reuseTxPayloadCmd(void)
  * Flush RX FIFO. Should be not executed during transmission of acknowledge,
  * that is, acknowledge package will not be completed.
  */
-void `$INSTANCE_NAME`_flushRxCmd(void)
+void `$INSTANCE_NAME`_flush_rx_cmd(void)
 {
-    `$INSTANCE_NAME`_sendCommand(NRF_FLUSH_RX_CMD);
+    `$INSTANCE_NAME`_send_command(NRF_FLUSH_RX_CMD);
 }
 
 /**
  * Used in TX mode.
  * Flush TX FIFO.
  */
-void `$INSTANCE_NAME`_flushTxCmd(void)
+void `$INSTANCE_NAME`_flush_tx_cmd(void)
 {
-    `$INSTANCE_NAME`_sendCommand(NRF_FLUSH_TX_CMD);
+    `$INSTANCE_NAME`_send_command(NRF_FLUSH_TX_CMD);
 }
 
 /**
@@ -112,7 +112,7 @@ void `$INSTANCE_NAME`_flushTxCmd(void)
  * @param uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_readRXPayloadCmd(uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
 #if defined(`$SPI_MASTER`_CY_SCB_SPI_PDL_H) // PSoC6
@@ -181,7 +181,7 @@ void `$INSTANCE_NAME`_readRXPayloadCmd(uint8_t* data, const size_t size)
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
 #if defined(`$SPI_MASTER`_CY_SCB_SPI_PDL_H) // PSoC6
@@ -226,7 +226,7 @@ void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size)
  *
  * @return uint8_t: width of the payload on the top of the RX FIFO.
  */
-uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
+uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
 {
     uint8_t width = 0;
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
@@ -279,7 +279,7 @@ uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
 
     // If width is greater than 32 then is garbage, we must flush the RX FIFO
     if (32 < width) {
-        `$INSTANCE_NAME`_flushRxCmd();
+        `$INSTANCE_NAME`_flush_rx_cmd();
     }
 
     return width;
@@ -296,11 +296,11 @@ uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void)
  * Write payload: 1 - 32 bytes.
  * A write operation always starts at byte 0.
  *
- * @param const NrfPipe pipe:
+ * @param const nrf_pipe pipe:
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe, const uint8_t* data,
+void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* data,
                                         const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
@@ -349,7 +349,7 @@ void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe, const uint8_t* data
  * @param const uint8_t* data:
  * @param const size_t size:
  */
-void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
 {
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block
 #if defined(`$SPI_MASTER`_CY_SCB_SPI_PDL_H) // PSoC6
@@ -394,7 +394,7 @@ void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size)
  *
  * @return uint8_t: STATUS register.
  */
-uint8_t `$INSTANCE_NAME`_NOPCmd(void)
+uint8_t `$INSTANCE_NAME`_nop_cmd(void)
 {
     uint8_t status = 0;
 #if defined(CY_SCB_`$SPI_MASTER`_H) // SCB Block

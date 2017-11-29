@@ -55,7 +55,7 @@ typedef enum {
     NRF_FIFO_STATUS_REG = 0x17,
     NRF_DYNPD_REG       = 0x1C,
     NRF_FEATURE_REG     = 0x1D,
-} NrfRegister;
+} nrf_register;
 
 // Command Name Mnemonics (Instructions)
 typedef enum{
@@ -70,7 +70,7 @@ typedef enum{
     NRF_W_ACK_PAYLOAD_CMD       = 0xA8, // Write payload to be transmitted together with ACK packet
     NRF_W_TX_PAYLOAD_NOACK_CMD  = 0xB0, // Disable AUTOACK on this specific packet
     NRF_NOP_CMD                 = 0xFF, // No operation, read STATUS register
-} NrfCmd;
+} nrf_cmd;
 
 // Data pipes
 typedef enum{
@@ -80,7 +80,7 @@ typedef enum{
     NRF_PIPE3   = 0x03,
     NRF_PIPE4   = 0x04,
     NRF_PIPE5   = 0x05,
-} NrfPipe;
+} nrf_pipe;
 
 // Rx data pipes addresses
 typedef enum {
@@ -90,7 +90,7 @@ typedef enum {
     NRF_PIPE3_ADDR = NRF_RX_ADDR_P3_REG,
     NRF_PIPE4_ADDR = NRF_RX_ADDR_P4_REG,
     NRF_PIPE5_ADDR = NRF_RX_ADDR_P5_REG,
-} NrfRxPipeAddress;
+} nrf_rx_pipe_address;
 
 typedef enum {
     NRF_PIPE0_PAYLOAD_SIZE = NRF_RX_PW_P0_REG,
@@ -99,20 +99,20 @@ typedef enum {
     NRF_PIPE3_PAYLOAD_SIZE = NRF_RX_PW_P3_REG,
     NRF_PIPE4_PAYLOAD_SIZE = NRF_RX_PW_P4_REG,
     NRF_PIPE5_PAYLOAD_SIZE = NRF_RX_PW_P5_REG,
-} NrfPipePayloadSize;
+} nrf_pipe_payload_size;
 
 // nRF24 Modes
 typedef enum{
     NRF_MODE_TX     = 0,
     NRF_MODE_RX     = 1,
-} NrfMode;
+} nrf_mode;
 
 typedef enum{
     NRF_NONE_IRQ    = 0, // 0x00
     NRF_MAX_RT_IRQ  = 4, // 0x10
     NRF_TX_DS_IRQ   = 5, // 0x20
     NRF_RX_DR_IRQ   = 6, // 0x40
-} NrfIRQ;
+} nrf_irq;
 
 // CONFIG: Configuration Register
 enum {
@@ -150,7 +150,7 @@ typedef enum {
     NRF_SETUP_AW_3BYTES = 1,
     NRF_SETUP_AW_4BYTES = 2,
     NRF_SETUP_AW_5BYTES = 3,
-} NrfSetupAddressWidth;
+} nrf_setup_address_width;
 
 // SETUP_RETR: Setup of Automatic Retransmission
 enum {

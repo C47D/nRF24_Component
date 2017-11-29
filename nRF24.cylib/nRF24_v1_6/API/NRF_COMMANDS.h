@@ -37,16 +37,16 @@
 
 #include "`$INSTANCE_NAME`_REGS.h"
 
-void `$INSTANCE_NAME`_sendCommand(const NrfCmd cmd);
-void `$INSTANCE_NAME`_reuseTxPayloadCmd(void);
-void `$INSTANCE_NAME`_readRXPayloadCmd(uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_writeTXPayloadCmd(const uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_flushRxCmd(void);
-void `$INSTANCE_NAME`_flushTxCmd(void);
-uint8_t `$INSTANCE_NAME`_readPayloadWidthCmd(void);
-void `$INSTANCE_NAME`_writeACKPayloadCmd(const NrfPipe pipe, const uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_noACKPayloadCmd(const uint8_t* data, const size_t size);
-uint8_t `$INSTANCE_NAME`_NOPCmd(void);
+void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd);
+void `$INSTANCE_NAME`_reuse_tx_payload_cmd(void);
+void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_flush_rx_cmd(void);
+void `$INSTANCE_NAME`_flush_tx_cmd(void);
+uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void);
+void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size);
+uint8_t `$INSTANCE_NAME`_nop_cmd(void);
 
 #endif /* `$INSTANCE_NAME`_NRF_COMMANDS_H */
 
