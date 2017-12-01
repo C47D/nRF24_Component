@@ -8,7 +8,7 @@ The SS (also known as CS or Chip Select) pin of the component is controlled via 
 
 The component have portability between diferent PSoC devices in mind so the SPI Master component, SS, CE and IRQ pins must be provided by the user on the project schematic. See the image below for an example.
 
-![nRF24_sch_example](img/nRF24_sch_example)
+![nRF24_sch_example](img/nRF24_sch_example.png)
 
 ## Example projects
 
@@ -17,16 +17,17 @@ See ![nRF24 Example Projects](https://github.com/C47D/nRF24_Example_Projects) fo
 ## Current version: 1.6
 
 The component symbol is shown below:
+
 ![Component](img/v1_6.png)
 
 The *customizer* or configuration window is separated in two tabs:
 - nRF Configuration
 
-![nRF_Configuration](img/nRF24_conf)
+![nRF_Configuration](img/nRF24_conf.png)
 
 - SPI Interface (TODO: Find a more appropiate name)
 
-![nRF_SPI](img/nRF24_spi)
+![nRF_SPI](img/nRF24_spi.png)
 
 ## TODO for version 1.6 [WiP]
 - [ ] Update documentation.
