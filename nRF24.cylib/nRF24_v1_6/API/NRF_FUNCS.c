@@ -936,6 +936,17 @@ bool `$INSTANCE_NAME`_is_rx_fifo_empty(void)
 }
 
 /**
+ * Received Power Detector triggers at received power levels above -64dBm that
+ * are present in the RF channel you receive on. If the received power is less
+ * than -64dBm, RDP = 0.
+ * The RPD can be read out at any time while nRF24L01+ is in receive mode.
+ */
+bool `$INSTANCE_NAME`_test_carrier(void)
+{
+    return `$INSTANCE_NAME`_read_bit(NRF_RPD_REG, NRF_RPD_RPD);
+}
+
+/**
  * This function will write 1 to all the three IRQ "flag" bits on the
  * STATUS register.
  */

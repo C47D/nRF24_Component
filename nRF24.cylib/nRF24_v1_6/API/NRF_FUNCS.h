@@ -131,6 +131,7 @@ uint8_t `$INSTANCE_NAME`_get_data_pipe_with_payload(void);
 uint8_t `$INSTANCE_NAME`_received_power_detector(void);
 bool `$INSTANCE_NAME`_is_tx_fifo_full(void);
 bool `$INSTANCE_NAME`_is_rx_fifo_empty(void);
+bool `$INSTANCE_NAME`_test_carrier(void);
 
 // IRQ Handle functions
 void `$INSTANCE_NAME`_clear_all_irqs(void);
