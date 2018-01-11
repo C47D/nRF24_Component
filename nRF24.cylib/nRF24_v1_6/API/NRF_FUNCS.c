@@ -99,7 +99,7 @@ void `$INSTANCE_NAME`_init(void)
     `$INSTANCE_NAME`_write_register(NRF_RX_PW_P5_REG, CUSTOMIZER_RX_PW_P0);
 #endif
 
-    `$INSTANCE_NAME`_write_register( NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
+    `$INSTANCE_NAME`_write_register(NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
 }
 
 /**
@@ -198,11 +198,7 @@ void `$INSTANCE_NAME`_set_power_down_mode(void)
  */
 void `$INSTANCE_NAME`_set_standby_i_mode(void)
 {
-#if 0
-    `$INSTANCE_NAME`_listen(false);
-#else
     `$INSTANCE_NAME`_stop_listening();
-#endif
     `$INSTANCE_NAME`_set_bit(NRF_CONFIG_REG, NRF_CONFIG_PWR_UP);
 }
 
@@ -217,11 +213,7 @@ void `$INSTANCE_NAME`_set_standby_i_mode(void)
  */
 void `$INSTANCE_NAME`_set_standby_ii_mode(void)
 {
-#if 0
-    `$INSTANCE_NAME`_listen(true);
-#else
     `$INSTANCE_NAME`_start_listening();
-#endif
     `$INSTANCE_NAME`_set_bit(NRF_CONFIG_REG, NRF_CONFIG_PWR_UP);
 }
 

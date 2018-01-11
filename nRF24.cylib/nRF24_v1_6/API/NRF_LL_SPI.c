@@ -27,11 +27,11 @@
 #include "`$INSTANCE_NAME`_LL_SPI.h"
 
 /**
- * Read a (1 byte long) nRF24 register.
+ * Read the specified nRF24 register (1byte).
  *
  * @param const nrf_register reg: Register to be read.
  *
- * @return uint8_t: Content of the register.
+ * @return uint8_t: Content of the specified register.
  */
 uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 {
@@ -66,8 +66,7 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
     // This is the data we want
     data = `$SPI_MASTER`_SpiUartReadRxData();
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_R_REGISTER_CMD | reg);
@@ -86,16 +85,15 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 }
 
 /**
- * Read a (multi byte long) nRF24 register.
+ * Read the specified nRF24 register (bigger than 1 byte).
  *
  * @param const nrf_register reg: Register to be read.
  * @param uint8_t* data: Pointer to where the content of the register
  * will be stored.
- * @param size_t size: Size of the register, larger register hold 5 bytes of
- * data.
+ * @param size_t size: Size of the register and data.
  */
-void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data,
-                                       const size_t size)
+void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
+                                           uint8_t* data, const size_t size)
 {
 #if (_PSOC_6==1) // PSoC6
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
@@ -104,6 +102,7 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data,
     }
     
     (void)Cy_SCB_SPI_Read(`$SPI_MASTER`_HW);
+    
     for(size_t i = 0; i < size; i++){
         Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_NOP_CMD);
         while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {}
@@ -122,7 +121,6 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data,
     
     // Read the status register, just to clear the rx fifo
     `$SPI_MASTER`_SpiUartReadRxData();
-    //SPI_SpiUartClearRxBuffer();
     
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_SpiUartWriteTxData(NRF_NOP_CMD);
@@ -153,10 +151,10 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data,
 }
 
 /**
- * Write one byte to a nRF24 Register.
+ * Write to the specified nRF24 Register (1byte).
  *
  * @param const nrf_register reg: Register to be written.
- * @param const uint8_t data: Data to be written into the register.
+ * @param const uint8_t data: Data to be written into the specified register.
  */
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 {
@@ -181,8 +179,7 @@ void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_W_REGISTER_CMD | reg);
@@ -195,14 +192,14 @@ void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 }
 
 /**
- * Write one or more bytes to a nRF24 Register, larger register is 5 bytes.
+ * Write one or more bytes to the specified nRF24 Register.
  *
  * @param const nrf_register reg: Register to be written.
- * @param const uint8_t* data: Data to write into the register.
- * @param size_t size: Size (in bytes) of the data to be written.
+ * @param const uint8_t* data: Data to writen into the register.
+ * @param size_t size: Bytes of the data to be written in the specified register.
  */
-void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t* data,
-                                        const size_t size)
+void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
+                                            const uint8_t* data, const size_t size)
 {
 #if (_PSOC6==1)
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
@@ -229,8 +226,7 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t*
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_W_REGISTER_CMD | reg);
@@ -247,71 +243,84 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t*
 }
 
 /**
- * Read a bit of a nrf_register.
+ * Read the content of the specified bit of the specified nrf_register.
  *
  * @param const nrf_register reg: Register to be read.
  * @param uint8_t bit: Bit to be read.
  *
- * @return bool: Return 1 if bit is set (logic 1), return 0 if the bit
- * is clear (logic 0).
+ * @return bool: Return the content of the bit.
  */
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit)
 {
+    if (8 < bit) {
+        return;
+    }
+    
     return (`$INSTANCE_NAME`_read_register(reg) & (1 << bit)) != 0;
 }
 
 /**
- * Set (logic 1) or clear (logic 0) a given bit of a given nRF24 register.
+ * Set (1) or clear (0) the specified bit of the specified nRF24 register.
  *
- * Before setting the value we want to write to the bit we first check it's value,
- * if the bit have the value we wanted already, we exit the function early.
+ * First we read the specified register and check the content of the specified
+ * bit, exit early if the bit already is the value we wanted, otherwise we set
+ * the bit to the specified value.
  *
  * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Position of the bit to be written.
- * @param const bool value: Value (Logic 1 or 0) to write into the bit.
+ * @param const bool value: Value (1 or 0) to write into the bit.
  */
-void `$INSTANCE_NAME`_write_bit(const nrf_register reg, const uint8_t bit,
-                               const bool value)
+void `$INSTANCE_NAME`_write_bit(const nrf_register reg,
+                                  const uint8_t bit, const bool value)
 {
     uint8_t temp = `$INSTANCE_NAME`_read_register(reg);
 
-    // Check if the bit of interest is set
+    // Check if the bit is 1
     if ((temp & (1 << bit)) != 0) {
-        // Return if we wanted to set it, continue if we wanted to clear it.
+        // it is 1, return if we wanted to set it to 1
         if (value) {
             return;
         }
-    } else { // the bit is clear
+    } else { // the bit is 0
+        // it is 0, return if we wanted to set it to 0
         if (!value) {
-            return; // return if we wanted to clear the bit
+            return;
         }
     }
 
-    // Calculate the new value to be written in the register
+    // Calculate the new value to be written into the register
     temp = value ? temp | (1 << bit) : temp & ~(1 << bit);
 
     `$INSTANCE_NAME`_write_register(reg, temp);
 }
 
 /**
- * Clear (set to 0) a given bit of a given nRF24 register.
+ * Set to 0 the specified bit of the specified nRF24 register.
  *
  * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
  */
 void `$INSTANCE_NAME`_clear_bit(const nrf_register reg, const uint8_t bit)
 {
+    if (8 < bit) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_write_bit(reg, bit, 0);
 }
 
 /**
- * Set (set to 1) a given bit of a given nRF24 register.
+ * Set to 1 the specified bit of the specified nRF24 register.
  *
  * @param const nrf_register reg: Register to be written.
  * @param const uint8_t bit: Bit to be written.
  */
 void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit)
 {
+    if (8 < bit) {
+        return;
+    }
+    
     `$INSTANCE_NAME`_write_bit(reg, bit, 1);
 }
 

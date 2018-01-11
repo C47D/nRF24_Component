@@ -31,7 +31,7 @@
 #include "`$INSTANCE_NAME`_REGS.h"
 
 /**
- * Send a command to the nRF24 radio.
+ * Send the specified command to the nRF24 radio.
  *
  * @param const nrf_cmd cmd: Command to send to the nRF24 radio.
  */
@@ -107,8 +107,8 @@ void `$INSTANCE_NAME`_flush_tx_cmd(void)
  * Read RX payload: 1 - 32 bytes. A read operation always starts at byte 0.
  * Payload is deleted from FIFO after it is read.
  *
- * @param uint8_t* data:
- * @param const size_t size:
+ * @param uint8_t* data: Data to be read.
+ * @param const size_t size: Bytes of data to be read (max 32).
  */
 void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
 {
@@ -174,8 +174,8 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
  * Write TX payload: 1 - 32 bytes.
  * A write operation always starts at byte 0 used in TX payload.
  *
- * @param const uint8_t* data:
- * @param const size_t size:
+ * @param const uint8_t* data: Data to be sent.
+ * @param const size_t size: Bytes of data to be sent (max 32).
  */
 void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t size)
 {
@@ -205,7 +205,7 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
-    for (uint8_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         SPI_WriteTxData(data[i]);
         while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {
         }
@@ -266,9 +266,7 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
     }
     `$SS_PIN`_Write(1);
 
-    // This is the STATUS Register
     (void)`$SPI_MASTER`_ReadRxData();
-    // This is the data we want
     width = `$SPI_MASTER`_ReadRxData();
 #endif
 
@@ -291,9 +289,9 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
  * Write payload: 1 - 32 bytes.
  * A write operation always starts at byte 0.
  *
- * @param const nrf_pipe pipe:
- * @param const uint8_t* data:
- * @param const size_t size:
+ * @param const nrf_pipe pipe: Pipe to use.
+ * @param const uint8_t* data: Data to be sent.
+ * @param const size_t size: Bytes of data to be sent (max 32)
  */
 void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* data,
                                         const size_t size)
@@ -325,8 +323,7 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
 
     `$SS_PIN`_Write(0);
 
-    `$SPI_MASTER`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
-    //`$SPI_MASTER`_PutArray(data, size);
+    `$SPI_MASTER`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe)
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
@@ -343,8 +340,8 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
  * Used in TX mode.
  * Disable AUTOACK on this packet.
  *
- * @param const uint8_t* data:
- * @param const size_t size:
+ * @param const uint8_t* data: Data to be sent.
+ * @param const size_t size: Bytes of data to be sent (max 32).
  */
 void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
 {
@@ -376,7 +373,6 @@ void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
     `$SS_PIN`_Write(0);
 
     `$SPI_MASTER`_WriteTxData(NRF_W_TX_PAYLOAD_NOACK_CMD);
-    //`$SPI_MASTER`_PutArray(data, size);
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
