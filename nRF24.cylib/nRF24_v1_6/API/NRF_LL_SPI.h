@@ -19,11 +19,6 @@
 #ifndef `$INSTANCE_NAME`_LL_SPI_H
 #define `$INSTANCE_NAME`_LL_SPI_H
 
-#if 0
-#include <cytypes.h>
-#include <cyfitter.h>
-#endif
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -35,7 +30,6 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data ,
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data);
 void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t* data, const size_t size);
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit);
-void `$INSTANCE_NAME`_write_bit(const nrf_register reg, const uint8_t bit, const bool value);
 void `$INSTANCE_NAME`_clear_bit(const nrf_register reg, const uint8_t bit);
 void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit);
 

@@ -253,7 +253,7 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit)
 {
     if (8 < bit) {
-        return;
+        return false; // how to deal with this?
     }
     
     return (`$INSTANCE_NAME`_read_register(reg) & (1 << bit)) != 0;
@@ -270,7 +270,7 @@ bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit)
  * @param const uint8_t bit: Position of the bit to be written.
  * @param const bool value: Value (1 or 0) to write into the bit.
  */
-void `$INSTANCE_NAME`_write_bit(const nrf_register reg,
+static void `$INSTANCE_NAME`_write_bit(const nrf_register reg,
                                   const uint8_t bit, const bool value)
 {
     uint8_t temp = `$INSTANCE_NAME`_read_register(reg);
