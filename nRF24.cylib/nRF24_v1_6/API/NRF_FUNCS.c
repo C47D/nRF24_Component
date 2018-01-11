@@ -33,20 +33,20 @@
  */
 void `$INSTANCE_NAME`_start(void)
 {
-    // Recommended delay to start using the nRF24
+    // Recommended delay before start using the nRF24
     CyDelay(NRF_POWER_UP_DELAY);
     
     // Now the radio is in Power Down mode
     
-    // Set `$SS_PIN` to logic 1, `$CE_PIN` to logic 0 and Start the `$SPI_MASTER`
-#if defined(CY_GPIO_H) // PSoC6
+    // Start the `$SPI_MASTER` and set CE and SS to a known value
+    `$SPI_MASTER`_Start();
+#if defined(_PSOC6) // PSoC6
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #else // PSoC 4 and 5LP
     `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
 #endif
-    `$SPI_MASTER`_Start();
 
     // Flush both nRF24 FIFOs
     `$INSTANCE_NAME`_flush_rx_cmd();
@@ -679,23 +679,6 @@ void `$INSTANCE_NAME`_disable_payload_with_no_ack_cmd(void)
 }
 
 /**
- * @brief Set the value of the CE pin to listen or not.
- *
- * @param const bool listen: If @listen is set to true, then the radio will
- * listen, if set to false the radio will stop listening.
- 
-void `$INSTANCE_NAME`_listen(const bool listen)
-{
-#if defined(CY_GPIO_H)
-    listen ? Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM) : 
-            Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    listen ? `$CE_PIN`_Write(1) : `$CE_PIN`_Write(0);
-#endif
-}
-*/
-
-/**
  * @brief The nRF24 radio will start listening.
  *
  * This function set the pin CE to logic high, this enable the radio for
@@ -703,14 +686,10 @@ void `$INSTANCE_NAME`_listen(const bool listen)
  */
 void `$INSTANCE_NAME`_start_listening(void)
 {
-#if 0
-    `$INSTANCE_NAME`_listen(true);
-#else
-    #if defined(CY_GPIO_H)
+#if (_PSOC6==1)
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-    #else
+#else
     `$CE_PIN`_Write(1);
-    #endif
 #endif
 }
 
@@ -722,14 +701,10 @@ void `$INSTANCE_NAME`_start_listening(void)
  */
 void `$INSTANCE_NAME`_stop_listening(void)
 {
-#if 0
-    `$INSTANCE_NAME`_listen(false);
-#else
-    #if defined(CY_GPIO_H)
+#if (_PSOC6==1)
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-    #else
+#else
     `$CE_PIN`_Write(0);
-    #endif
 #endif
 }
 
@@ -741,7 +716,7 @@ void `$INSTANCE_NAME`_stop_listening(void)
  */
 void `$INSTANCE_NAME`_transmit_pulse(void)
 {
-#if defined(CY_GPIO_H)
+#if (_PSOC6==1)
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     CyDelayUs(NRF_CE_PULSE_WIDTH);
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
@@ -845,7 +820,7 @@ void `$INSTANCE_NAME`_get_rx_payload(uint8_t* data, const size_t size)
     if (NULL == data) {
         return;
     }
-#if defined(CY_GPIO_H)
+#if (_PSOC6==1)
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     `$INSTANCE_NAME`_read_rx_payload_cmd(data, size);
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
