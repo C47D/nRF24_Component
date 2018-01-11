@@ -323,7 +323,7 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
 
     `$SS_PIN`_Write(0);
 
-    `$SPI_MASTER`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe)
+    `$SPI_MASTER`_WriteTxData(NRF_W_ACK_PAYLOAD_CMD | pipe);
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
