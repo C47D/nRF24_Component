@@ -25,11 +25,11 @@ You can directly clone this repo inside your project directory and update it as 
 If you want you can also include this repo as a git submodule.
 
 
-## Current version: 1.6
+## Current version: 1.7
 
 The current component symbol is shown below:
 
-![Component](img/v1_6.png)
+![Component](img/v1_7.png)
 
 The *customizer* or configuration window is where the PSoC Creator magic "happens", the custom *customizers* are ugly so i'm also trying to write a customizer in C# and add it to the component (Work in Progress), this is not really well documented and i'm pretty bad at desining GUI's so if you know C# and UI you can help me out.
 
@@ -48,17 +48,16 @@ In this tab all the configurable nRF24 registers are layed out, at the right of 
 ![nRF_SPI](img/nRF24_spi.png)
 
 
-## TODO for version 1.6 [WiP]
-- [ ] Update documentation.
-- [ ] Component Datasheet.
-- [x] PSoC6 support (WiP).
+## TODO for version 1.7 [WiP]
+- [ ] Component datasheet.
+- [ ] PSoC6 support (WiP, having problems with the PDL library).
 
 
-## TODO for version 2.0 [WiP]
+## TODO for version 2.0
 - [ ] API compatible with the nRF24 component of Erich Styger (mcuoneclipse)
 - [ ] Design the customizer using Visual Studio.
 
 
-## Coding style [WiP]
+## Coding style
 
 The code style in the v2.0 will be similar to the [Linux kernel coding style](https://www.kernel.org/doc/html/v4.10/process/coding-style.html), for this the tool clang-format is used, the repo contains the .clang-format file.
