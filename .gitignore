@@ -1,12 +1,7 @@
 # Ignore PSoC Creator temp and user specific files
 
 # Ignore test projects
-nRF24_5LP_Tx.cydsn
-nRF24_SCB_Tx.cydsn
-nRF24_tests.cydsn
-nRF24_tests_scb.cydsn
-nRF24_UDB_Tx.cydsn
-test_P6.cydsn
+*.cydsn
 docs/*
 nRF24.cylib/nRF24_v2_0/*
 
