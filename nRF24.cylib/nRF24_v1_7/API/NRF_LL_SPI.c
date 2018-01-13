@@ -36,7 +36,7 @@
 uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 {
     uint8_t data = 0;
-#if (_PSOC_6==1) // PSoC6
+#if (_PSOC6==1) // PSoC6
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     
     Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_R_REGISTER_CMD | reg);
@@ -95,7 +95,7 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
                                            uint8_t* data, const size_t size)
 {
-#if (_PSOC_6==1) // PSoC6
+#if (_PSOC6==1) // PSoC6
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_R_REGISTER_CMD | reg);
     while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {
@@ -252,9 +252,11 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
  */
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit)
 {
+#if 0
     if (8 < bit) {
         return false; // how to deal with this?
     }
+#endif
     
     return (`$INSTANCE_NAME`_read_register(reg) & (1 << bit)) != 0;
 }

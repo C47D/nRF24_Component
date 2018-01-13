@@ -40,7 +40,7 @@ void `$INSTANCE_NAME`_start(void)
     
     // Start the `$SPI_MASTER` and set CE and SS to a known value
     `$SPI_MASTER`_Start();
-#if defined(_PSOC6) // PSoC6
+#if (_PSOC6==1) // PSoC6
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #else // PSoC 4 and 5LP

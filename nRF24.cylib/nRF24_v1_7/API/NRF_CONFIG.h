@@ -34,7 +34,7 @@
 #endif
 
 #if (_PSOC6==1)
-    #include "SPI_SPI_UART.h"
+    //#include "SPI_SPI_UART.h"
     #include "gpio/cy_gpio.h"
 #elif (_PSOC_UDB==1) || (_PSOC4_SCB==1)
     #include "CE.h"
