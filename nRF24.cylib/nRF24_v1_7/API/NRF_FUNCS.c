@@ -39,11 +39,16 @@ void `$INSTANCE_NAME`_start(void)
     // Now the radio is in Power Down mode
     
     // Start the `$SPI_MASTER` and set CE and SS to a known value
-    `$SPI_MASTER`_Start();
 #if (_PSOC6==1) // PSoC6
+    /* We are using the low level driver, so pass NULL to the context*/
+    (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
+    Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
+    Cy_GPIO_Clr(CE_PORT, CE_NUM);
+    Cy_GPIO_Set(SS_PORT, SS_NUM);
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #else // PSoC 4 and 5LP
+    `$SPI_MASTER`_Start();
     `$CE_PIN`_Write(0);
     `$SS_PIN`_Write(1);
 #endif

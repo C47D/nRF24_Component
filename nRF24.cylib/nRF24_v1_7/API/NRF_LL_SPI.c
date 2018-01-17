@@ -37,13 +37,16 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 {
     uint8_t data = 0;
 #if (_PSOC6==1) // PSoC6
+    Cy_SCB_`$SPI_MASTER`_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_`$SPI_MASTER`_ClearTxFifo(`$SPI_MASTER`_HW);
+    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     
-    Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_R_REGISTER_CMD | reg);
-    Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_NOP_CMD);
+    Cy_SCB_SPI_WriteArrayBlocking(`$SPI_MASTER`_HW, (uint8_t []){NRF_R_REGISTER_CMD | reg, NRF_NOP_CMD}, 2);
     
-    while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) != 2) {
+    while (Cy_SCB_`$SPI_MASTER`_IsTxComplete(`$SPI_MASTER`_HW) == false) {
     }
+    CyDelayUs(1);
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     
@@ -96,6 +99,9 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
                                            uint8_t* data, const size_t size)
 {
 #if (_PSOC6==1) // PSoC6
+    Cy_SCB_`$SPI_MASTER`_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_`$SPI_MASTER`_ClearTxFifo(`$SPI_MASTER`_HW);
+    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_R_REGISTER_CMD | reg);
     while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {
@@ -104,7 +110,7 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
     (void)Cy_SCB_SPI_Read(`$SPI_MASTER`_HW);
     
     for(size_t i = 0; i < size; i++){
-        Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_NOP_CMD);
+        while(Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_NOP_CMD) == 0);
         while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {}
         data[1] = Cy_SCB_SPI_Read(`$SPI_MASTER`_HW);
     }
@@ -159,12 +165,16 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 {
 #if (_PSOC6==1)
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-    Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_W_REGISTER_CMD | reg);
-    Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, data);
+    Cy_SCB_`$SPI_MASTER`_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_`$SPI_MASTER`_ClearTxFifo(`$SPI_MASTER`_HW);
     
-    while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) != 2) {
+    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    Cy_SCB_SPI_WriteArrayBlocking(`$SPI_MASTER`_HW, (uint8_t []){NRF_W_REGISTER_CMD | reg, data}, 2);
+    
+    while (Cy_SCB_`$SPI_MASTER`_IsTxComplete(`$SPI_MASTER`_HW) == false) {
     }
+    CyDelayUs(1);
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #elif (_PSOC4_SCB==1)
@@ -202,12 +212,16 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
                                             const uint8_t* data, const size_t size)
 {
 #if (_PSOC6==1)
+    Cy_SCB_`$SPI_MASTER`_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_`$SPI_MASTER`_ClearTxFifo(`$SPI_MASTER`_HW);
+    
     Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
     Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_W_REGISTER_CMD | reg);
-    Cy_SCB_SPI_WriteArray(`$SPI_MASTER`_HW, data, size);
+    Cy_SCB_SPI_WriteArrayBlocking(`$SPI_MASTER`_HW, data, size);
     
-    while (Cy_SCB_SPI_GetNumInRxFifo(`$SPI_MASTER`_HW) != (1 + size)) {
+    while (Cy_SCB_`$SPI_MASTER`_IsTxComplete(`$SPI_MASTER`_HW) == false) {
     }
+    CyDelayUs(1);
     
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #elif (_PSOC4_SCB==1)
