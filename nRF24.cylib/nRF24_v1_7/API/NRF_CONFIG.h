@@ -19,8 +19,6 @@
 #ifndef `$INSTANCE_NAME`_CONFIG_H
 #define `$INSTANCE_NAME`_CONFIG_H
 
-#include "project.h"
-
 #include "`$SPI_MASTER`.h"
 
 #if defined (CY_SCB_`$SPI_MASTER`_H)
