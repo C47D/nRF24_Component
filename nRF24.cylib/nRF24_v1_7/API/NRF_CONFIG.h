@@ -32,9 +32,11 @@
 #endif
 
 #if (_PSOC6==1)
-    //#include "SPI_SPI_UART.h"
     #include "gpio/cy_gpio.h"
 #elif (_PSOC_UDB==1) || (_PSOC4_SCB==1)
+    #if (_PSOC4_SCB==1)
+        #include "`$SPI_MASTER`_SPI_UART.h"
+    #endif
     #include "CE.h"
     #include "SS.h"
 #endif
