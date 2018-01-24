@@ -28,6 +28,27 @@
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
 
+/* "Helper" global variables */
+/* _nrf_addr_width expresed in bytes, declared with the default value */
+static nrf_pipe_address_width _nrf_addr_width = NRF_PIPE_ADDR_WIDTH_5BYTES;
+
+static nrf_pipe_address_width
+_addr_width_conf_to_bytes(enum nrf_setup_address_width addr_width)
+{
+    switch(addr_width)
+    {
+    case NRF_SETUP_AW_3BYTES:
+        NRF_ADDR_WIDTH = NRF_PIPE_ADDR_WIDTH_3BYTES;
+        break;
+    case NRF_SETUP_AW_4BYTES:
+        NRF_ADDR_WIDTH = NRF_PIPE_ADDR_WIDTH_4BYTES;
+        break;
+    case NRF_SETUP_AW_5BYTES:
+        NRF_ADDR_WIDTH = NRF_PIPE_ADDR_WIDTH_5BYTES;
+        break;
+    }
+}
+
 /**
  * @brief Configure the radio and clear IRQs, TX and RX FIFOs.
  */
@@ -43,8 +64,6 @@ void `$INSTANCE_NAME`_start(void)
     /* We are using the low level driver, so pass NULL to the context*/
     (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
     Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
-    Cy_GPIO_Clr(CE_PORT, CE_NUM);
-    Cy_GPIO_Set(SS_PORT, SS_NUM);
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
 #else // PSoC 4 and 5LP

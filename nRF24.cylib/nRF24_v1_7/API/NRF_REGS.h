@@ -152,6 +152,13 @@ typedef enum {
     NRF_SETUP_AW_5BYTES = 3,
 } nrf_setup_address_width;
 
+// helper to use set and get pipe addresses
+typedef enum {
+    NRF_PIPE_ADDR_WIDTH_3BYTES = 3,
+    NRF_PIPE_ADDR_WIDTH_4BYTES = 4,
+    NRF_PIPE_ADDR_WIDTH_5BYTES = 5,
+} nrf_pipe_address_width;
+
 // SETUP_RETR: Setup of Automatic Retransmission
 enum {
     NRF_SETUP_RETR_ARC  = 0,
