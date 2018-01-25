@@ -341,7 +341,7 @@ uint8_t `$INSTANCE_NAME`_get_address_width(void)
     
     return addr_width;
 #else
-    return _nrf_addr_width
+    return _nrf_addr_width;
 #endif
 }
 
