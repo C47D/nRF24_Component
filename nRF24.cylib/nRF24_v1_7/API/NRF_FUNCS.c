@@ -311,7 +311,7 @@ void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width
 {
     `$INSTANCE_NAME`_write_register(NRF_SETUP_AW_REG, (uint8_t)addr_width);
     // update the _nrf_addr_width variable
-    _addr_width_conf_to_bytes(CUSTOMIZER_SETUP_AW);
+    _addr_width_conf_to_bytes(addr_width);
 }
 
 /**
@@ -321,28 +321,7 @@ void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width
  */
 uint8_t `$INSTANCE_NAME`_get_address_width(void)
 {
-#if 0
-    uint8_t addr_width = 0;
-    uint8_t reg = `$INSTANCE_NAME`_read_register(NRF_SETUP_AW_REG);
-
-    switch (reg) {
-    case NRF_SETUP_AW_3BYTES:
-        addr_width = 3;
-        break;
-    case NRF_SETUP_AW_4BYTES:
-        addr_width = 4;
-        break;
-    case NRF_SETUP_AW_5BYTES:
-        addr_width = 5;
-        break;
-    default:
-        break;
-    }
-    
-    return addr_width;
-#else
     return _nrf_addr_width;
-#endif
 }
 
 /**
@@ -359,16 +338,9 @@ void `$INSTANCE_NAME`_set_rx_pipe_0_address(const uint8_t* addr, size_t size)
         return;
     }
 
-    // TODO: Replace NRF_MAX_ADDR_SIZE with ADD_WIDTH
-#if 0
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
-    }
-#else
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-#endif
     
     `$INSTANCE_NAME`_write_long_register(NRF_RX_ADDR_P0_REG, addr, size);
 }
@@ -385,15 +357,9 @@ void `$INSTANCE_NAME`_get_rx_pipe_0_address(uint8_t* addr, size_t size)
         return;
     }
 
-#if 0
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
-    }
-#else
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-#endif
     
     `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P0_REG, addr, size);
 }
@@ -412,15 +378,9 @@ void `$INSTANCE_NAME`_set_rx_pipe_1_address(const uint8_t* addr, size_t size)
         return;
     }
 
-#if 0
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
-    }
-#else
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-#endif
     
     `$INSTANCE_NAME`_write_long_register(NRF_RX_ADDR_P1_REG, addr, size);
 }
@@ -437,15 +397,9 @@ void `$INSTANCE_NAME`_get_rx_pipe_1_address(uint8_t* addr, size_t size)
         return;
     }
 
-#if 0
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
-    }
-#else
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-#endif
     
     `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size);
 }
@@ -472,15 +426,9 @@ void `$INSTANCE_NAME`_get_rx_pipe_2_address(uint8_t* addr, size_t size)
         return;
     }
 
-#if 0
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
-    }
-#else
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-#endif
     
     // The pipe2 address is the same as the pipe1 address except the LSB
     nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
@@ -509,8 +457,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_3_address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
+    if (_nrf_addr_width < size) {
+        size = _nrf_addr_width;
     }
     
     // The pipe3 address is the same as the pipe1 address except the LSB
@@ -540,8 +488,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_4_address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
+    if (_nrf_addr_width < size) {
+        size = _nrf_addr_width;
     }
     
     // The pipe4 address is the same as the pipe1 address except the LSB
@@ -571,8 +519,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_5_address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
+    if (_nrf_addr_width < size) {
+        size = _nrf_addr_width;
     }
     
     // The pipe5 address is the same as the pipe1 address except the LSB
@@ -592,8 +540,8 @@ void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size)
         return;
     }
 
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
+    if (_nrf_addr_width < size) {
+        size = _nrf_addr_width;
     }
     
     `$INSTANCE_NAME`_write_long_register(NRF_TX_ADDR_REG, addr, size);
@@ -611,8 +559,8 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
         return;
     }
 
-    if (NRF_MAX_ADDR_SIZE < size) {
-        size = NRF_MAX_ADDR_SIZE;
+    if (_nrf_addr_width < size) {
+        size = _nrf_addr_width;
     }
     
     `$INSTANCE_NAME`_read_long_register(NRF_TX_ADDR_REG, addr, size);
