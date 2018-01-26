@@ -43,14 +43,16 @@ In this tab all the configurable nRF24 registers are layed out, at the right of 
 
 ![nRF_Configuration](img/nRF24_conf.png)
 
-- SPI Interface (TODO: Find a more appropiate name, may be HW Interface?)
+- Hardware Interface
 
-![nRF_SPI](img/nRF24_spi.png)
+In this tab the user need to provide the names of the SPI Master component used for communication with the nRF24 radio, the name of the pin used to control the SS (slave select) and the pin used to control the CE pin.
+
+![nRF_SPI](img/nRF24_spi_v2.png)
 
 
 ## TODO for version 1.7 [WiP]
 - [ ] Component datasheet.
-- [ ] PSoC6 support (WiP, having problems with the PDL library).
+- [x] PSoC6 support (WiP, having problems with the PDL library).
 
 
 ## TODO for version 2.0
