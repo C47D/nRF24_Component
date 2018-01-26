@@ -25,11 +25,6 @@
 #ifndef `$INSTANCE_NAME`_FUNCS_H
 #define `$INSTANCE_NAME`_FUNCS_H
 
-#if 0
-#include <cyfitter.h>
-#include <cytypes.h>
-#endif
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -113,7 +108,6 @@ void `$INSTANCE_NAME`_disable_payload_with_ack(void);
 void `$INSTANCE_NAME`_disable_payload_with_no_ack_cmd(void);
 
 /* General purpose functions */
-// void `$INSTANCE_NAME`_listen(const bool listen);
 void `$INSTANCE_NAME`_start_listening(void);
 void `$INSTANCE_NAME`_stop_listening(void);
 void `$INSTANCE_NAME`_transmit_pulse(void);

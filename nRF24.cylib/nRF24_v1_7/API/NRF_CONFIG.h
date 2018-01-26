@@ -22,23 +22,23 @@
 #include "`$SPI_MASTER`.h"
 
 #if defined (CY_SCB_`$SPI_MASTER`_H)
-    #if defined (`$SPI_MASTER`_CY_SCB_SPI_PDL_H)
-        #define _PSOC6      1
-    #else
-        #define _PSOC4_SCB  1
-    #endif
+# if defined (`$SPI_MASTER`_CY_SCB_SPI_PDL_H)
+#  define _PSOC6      1
+# else
+#  define _PSOC4_SCB  1
+# endif
 #else
-    #define _PSOC_UDB   1
+# define _PSOC_UDB   1
 #endif
 
 #if (_PSOC6==1)
-    #include "gpio/cy_gpio.h"
+# include "gpio/cy_gpio.h"
 #elif (_PSOC_UDB==1) || (_PSOC4_SCB==1)
-    #if (_PSOC4_SCB==1)
-        #include "`$SPI_MASTER`_SPI_UART.h"
-    #endif
-    #include "CE.h"
-    #include "SS.h"
+# if (_PSOC4_SCB==1)
+#  include "`$SPI_MASTER`_SPI_UART.h"
+# endif
+# include "CE.h"
+# include "SS.h"
 #endif
 
 // Component version info

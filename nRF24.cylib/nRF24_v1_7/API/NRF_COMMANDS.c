@@ -21,13 +21,10 @@
 *
 * @brief The nRF24 radio is controlled via commands, this file implement all
 * the available commands.
-* 
 */
 
 #include "`$INSTANCE_NAME`_CONFIG.h"
-#include "`$INSTANCE_NAME`_LL_SPI.h"
 #include "`$INSTANCE_NAME`_COMMANDS.h"
-#include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_REGS.h"
 
 /**
@@ -61,8 +58,7 @@ void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd)
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(cmd);
@@ -155,8 +151,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_R_RX_PAYLOAD_CMD);
@@ -213,8 +208,7 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_W_TX_PAYLOAD_CMD);
@@ -271,8 +265,7 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
     // This is the data we want
     width = `$SPI_MASTER`_SpiUartReadRxData();
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_R_RX_PL_WID_CMD);
@@ -337,8 +330,7 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
 
@@ -389,8 +381,7 @@ void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
     }
     `$SS_PIN`_Write(1);
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
 
@@ -441,8 +432,7 @@ uint8_t `$INSTANCE_NAME`_nop_cmd(void)
 
     status = `$SPI_MASTER`_SpiUartReadRxData();
 #else // _PSOC_UDB
-    `$SPI_MASTER`_ClearRxBuffer();
-    `$SPI_MASTER`_ClearTxBuffer();
+    `$SPI_MASTER`_ClearFIFO();
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_NOP_CMD);
