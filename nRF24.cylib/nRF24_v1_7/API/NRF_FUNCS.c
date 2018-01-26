@@ -61,7 +61,7 @@ void `$INSTANCE_NAME`_start(void)
     
     // Start the `$SPI_MASTER` and set CE and SS to a known value
 #if (_PSOC6==1) // PSoC6
-    /* We are using the low level driver, so pass NULL to the context*/
+    /* We are using the low level driver, so pass NULL to the context */
     (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
     Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
@@ -104,23 +104,23 @@ void `$INSTANCE_NAME`_init(void)
     `$INSTANCE_NAME`_write_register(NRF_RX_PW_P0_REG, CUSTOMIZER_RX_PW_P0);
 #endif
 #if (ENABLE_PIPE1 == 1)
-    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P1_REG, CUSTOMIZER_RX_PW_P0);
+    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P1_REG, CUSTOMIZER_RX_PW_P1);
 #endif
 #if (ENABLE_PIPE2 == 1)
     `$INSTANCE_NAME`_write_register(NRF_RX_ADDR_P2_REG, CUSTOMIZER_RX_ADDR_P2);
-    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P2_REG, CUSTOMIZER_RX_PW_P0);
+    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P2_REG, CUSTOMIZER_RX_PW_P2);
 #endif
 #if (ENABLE_PIPE3 == 1)
     `$INSTANCE_NAME`_write_register(NRF_RX_ADDR_P3_REG, CUSTOMIZER_RX_ADDR_P3);
-    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P3_REG, CUSTOMIZER_RX_PW_P0);
+    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P3_REG, CUSTOMIZER_RX_PW_P3);
 #endif
 #if (ENABLE_PIPE4 == 1)
     `$INSTANCE_NAME`_write_register(NRF_RX_ADDR_P4_REG, CUSTOMIZER_RX_ADDR_P4);
-    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P4_REG, CUSTOMIZER_RX_PW_P0);
+    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P4_REG, CUSTOMIZER_RX_PW_P4);
 #endif
 #if (ENABLE_PIPE5 == 1)
     `$INSTANCE_NAME`_write_register(NRF_RX_ADDR_P5_REG, CUSTOMIZER_RX_ADDR_P5);
-    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P5_REG, CUSTOMIZER_RX_PW_P0);
+    `$INSTANCE_NAME`_write_register(NRF_RX_PW_P5_REG, CUSTOMIZER_RX_PW_P5);
 #endif
 
     `$INSTANCE_NAME`_write_register(NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
