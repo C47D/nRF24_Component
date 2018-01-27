@@ -744,6 +744,11 @@ uint8_t `$INSTANCE_NAME`_get_status(void)
     return `$INSTANCE_NAME`_nop_cmd();
 }
 
+uint8_t `$INSTANCE_NAME`_get_fifo_status(void)
+{
+    return `$INSTANCE_NAME`_read_register(NRF_FIFO_STATUS_REG);
+}
+
 /**
  * @brief Get the number of retransmissions.
  *

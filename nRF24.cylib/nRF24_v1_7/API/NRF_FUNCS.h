@@ -112,6 +112,7 @@ void `$INSTANCE_NAME`_start_listening(void);
 void `$INSTANCE_NAME`_stop_listening(void);
 void `$INSTANCE_NAME`_transmit_pulse(void);
 uint8_t `$INSTANCE_NAME`_get_status(void);
+uint8_t `$INSTANCE_NAME`_get_fifo_status(void);
 uint8_t `$INSTANCE_NAME`_get_retransmissions_count(void);
 uint8_t `$INSTANCE_NAME`_get_lost_packets_count(void);
 void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *data, size_t size);
