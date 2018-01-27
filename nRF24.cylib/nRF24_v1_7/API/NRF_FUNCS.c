@@ -300,6 +300,10 @@ void `$INSTANCE_NAME`_set_channel(uint8_t channel)
     }
 
     `$INSTANCE_NAME`_write_register(NRF_RF_CH_REG, channel);
+    
+    // Flush both nRF24 FIFOs, from mcuoneclipse nrf24 component
+    `$INSTANCE_NAME`_flush_rx_cmd();
+    `$INSTANCE_NAME`_flush_tx_cmd();
 }
 
 /**
@@ -977,6 +981,30 @@ nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
     }
     
     return irq;
+}
+
+void `$INSTANCE_NAME`_poll_interrupt(void)
+{
+    
+}
+
+uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void)
+{
+    uint8_t sts = `$INSTANCE_NAME`_nop_cmd();
+    `$INSTANCE_NAME`_write_register(NRF_STATUS_REG, NRF_ALL_IRQ_MASK);
+    
+    return sts;
+}
+
+// command wrappers
+void `$INSTANCE_NAME`_flush_rx(void)
+{
+    `$INSTANCE_NAME`_flush_rx_cmd();
+}
+
+void `$INSTANCE_NAME`_flush_tx(void)
+{
+    `$INSTANCE_NAME`_flush_tx_cmd();
 }
 
 /* [] END OF FILE */

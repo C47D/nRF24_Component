@@ -91,7 +91,7 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t *addr, size_t size);
 
 // RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
 void `$INSTANCE_NAME`_set_payload_size(const nrf_pipe_payload_size pipe,
-                                     uint8_t size);
+                                          uint8_t size);
 uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pipe_payload_size pipe);
 
 // FIFO_STATUS Reg
@@ -120,7 +120,7 @@ bool `$INSTANCE_NAME`_is_data_ready(void);
 void `$INSTANCE_NAME`_get_rx_payload(uint8_t *payload, const size_t size);
 void `$INSTANCE_NAME`_tx_transmit_wait_no_ack(const uint8_t *data, size_t size);
 void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe, const uint8_t *data,
-                                     size_t size);
+                                         size_t size);
 uint8_t `$INSTANCE_NAME`_get_data_pipe_with_payload(void);
 uint8_t `$INSTANCE_NAME`_received_power_detector(void);
 bool `$INSTANCE_NAME`_is_tx_fifo_full(void);
@@ -131,6 +131,12 @@ bool `$INSTANCE_NAME`_test_carrier(void);
 void `$INSTANCE_NAME`_clear_all_irqs(void);
 void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag);
 nrf_irq `$INSTANCE_NAME`_get_irq_flag(void);
+void `$INSTANCE_NAME`_poll_interrupt(void);
+uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void);
+
+// command wrappers
+void `$INSTANCE_NAME`_flush_rx(void);
+void `$INSTANCE_NAME`_flush_tx(void);
 
 #endif /* `$INSTANCE_NAME`_FUNCS_H */
 
