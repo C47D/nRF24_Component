@@ -56,11 +56,11 @@ void `$INSTANCE_NAME`_start(void)
 {
     // Recommended delay before start using the nRF24
     CyDelay(NRF_POWER_UP_DELAY);
-    
+
     // Now the radio is in Power Down mode
-    
+
     // Start the `$SPI_MASTER` and set CE and SS to a known value
-#if (_PSOC6==1) // PSoC6
+#if defined (_PSOC6)
     /* We are using the low level driver, so pass NULL to the context */
     (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
     Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
@@ -77,10 +77,10 @@ void `$INSTANCE_NAME`_start(void)
     `$INSTANCE_NAME`_flush_tx_cmd();
     // Clear IRQ flags
     `$INSTANCE_NAME`_clear_all_irqs();
-    
+
     // Configure the nRF24 with the data from the customizer
     `$INSTANCE_NAME`_init();
-    
+
     // After PWR_UP = 1 the radio is in Standby-I mode, 130us of delay for settling
     CyDelayUs(150);
 }
@@ -124,7 +124,7 @@ void `$INSTANCE_NAME`_init(void)
 #endif
 
     `$INSTANCE_NAME`_write_register(NRF_CONFIG_REG, CUSTOMIZER_CONFIG);
-    
+
     // Set the _nrf_addr_width variable
     _addr_width_conf_to_bytes(CUSTOMIZER_SETUP_AW);
 }
@@ -300,7 +300,7 @@ void `$INSTANCE_NAME`_set_channel(uint8_t channel)
     }
 
     `$INSTANCE_NAME`_write_register(NRF_RF_CH_REG, channel);
-    
+
     // Flush both nRF24 FIFOs, from mcuoneclipse nrf24 component
     `$INSTANCE_NAME`_flush_rx_cmd();
     `$INSTANCE_NAME`_flush_tx_cmd();
@@ -345,7 +345,7 @@ void `$INSTANCE_NAME`_set_rx_pipe_0_address(const uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_write_long_register(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -364,7 +364,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_0_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P0_REG, addr, size);
 }
 
@@ -385,7 +385,7 @@ void `$INSTANCE_NAME`_set_rx_pipe_1_address(const uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_write_long_register(NRF_RX_ADDR_P1_REG, addr, size);
 }
 
@@ -404,7 +404,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_1_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size);
 }
 
@@ -433,7 +433,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_2_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     // The pipe2 address is the same as the pipe1 address except the LSB
     nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P2_REG);
@@ -464,7 +464,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_3_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     // The pipe3 address is the same as the pipe1 address except the LSB
     nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P3_REG);
@@ -495,7 +495,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_4_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     // The pipe4 address is the same as the pipe1 address except the LSB
     nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P4_REG);
@@ -526,7 +526,7 @@ void `$INSTANCE_NAME`_get_rx_pipe_5_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     // The pipe5 address is the same as the pipe1 address except the LSB
     nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
     addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P5_REG);
@@ -547,7 +547,7 @@ void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_write_long_register(NRF_TX_ADDR_REG, addr, size);
 }
 
@@ -566,7 +566,7 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-    
+
     `$INSTANCE_NAME`_read_long_register(NRF_TX_ADDR_REG, addr, size);
 }
 
@@ -583,7 +583,7 @@ void `$INSTANCE_NAME`_set_payload_size(const nrf_pipe_payload_size pipe, uint8_t
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         size = NRF_MAX_PAYLOAD_SIZE;
     }
-    
+
     `$INSTANCE_NAME`_write_register(pipe, size);
 }
 
@@ -693,7 +693,7 @@ void `$INSTANCE_NAME`_disable_payload_with_no_ack_cmd(void)
  */
 void `$INSTANCE_NAME`_start_listening(void)
 {
-#if (_PSOC6==1)
+#if defined (_PSOC6)
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
 #else
     `$CE_PIN`_Write(1);
@@ -708,7 +708,7 @@ void `$INSTANCE_NAME`_start_listening(void)
  */
 void `$INSTANCE_NAME`_stop_listening(void)
 {
-#if (_PSOC6==1)
+#if defined (_PSOC6)
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
 #else
     `$CE_PIN`_Write(0);
@@ -723,7 +723,7 @@ void `$INSTANCE_NAME`_stop_listening(void)
  */
 void `$INSTANCE_NAME`_transmit_pulse(void)
 {
-#if (_PSOC6==1)
+#if defined (_PSOC6)
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     CyDelayUs(NRF_CE_PULSE_WIDTH);
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
@@ -787,7 +787,7 @@ void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t* data, size_t size)
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         size = NRF_MAX_PAYLOAD_SIZE;
     }
-    
+
     `$INSTANCE_NAME`_write_tx_payload_cmd(data, size);
 }
 
@@ -802,7 +802,7 @@ void `$INSTANCE_NAME`_transmit(const uint8_t* data, size_t size)
     if (NULL == data) {
         return;
     }
-    
+
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         size = NRF_MAX_PAYLOAD_SIZE;
     }
@@ -832,7 +832,7 @@ void `$INSTANCE_NAME`_get_rx_payload(uint8_t *data, const size_t size)
     if (NULL == data) {
         return;
     }
-#if (_PSOC6==1)
+#if defined (_PSOC6)
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
     `$INSTANCE_NAME`_read_rx_payload_cmd(data, size);
     Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
@@ -858,7 +858,7 @@ void `$INSTANCE_NAME`_tx_transmit_wait_no_ack(const uint8_t *data, size_t size)
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         return;
     }
-    
+
     `$INSTANCE_NAME`_no_ack_payload_cmd(data, size);
     `$INSTANCE_NAME`_transmit_pulse();
 }
@@ -881,7 +881,7 @@ void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe,
     if (NRF_MAX_PAYLOAD_SIZE < size) {
         size = NRF_MAX_PAYLOAD_SIZE;
     }
-    
+
     `$INSTANCE_NAME`_write_ack_payload_cmd(pipe, data, size);
 }
 
@@ -965,10 +965,10 @@ void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag)
 nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
 {
     nrf_irq irq = NRF_NONE_IRQ;
-    
+
     // Get the STATUS register
     uint8_t sts = `$INSTANCE_NAME`_nop_cmd();
-    
+
     // We only care if bits 4, 5 or 6 are set, so we mask the STATUS with 0x0111_0000
     switch (sts & NRF_ALL_IRQ_MASK) {
     case NRF_STATUS_RX_DR_MASK:
@@ -984,20 +984,20 @@ nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
         irq = NRF_ALL_IRQ_MASK;
         break;
     }
-    
+
     return irq;
 }
 
 void `$INSTANCE_NAME`_poll_interrupt(void)
 {
-    
+
 }
 
 uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void)
 {
     uint8_t sts = `$INSTANCE_NAME`_nop_cmd();
     `$INSTANCE_NAME`_write_register(NRF_STATUS_REG, NRF_ALL_IRQ_MASK);
-    
+
     return sts;
 }
 

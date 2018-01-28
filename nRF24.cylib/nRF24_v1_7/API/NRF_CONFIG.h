@@ -23,18 +23,18 @@
 
 #if defined (CY_SCB_`$SPI_MASTER`_H)
 # if defined (`$SPI_MASTER`_CY_SCB_SPI_PDL_H)
-#  define _PSOC6      1
+#  define _PSOC6
 # else
-#  define _PSOC4_SCB  1
+#  define _PSOC4_SCB
 # endif
 #else
-# define _PSOC_UDB   1
+# define _PSOC_UDB
 #endif
 
-#if (_PSOC6==1)
+#if defined (_PSOC6)
 # include "gpio/cy_gpio.h"
-#elif (_PSOC_UDB==1) || (_PSOC4_SCB==1)
-# if (_PSOC4_SCB==1)
+#else // (_PSOC_UDB==1) || (_PSOC4_SCB==1)
+# if defined (_PSOC4_SCB)
 #  include "`$SPI_MASTER`_SPI_UART.h"
 # endif
 # include "CE.h"
@@ -83,7 +83,7 @@
 #define CUSTOMIZER_RX_ADDR_P4   (`@RX_ADDR_P4`)
 #define CUSTOMIZER_RX_PW_P5     (`@RX_PW_P5`)
 #define CUSTOMIZER_RX_ADDR_P5   (`@RX_ADDR_P5`)
-    
+
 #endif /* `$INSTANCE_NAME`_CONFIG_H */
 
 /* [] END OF FILE */
