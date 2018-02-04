@@ -97,8 +97,10 @@ uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pipe_payload_size pipe);
 // FIFO_STATUS Reg
 void `$INSTANCE_NAME`_reuse_last_transmitted_payload(void);
 // DYNPD Reg
-void `$INSTANCE_NAME`_enable_dynamic_payload(const nrf_pipe pipe);
-void `$INSTANCE_NAME`_disable_dynamic_payload(const nrf_pipe pipe);
+void `$INSTANCE_NAME`_enable_dynamic_payload(void);
+void `$INSTANCE_NAME`_enable_dynamic_payload_on_pipe(const nrf_pipe pipe);
+void `$INSTANCE_NAME`_disable_dynamic_payload(void);
+void `$INSTANCE_NAME`_disable_dynamic_payload_on_pipe(const nrf_pipe pipe);
 // FEATURE Reg
 void `$INSTANCE_NAME`_enable_dynamic_payload_length(void);
 void `$INSTANCE_NAME`_enable_payload_with_ack(void);

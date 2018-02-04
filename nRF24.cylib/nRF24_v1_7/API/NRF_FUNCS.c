@@ -435,8 +435,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_2_address(uint8_t* addr, size_t size)
     }
 
     // The pipe2 address is the same as the pipe1 address except the LSB
-    nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
-    addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P2_REG);
+    `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
+    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_RX_ADDR_P2_REG);
 }
 
 /**
@@ -466,8 +466,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_3_address(uint8_t* addr, size_t size)
     }
 
     // The pipe3 address is the same as the pipe1 address except the LSB
-    nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
-    addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P3_REG);
+    `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
+    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_RX_ADDR_P3_REG);
 }
 
 /**
@@ -497,8 +497,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_4_address(uint8_t* addr, size_t size)
     }
 
     // The pipe4 address is the same as the pipe1 address except the LSB
-    nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
-    addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P4_REG);
+    `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
+    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_RX_ADDR_P4_REG);
 }
 
 /**
@@ -528,8 +528,8 @@ void `$INSTANCE_NAME`_get_rx_pipe_5_address(uint8_t* addr, size_t size)
     }
 
     // The pipe5 address is the same as the pipe1 address except the LSB
-    nRF24_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
-    addr[size - 1] = nRF24_read_register(NRF_RX_ADDR_P5_REG);
+    `$INSTANCE_NAME`_read_long_register(NRF_RX_ADDR_P1_REG, addr, size - 1);
+    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_RX_ADDR_P5_REG);
 }
 
 /**
@@ -616,11 +616,22 @@ void `$INSTANCE_NAME`_reuse_last_transmitted_payload(void)
  *
  * @param const nrf_pipe pipe:
  */
-void `$INSTANCE_NAME`_enable_dynamic_payload(const nrf_pipe pipe)
+void `$INSTANCE_NAME`_enable_dynamic_payload(void)
 {
-    `$INSTANCE_NAME`_set_bit(NRF_EN_AA_REG, pipe);
+    // TODO: Read the FEATURE register, check the needed values and set
+    // the bits if not set already
     `$INSTANCE_NAME`_set_bit(NRF_FEATURE_REG, NRF_FEATURE_EN_ACK_PAY);
     `$INSTANCE_NAME`_set_bit(NRF_FEATURE_REG, NRF_FEATURE_EN_DPL);
+}
+
+/**
+ * @brief Enable dynamic payload on the given pipe.
+ *
+ * @param const nrf_pipe pipe:
+ */
+void `$INSTANCE_NAME`_enable_dynamic_payload_on_pipe(const nrf_pipe pipe)
+{
+    `$INSTANCE_NAME`_set_bit(NRF_EN_AA_REG, pipe);
     `$INSTANCE_NAME`_set_bit(NRF_DYNPD_REG, pipe);
 }
 
@@ -629,11 +640,22 @@ void `$INSTANCE_NAME`_enable_dynamic_payload(const nrf_pipe pipe)
  *
  * @param const nrf_pipe pipe:
  */
-void `$INSTANCE_NAME`_disable_dynamic_payload(const nrf_pipe pipe)
+void `$INSTANCE_NAME`_disable_dynamic_payload()
 {
-    `$INSTANCE_NAME`_clear_bit(NRF_EN_AA_REG, pipe);
+    // TODO: Read the FEATURE register, check the needed values and clear
+    // the bits if not clear already
     `$INSTANCE_NAME`_clear_bit(NRF_FEATURE_REG, NRF_FEATURE_EN_ACK_PAY);
     `$INSTANCE_NAME`_clear_bit(NRF_FEATURE_REG, NRF_FEATURE_EN_DPL);
+}
+
+/**
+ * @brief Disable dynamic payload on the given pipe.
+ *
+ * @param const nrf_pipe pipe:
+ */
+void `$INSTANCE_NAME`_disable_dynamic_payload_on_pipe(const nrf_pipe pipe)
+{
+    `$INSTANCE_NAME`_clear_bit(NRF_EN_AA_REG, pipe);
     `$INSTANCE_NAME`_clear_bit(NRF_DYNPD_REG, pipe);
 }
 
