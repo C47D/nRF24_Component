@@ -98,7 +98,7 @@ typedef enum {
     NRF_PLD_SIZE_PIPE3  = NRF_REG_RX_PW_P3,
     NRF_PLD_SIZE_PIPE4  = NRF_REG_RX_PW_P4,
     NRF_PLD_SIZE_PIPE5  = NRF_REG_RX_PW_P5,
-} nrf_pld_size_rx_pipe;
+} nrf_pld_size;
 
 // nRF24 Modes
 typedef enum{
@@ -191,19 +191,19 @@ enum {
     NRF_ENABLE_PIPE5    = (1 << NRF_EN_RXADDR_BIT_ERX_P5),
 };
 
-// SETUP_AW: Setup of Address Widths(common for all data pipes)
+// SETUP_AW: Setup of Address Width (common for all data pipes)
 typedef enum {
     NRF_SETUP_AW_3BYTES = 1,
     NRF_SETUP_AW_4BYTES = 2,
     NRF_SETUP_AW_5BYTES = 3,
-} nrf_setup_address_width;
+} nrf_addr_width;
 
 // helper to use set and get pipe addresses
 typedef enum {
     NRF_PIPE_ADDR_WIDTH_3BYTES = 3,
     NRF_PIPE_ADDR_WIDTH_4BYTES = 4,
     NRF_PIPE_ADDR_WIDTH_5BYTES = 5,
-} nrf_pipe_address_width;
+} nrf_pipe_addr_width;
 
 // SETUP_RETR: Setup of Automatic Retransmission
 enum {

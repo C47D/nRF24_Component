@@ -311,7 +311,17 @@ void `$INSTANCE_NAME`_set_channel(uint8_t channel)
  *
  * @param const nrf_setup_address_width addr_width:
  */
-void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width)
+uint8_t `$INSTANCE_NAME`_get_channel(void)
+{
+    return `$INSTANCE_NAME`_read_register(NRF_REG_RF_CH);
+}
+
+/**
+ * @brief Set the data pipes address width.
+ *
+ * @param const nrf_addr_width addr_width:
+ */
+void `$INSTANCE_NAME`_set_address_width(const nrf_addr_width addr_width)
 {
     `$INSTANCE_NAME`_write_register(NRF_REG_SETUP_AW, (uint8_t)addr_width);
     // update the _nrf_addr_width variable
@@ -455,7 +465,7 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
  * @param const nrf_pipe pipe:
  * @param uint8_t size:
  */
-void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size_rx_pipe pipe, uint8_t size)
+void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe, uint8_t size)
 {
     if (NRF_PAYLOAD_SIZE_MAX < size) {
         size = NRF_PAYLOAD_SIZE_MAX;
@@ -471,7 +481,7 @@ void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size_rx_pipe pipe, uint8_t 
  *
  * @return uint8_t: Configured payload size of the given pipe.
  */
-uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size_rx_pipe pipe)
+uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size pipe)
 {
     return `$INSTANCE_NAME`_read_register(pipe);
 }
@@ -571,7 +581,7 @@ void `$INSTANCE_NAME`_disable_payload_with_ack(void)
 /**
  * @brief Enable dynamic payload length.
  */
-void `$INSTANCE_NAME`_enable_payload_with_no_ack_cmd(void)
+void `$INSTANCE_NAME`_enable_payload_with_no_ack(void)
 {
     `$INSTANCE_NAME`_set_bit(NRF_REG_FEATURE, NRF_FEATURE_BIT_EN_DYN_ACK);
 }
@@ -579,7 +589,7 @@ void `$INSTANCE_NAME`_enable_payload_with_no_ack_cmd(void)
 /**
  * @brief Disable Payload with no ACK.
  */
-void `$INSTANCE_NAME`_disable_payload_with_no_ack_cmd(void)
+void `$INSTANCE_NAME`_disable_payload_with_no_ack(void)
 {
     `$INSTANCE_NAME`_clear_bit(NRF_REG_FEATURE, NRF_FEATURE_BIT_EN_DYN_ACK);
 }

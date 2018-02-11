@@ -52,50 +52,27 @@ void `$INSTANCE_NAME`_set_rx_mode(void);
 void `$INSTANCE_NAME`_set_tx_mode(void);
 
 // Functions related to registers
-
-// CONFIG Reg
-// EN_AA_Reg
 void `$INSTANCE_NAME`_enable_auto_ack(const nrf_pipe pipe);
 void `$INSTANCE_NAME`_disable_auto_ack(const nrf_pipe pipe);
-// EN_RXADDR Reg
-// SETUP_AW Reg
-// SETUP_RETR Reg
-// RF_CH Reg
 void `$INSTANCE_NAME`_set_channel(uint8_t channel);
-// RF_SETUP Reg
-// STATUS Reg
-
-void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width);
+uint8_t `$INSTANCE_NAME`_get_channel(void);
+void `$INSTANCE_NAME`_set_address_width(const nrf_addr_width addr_width);
 uint8_t `$INSTANCE_NAME`_get_address_width(void);
-
-// v2.0
-void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
-                                            const uint8_t *addr, size_t size);
-void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
-                                            uint8_t *addr, size_t size);
-// TX_ADDR Reg
 void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size);
 void `$INSTANCE_NAME`_get_tx_address(uint8_t *addr, size_t size);
-
-// RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
-void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size_rx_pipe pipe,
+void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe,
                                           uint8_t size);
-uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size_rx_pipe pipe);
-
-// FIFO_STATUS Reg
-void `$INSTANCE_NAME`_reuse_last_transmitted_payload(void);
-// DYNPD Reg
+uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size pipe);
 void `$INSTANCE_NAME`_enable_dynamic_payload(void);
-void `$INSTANCE_NAME`_enable_dynamic_payload_on_pipe(const nrf_pipe pipe);
 void `$INSTANCE_NAME`_disable_dynamic_payload(void);
+void `$INSTANCE_NAME`_enable_dynamic_payload_on_pipe(const nrf_pipe pipe);
 void `$INSTANCE_NAME`_disable_dynamic_payload_on_pipe(const nrf_pipe pipe);
-// FEATURE Reg
 void `$INSTANCE_NAME`_enable_dynamic_payload_length(void);
-void `$INSTANCE_NAME`_enable_payload_with_ack(void);
-void `$INSTANCE_NAME`_enable_payload_with_no_ack_cmd(void);
 void `$INSTANCE_NAME`_disable_dynamic_payload_length(void);
+void `$INSTANCE_NAME`_enable_payload_with_ack(void);
 void `$INSTANCE_NAME`_disable_payload_with_ack(void);
-void `$INSTANCE_NAME`_disable_payload_with_no_ack_cmd(void);
+void `$INSTANCE_NAME`_enable_payload_with_no_ack(void);
+void `$INSTANCE_NAME`_disable_payload_with_no_ack(void);
 
 /* General purpose functions */
 void `$INSTANCE_NAME`_start_listening(void);
@@ -118,6 +95,12 @@ bool `$INSTANCE_NAME`_is_tx_fifo_full(void);
 bool `$INSTANCE_NAME`_is_rx_fifo_empty(void);
 bool `$INSTANCE_NAME`_test_carrier(void);
 
+// v2.0
+void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
+                                            const uint8_t *addr, size_t size);
+void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
+                                            uint8_t *addr, size_t size);
+
 // IRQ Handle functions
 void `$INSTANCE_NAME`_clear_all_irqs(void);
 void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag);
@@ -128,6 +111,7 @@ uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void);
 // command wrappers
 void `$INSTANCE_NAME`_flush_rx(void);
 void `$INSTANCE_NAME`_flush_tx(void);
+void `$INSTANCE_NAME`_reuse_last_transmitted_payload(void);
 
 #endif /* `$INSTANCE_NAME`_FUNCS_H */
 
