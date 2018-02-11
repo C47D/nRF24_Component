@@ -3,7 +3,6 @@
 # Ignore test projects
 *.cydsn
 docs/*
-nRF24.cylib/nRF24_v2_0/*
 
 # Ignore Archive directory, project bundles there
 Archive/*
