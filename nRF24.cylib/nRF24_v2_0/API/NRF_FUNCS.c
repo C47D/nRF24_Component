@@ -30,10 +30,10 @@
 
 /* "Helper" global variables */
 /* _nrf_addr_width expresed in bytes, declared with the default value */
-static nrf_pipe_address_width _nrf_addr_width = NRF_PIPE_ADDR_WIDTH_5BYTES;
+static nrf_pipe_addr_width _nrf_addr_width = NRF_PIPE_ADDR_WIDTH_5BYTES;
 
 static void
-_addr_width_conf_to_bytes(nrf_setup_address_width addr_width)
+_addr_width_conf_to_bytes(nrf_addr_width addr_width)
 {
     switch(addr_width)
     {
