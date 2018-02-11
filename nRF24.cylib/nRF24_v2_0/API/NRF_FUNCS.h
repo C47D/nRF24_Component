@@ -67,24 +67,12 @@ void `$INSTANCE_NAME`_set_channel(uint8_t channel);
 
 void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width);
 uint8_t `$INSTANCE_NAME`_get_address_width(void);
-// RX ADDR P0 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_0_address(const uint8_t *addr, size_t size);
-void `$INSTANCE_NAME`_get_rx_pipe_0_address(uint8_t *addr, size_t size);
-// RX ADDR P1 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_1_address(const uint8_t *addr, size_t size);
-void `$INSTANCE_NAME`_get_rx_pipe_1_address(uint8_t *addr, size_t size);
-// RX ADDR P2 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_2_address(const uint8_t addr_lsb);
-void `$INSTANCE_NAME`_get_rx_pipe_2_address(uint8_t *addr, size_t size);
-// RX ADDR P3 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_3_address(const uint8_t addr_lsb);
-void `$INSTANCE_NAME`_get_rx_pipe_3_address(uint8_t *addr, size_t size);
-// RX ADDR P4 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_4_address(const uint8_t addr_lsb);
-void `$INSTANCE_NAME`_get_rx_pipe_4_address(uint8_t *addr, size_t size);
-// RX ADDR P5 Reg
-void `$INSTANCE_NAME`_set_rx_pipe_5_address(const uint8_t addr_lsb);
-void `$INSTANCE_NAME`_get_rx_pipe_5_address(uint8_t *addr, size_t size);
+
+// v2.0
+void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
+                                            const uint8_t *addr, size_t size);
+void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_rx_pipe_address pipe,
+                                            uint8_t *addr, size_t size);
 // TX_ADDR Reg
 void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size);
 void `$INSTANCE_NAME`_get_tx_address(uint8_t *addr, size_t size);

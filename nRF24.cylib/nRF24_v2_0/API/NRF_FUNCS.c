@@ -336,17 +336,38 @@ uint8_t `$INSTANCE_NAME`_get_address_width(void)
  * @param const uint8_t* addr:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_set_rx_pipe_0_address(const uint8_t* addr, size_t size)
+void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
+                                            const uint8_t *addr, size_t size)
 {
     if (NULL == addr) {
         return;
     }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
+    
+    switch(pipe) {
+    // For pipes 0 and 1 we can change up to 5 bytes of it's addresses
+    case NRF_PIPE0_ADDR:
+    case NRF_PIPE1_ADDR:
+        // The smaller address is 3 bytes
+        if (NRF_PIPE_ADDR_WIDTH_3BYTES > size) {
+            // TODO
+        }
+        
+        if (_nrf_addr_width < size) {
+            size = _nrf_addr_width;
+        }
+            
+        `$INSTANCE_NAME`_write_long_register(pipe, addr, size);
+        break;
+    // For pipes 2, 3, 4 and 5 we can change only the LSB of it's address
+    case NRF_PIPE2_ADDR:
+    case NRF_PIPE3_ADDR:
+    case NRF_PIPE4_ADDR:
+    case NRF_PIPE5_ADDR:
+        (void)size; // so we don't get a warning on unused variable
+        
+        `$INSTANCE_NAME`_write_long_register(pipe, addr, 1);
+        break;
     }
-
-    `$INSTANCE_NAME`_write_long_register(NRF_REG_RX_ADDR_P0, addr, size);
 }
 
 /**
@@ -355,181 +376,37 @@ void `$INSTANCE_NAME`_set_rx_pipe_0_address(const uint8_t* addr, size_t size)
  * @param uint8_t* addr:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_get_rx_pipe_0_address(uint8_t* addr, size_t size)
+void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_rx_pipe_address pipe,
+                                            uint8_t *addr, size_t size)
 {
     if (NULL == addr) {
         return;
     }
-
+    
+    // The smaller address is 3 bytes
+    if (NRF_PIPE_ADDR_WIDTH_3BYTES > size) {
+        // TODO
+    }
+    
     if (_nrf_addr_width < size) {
         size = _nrf_addr_width;
     }
-
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P0, addr, size);
-}
-
-/**
- * @brief Set the address of the RX Pipe 1 in the radio.
- *
- * This function configure the address of the Rx Pipe 1 of the radio.
- *
- * @param const uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_set_rx_pipe_1_address(const uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
+    
+    switch(pipe) {
+    // For pipes 0 and 1 we can read up to 5 bytes of it's addresses
+    case NRF_PIPE0_ADDR:
+    case NRF_PIPE1_ADDR:
+        `$INSTANCE_NAME`_read_long_register(pipe, addr, size);
+        break;
+    // For pipes 2, 3, 4 and 5 the address is the same to pipe1 except the LSB
+    case NRF_PIPE2_ADDR:
+    case NRF_PIPE3_ADDR:
+    case NRF_PIPE4_ADDR:
+    case NRF_PIPE5_ADDR:
+        `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
+        addr[size - 1] = `$INSTANCE_NAME`_read_register(pipe);
+        break;
     }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    `$INSTANCE_NAME`_write_long_register(NRF_REG_RX_ADDR_P1, addr, size);
-}
-
-/**
- * @brief Get the address of the RX Pipe 1 in the radio.
- *
- * @param uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_get_rx_pipe_1_address(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size);
-}
-
-/**
- * Set the address of the least significant byte of the Rx Pipe 2 in the radio.
- *
- * @param const uint8_t addr_lsb:
- */
-void `$INSTANCE_NAME`_set_rx_pipe_2_address(const uint8_t addr_lsb)
-{
-    `$INSTANCE_NAME`_write_register(NRF_REG_RX_ADDR_P2, addr_lsb);
-}
-
-/**
- * Get the address of the Rx Pipe 2.
- *
- * @param uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_get_rx_pipe_2_address(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    // The pipe2 address is the same as the pipe1 address except the LSB
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_REG_RX_ADDR_P2);
-}
-
-/**
- * Set the address of the least significant byte of the Rx Pipe 3 in the radio.
- *
- * @param const uint8_t addr_lsb:
- */
-void `$INSTANCE_NAME`_set_rx_pipe_3_address(const uint8_t addr_lsb)
-{
-    `$INSTANCE_NAME`_write_register(NRF_REG_RX_ADDR_P3, addr_lsb);
-}
-
-/**
- * Get the address of the Rx Pipe 3.
- *
- * @param uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_get_rx_pipe_3_address(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    // The pipe3 address is the same as the pipe1 address except the LSB
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_REG_RX_ADDR_P3);
-}
-
-/**
- * Set the address of the least significant byte of the Rx Pipe 4 in the radio.
- *
- * @param const uint8_t addr_lsb:
- */
-void `$INSTANCE_NAME`_set_rx_pipe_4_address(const uint8_t addr_lsb)
-{
-    `$INSTANCE_NAME`_write_register(NRF_REG_RX_ADDR_P4, addr_lsb);
-}
-
-/**
- * Get the address of the Rx Pipe 4.
- *
- * @param uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_get_rx_pipe_4_address(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    // The pipe4 address is the same as the pipe1 address except the LSB
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_REG_RX_ADDR_P4);
-}
-
-/**
- * Set the address of the least significant byte of the Rx Pipe 5 in the radio.
- *
- * @param const uint8_t addr_lsb:
- */
-void `$INSTANCE_NAME`_set_rx_pipe_5_address(const uint8_t addr_lsb)
-{
-    `$INSTANCE_NAME`_write_register(NRF_REG_RX_ADDR_P5, addr_lsb);
-}
-
-/**
- * Get the address of the Rx Pipe 5.
- *
- * @param uint8_t* addr:
- * @param size_t size:
- */
-void `$INSTANCE_NAME`_get_rx_pipe_5_address(uint8_t* addr, size_t size)
-{
-    if (NULL == addr) {
-        return;
-    }
-
-    if (_nrf_addr_width < size) {
-        size = _nrf_addr_width;
-    }
-
-    // The pipe5 address is the same as the pipe1 address except the LSB
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-    addr[size - 1] = `$INSTANCE_NAME`_read_register(NRF_REG_RX_ADDR_P5);
 }
 
 /**

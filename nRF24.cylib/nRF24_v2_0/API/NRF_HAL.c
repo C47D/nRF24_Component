@@ -139,11 +139,12 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_CMD_R_REGISTER | reg);
+    
     // Wait for the byte to be sent
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
     // Read the status register, just to clear the rx fifo
-    `$SPI_MASTER`_ReadRxData();
+    (void)`$SPI_MASTER`_ReadRxData();
 
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
