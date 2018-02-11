@@ -55,7 +55,7 @@ _addr_width_conf_to_bytes(nrf_setup_address_width addr_width)
 void `$INSTANCE_NAME`_start(void)
 {
     // Recommended delay before start using the nRF24
-    CyDelay(NRF_POWER_UP_DELAY);
+    CyDelay(NRF_POWER_UP_DELAY_MS);
 
     // Now the radio is in Power Down mode
 
@@ -336,7 +336,7 @@ uint8_t `$INSTANCE_NAME`_get_address_width(void)
  * @param const uint8_t* addr:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
+void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
                                             const uint8_t *addr, size_t size)
 {
     if (NULL == addr) {
@@ -345,8 +345,8 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
     
     switch(pipe) {
     // For pipes 0 and 1 we can change up to 5 bytes of it's addresses
-    case NRF_PIPE0_ADDR:
-    case NRF_PIPE1_ADDR:
+    case NRF_ADDR_PIPE0:
+    case NRF_ADDR_PIPE1:
         // The smaller address is 3 bytes
         if (NRF_PIPE_ADDR_WIDTH_3BYTES > size) {
             // TODO
@@ -359,10 +359,10 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
         `$INSTANCE_NAME`_write_long_register(pipe, addr, size);
         break;
     // For pipes 2, 3, 4 and 5 we can change only the LSB of it's address
-    case NRF_PIPE2_ADDR:
-    case NRF_PIPE3_ADDR:
-    case NRF_PIPE4_ADDR:
-    case NRF_PIPE5_ADDR:
+    case NRF_ADDR_PIPE2:
+    case NRF_ADDR_PIPE3:
+    case NRF_ADDR_PIPE4:
+    case NRF_ADDR_PIPE5:
         (void)size; // so we don't get a warning on unused variable
         
         `$INSTANCE_NAME`_write_long_register(pipe, addr, 1);
@@ -376,7 +376,7 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
  * @param uint8_t* addr:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_rx_pipe_address pipe,
+void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
                                             uint8_t *addr, size_t size)
 {
     if (NULL == addr) {
@@ -394,15 +394,15 @@ void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_rx_pipe_address pipe,
     
     switch(pipe) {
     // For pipes 0 and 1 we can read up to 5 bytes of it's addresses
-    case NRF_PIPE0_ADDR:
-    case NRF_PIPE1_ADDR:
+    case NRF_ADDR_PIPE0:
+    case NRF_ADDR_PIPE1:
         `$INSTANCE_NAME`_read_long_register(pipe, addr, size);
         break;
     // For pipes 2, 3, 4 and 5 the address is the same to pipe1 except the LSB
-    case NRF_PIPE2_ADDR:
-    case NRF_PIPE3_ADDR:
-    case NRF_PIPE4_ADDR:
-    case NRF_PIPE5_ADDR:
+    case NRF_ADDR_PIPE2:
+    case NRF_ADDR_PIPE3:
+    case NRF_ADDR_PIPE4:
+    case NRF_ADDR_PIPE5:
         `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
         addr[size - 1] = `$INSTANCE_NAME`_read_register(pipe);
         break;
@@ -455,10 +455,10 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
  * @param const nrf_pipe pipe:
  * @param uint8_t size:
  */
-void `$INSTANCE_NAME`_set_payload_size(const nrf_pipe_payload_size pipe, uint8_t size)
+void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size_rx_pipe pipe, uint8_t size)
 {
-    if (NRF_MAX_PAYLOAD_SIZE < size) {
-        size = NRF_MAX_PAYLOAD_SIZE;
+    if (NRF_PAYLOAD_SIZE_MAX < size) {
+        size = NRF_PAYLOAD_SIZE_MAX;
     }
 
     `$INSTANCE_NAME`_write_register(pipe, size);
@@ -471,7 +471,7 @@ void `$INSTANCE_NAME`_set_payload_size(const nrf_pipe_payload_size pipe, uint8_t
  *
  * @return uint8_t: Configured payload size of the given pipe.
  */
-uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pipe_payload_size pipe)
+uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size_rx_pipe pipe)
 {
     return `$INSTANCE_NAME`_read_register(pipe);
 }
@@ -628,7 +628,7 @@ void `$INSTANCE_NAME`_transmit_pulse(void)
     `$CE_PIN`_Write(1);
 #endif
 
-    CyDelayUs(NRF_CE_PULSE_WIDTH);
+    CyDelayUs(NRF_CE_PULSE_WIDTH_US);
     
 #if defined (_PSOC6)
     Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
@@ -692,8 +692,8 @@ void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t* data, size_t size)
         return;
     }
 
-    if (NRF_MAX_PAYLOAD_SIZE < size) {
-        size = NRF_MAX_PAYLOAD_SIZE;
+    if (NRF_PAYLOAD_SIZE_MAX < size) {
+        size = NRF_PAYLOAD_SIZE_MAX;
     }
 
     `$INSTANCE_NAME`_write_tx_payload_cmd(data, size);
@@ -711,8 +711,8 @@ void `$INSTANCE_NAME`_transmit(const uint8_t* data, size_t size)
         return;
     }
 
-    if (NRF_MAX_PAYLOAD_SIZE < size) {
-        size = NRF_MAX_PAYLOAD_SIZE;
+    if (NRF_PAYLOAD_SIZE_MAX < size) {
+        size = NRF_PAYLOAD_SIZE_MAX;
     }
 
     `$INSTANCE_NAME`_put_in_tx_fifo(data, size);
@@ -762,13 +762,13 @@ void `$INSTANCE_NAME`_get_rx_payload(uint8_t *data, const size_t size)
  * @param const uint8_t* data:
  * @param size_t size:
  */
-void `$INSTANCE_NAME`_tx_transmit_wait_no_ack(const uint8_t *data, size_t size)
+void `$INSTANCE_NAME`_tx_transmit_no_ack(const uint8_t *data, size_t size)
 {
     if (NULL == data) {
         return;
     }
 
-    if (NRF_MAX_PAYLOAD_SIZE < size) {
+    if (NRF_PAYLOAD_SIZE_MAX < size) {
         return;
     }
 
@@ -790,8 +790,8 @@ void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe,
         return;
     }
 
-    if (NRF_MAX_PAYLOAD_SIZE < size) {
-        size = NRF_MAX_PAYLOAD_SIZE;
+    if (NRF_PAYLOAD_SIZE_MAX < size) {
+        size = NRF_PAYLOAD_SIZE_MAX;
     }
 
     `$INSTANCE_NAME`_write_ack_payload_cmd(pipe, data, size);

@@ -326,8 +326,7 @@ enum {
 // MISC enums
 enum {
     NRF_STATUS_PIPES_SHIFT  = 1,
-    NRF_MAX_ADDR_SIZE       = 5,
-    NRF_CE_PULSE_WIDTH      = 15,
+    NRF_CE_PULSE_WIDTH_US   = 15,
     NRF_MAX_PAYLOAD_SIZE    = 32,
     NRF_POWER_UP_DELAY      = 100,
     NRF_MAX_RF_CHANNEL      = 125,

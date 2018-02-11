@@ -69,18 +69,18 @@ void `$INSTANCE_NAME`_set_address_width(const nrf_setup_address_width addr_width
 uint8_t `$INSTANCE_NAME`_get_address_width(void);
 
 // v2.0
-void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_rx_pipe_address pipe,
+void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
                                             const uint8_t *addr, size_t size);
-void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_rx_pipe_address pipe,
+void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
                                             uint8_t *addr, size_t size);
 // TX_ADDR Reg
 void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size);
 void `$INSTANCE_NAME`_get_tx_address(uint8_t *addr, size_t size);
 
 // RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5 Reg
-void `$INSTANCE_NAME`_set_payload_size(const nrf_pipe_payload_size pipe,
+void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size_rx_pipe pipe,
                                           uint8_t size);
-uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pipe_payload_size pipe);
+uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size_rx_pipe pipe);
 
 // FIFO_STATUS Reg
 void `$INSTANCE_NAME`_reuse_last_transmitted_payload(void);
@@ -109,7 +109,7 @@ void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *data, size_t size);
 void `$INSTANCE_NAME`_transmit(const uint8_t *data, size_t size);
 bool `$INSTANCE_NAME`_is_data_ready(void);
 void `$INSTANCE_NAME`_get_rx_payload(uint8_t *payload, const size_t size);
-void `$INSTANCE_NAME`_tx_transmit_wait_no_ack(const uint8_t *data, size_t size);
+void `$INSTANCE_NAME`_tx_transmit_no_ack(const uint8_t *data, size_t size);
 void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe, const uint8_t *data,
                                          size_t size);
 uint8_t `$INSTANCE_NAME`_get_data_pipe_with_payload(void);
