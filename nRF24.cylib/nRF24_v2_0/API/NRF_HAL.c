@@ -36,6 +36,18 @@
 # include "SS.h"
 #endif
 
+/* This is a test for Optinal Merge Region where the users can add
+ * code without loosing it after a rebuild of the project.
+ * Add: #define USER_CUSTOM_HAL to be able to write your own:
+ * - read_register
+ * - read_long_register
+ * - write_register
+ * - write_long_register
+ */
+/* `#START hal_variables` */
+
+/* `#END` */
+
 /* GPIO Control */
 
 /**
@@ -92,7 +104,11 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 {
     uint8_t _reg_value = 0;
     uint8_t _nrf_cmd[] = {NRF_CMD_R_REGISTER | reg, NRF_CMD_NOP};
-    
+#if defined (USER_CUSTOM_HAL)
+/* `#START hal_custom_read_register` */
+
+/* `#END` */
+#else
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
@@ -144,6 +160,7 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
     // This is the data we want
     _reg_value = `$SPI_MASTER`_ReadRxData();
 #endif
+#endif
 
     return _reg_value;
 }
@@ -160,7 +177,12 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
                                            uint8_t* data, const size_t size)
 {
     uint8_t _nrf_cmd = NRF_CMD_R_REGISTER | reg;
-    
+
+#if defined (USER_CUSTOM_HAL)
+/* `#START hal_custom_read_long_register` */
+
+/* `#END` */
+#else
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
@@ -205,7 +227,7 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
 
     `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
     
-    `$SPI_MASTER`_WriteTxData(NRF_CMD_R_REGISTER | reg);
+    `$SPI_MASTER`_WriteTxData(_nrf_cmd);
     // Wait for the byte to be sent
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
@@ -221,6 +243,7 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
 
     `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
+#endif
 }
 
 /**
@@ -231,6 +254,11 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
  */
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 {
+#if defined (USER_CUSTOM_HAL)
+/* `#START hal_custom_write_register` */
+
+/* `#END` */
+#else
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
@@ -270,6 +298,7 @@ void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
     
     `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
+#endif
 }
 
 /**
@@ -282,6 +311,11 @@ void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
                                             const uint8_t* data, const size_t size)
 {
+#if defined (USER_CUSTOM_HAL)
+/* `#START hal_custom_write_long_register` */
+
+/* `#END` */
+#else
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
@@ -326,6 +360,7 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
     }
     
     `$INSTANCE_NAME`_ss_write(GPIO_SET);
+#endif
 #endif
 }
 
