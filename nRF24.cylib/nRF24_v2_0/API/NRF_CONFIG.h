@@ -21,6 +21,8 @@
 
 #include "`$SPI_MASTER`.h"
 
+/* So there's no symbol to know if the API is being built
+ * for a psoc4, 5lp or 6, so i found out based on the spi headers */
 #if defined (CY_SCB_`$SPI_MASTER`_H)
 # if defined (`$SPI_MASTER`_CY_SCB_SPI_PDL_H)
 #  define _PSOC6
@@ -29,16 +31,6 @@
 # endif
 #else
 # define _PSOC_UDB
-#endif
-
-#if defined (_PSOC6)
-# include "gpio/cy_gpio.h"
-#else // (_PSOC_UDB==1) || (_PSOC4_SCB==1)
-# if defined (_PSOC4_SCB)
-#  include "`$SPI_MASTER`_SPI_UART.h"
-# endif
-# include "CE.h"
-# include "SS.h"
 #endif
 
 #include "`$INSTANCE_NAME`_DEFS.h"

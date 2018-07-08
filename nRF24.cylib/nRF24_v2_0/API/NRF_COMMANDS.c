@@ -24,6 +24,7 @@
 */
 
 #include "`$INSTANCE_NAME`_CONFIG.h"
+#include "`$INSTANCE_NAME`_HAL.h"
 #include "`$INSTANCE_NAME`_COMMANDS.h"
 #include "`$INSTANCE_NAME`_DEFS.h"
 
@@ -38,7 +39,7 @@ void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW, (void *) &cmd, 1);
 
@@ -46,26 +47,30 @@ void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd)
     }
     CyDelayUs(1);
 
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_SpiUartWriteTxData(cmd);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != 1) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_WriteTxData(cmd);
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
 }
 
@@ -117,7 +122,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_R_RX_PAYLOAD);
     while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 0) {
@@ -131,12 +136,14 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
         }
         data[i] = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
     }
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_R_RX_PAYLOAD);
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){
     }
@@ -149,11 +156,13 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
         }
         data[i] = `$SPI_MASTER`_SpiUartReadRxData();
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_WriteTxData(NRF_CMD_R_RX_PAYLOAD);
 
     // Wait for the byte to be sent
@@ -169,7 +178,8 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
         }
         data[i] = `$SPI_MASTER`_ReadRxData();
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
 }
 
@@ -186,7 +196,7 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_W_TX_PAYLOAD);
     Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW, (void *) data, size);
@@ -195,22 +205,25 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
     }
     CyDelayUs(1);
 
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_W_TX_PAYLOAD);
     `$SPI_MASTER`_SpiUartPutArray(data, size);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != (1 + size)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_TX_PAYLOAD);
     for (size_t i = 0; i < size; i++) {
         SPI_WriteTxData(data[i]);
@@ -220,7 +233,8 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
 }
 
@@ -233,21 +247,19 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
 uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
 {
     uint8_t width = 0;
+    
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-#if 0
-    Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_R_RX_PL_WID);
-    Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_NOP);
-#else
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW,
         (void *)(uint8_t []){NRF_CMD_R_RX_PL_WID, NRF_CMD_NOP}, 2);
-#endif
     while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 2) {
     }
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     (void)Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
     width = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
@@ -255,13 +267,15 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_R_RX_PL_WID);
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_NOP);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != 2) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     // This is the STATUS Register
     (void)`$SPI_MASTER`_SpiUartReadRxData();
@@ -270,13 +284,15 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_WriteTxData(NRF_CMD_R_RX_PL_WID);
     `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     (void)`$SPI_MASTER`_ReadRxData();
     width = `$SPI_MASTER`_ReadRxData();
@@ -312,30 +328,32 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_W_ACK_PAYLOAD | pipe);
     Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW, (void *) data, size);
 
     while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != (1 + size)) {
     }
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_W_ACK_PAYLOAD | pipe);
     `$SPI_MASTER`_SpiUartPutArray(data, size);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != (1 + size)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_ACK_PAYLOAD | pipe);
     for (size_t i = 0; i < size; i++) {
@@ -346,7 +364,8 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
 }
 
@@ -363,30 +382,32 @@ void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_W_TX_PAYLOAD_NOACK);
     Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW, (void *) data, size);
 
     while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != (1 + size)) {
     }
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_W_TX_PAYLOAD_NOACK);
     `$SPI_MASTER`_SpiUartPutArray(data, size);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != (1 + size)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_TX_PAYLOAD_NOACK);
     for (size_t i = 0; i < size; i++) {
@@ -397,12 +418,13 @@ void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 #endif
 }
 
 /**
- * NOP (No OPeration) Command. Might be used to read the STATUS register.
+ * NOP (No OPeration) Command. Useful to read the STATUS register.
  *
  * @return uint8_t: STATUS register.
  */
@@ -413,36 +435,41 @@ uint8_t `$INSTANCE_NAME`_nop_cmd(void)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
     Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
 
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
 
     Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_NOP);
 
     while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 1) {
     }
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     status = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
 #elif defined (_PSOC4_SCB)
     `$SPI_MASTER`_SpiUartClearRxBuffer();
     `$SPI_MASTER`_SpiUartClearTxBuffer();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_NOP);
 
     while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != 1) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     status = `$SPI_MASTER`_SpiUartReadRxData();
 #else // _PSOC_UDB
     `$SPI_MASTER`_ClearFIFO();
 
-    `$SS_PIN`_Write(0);
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+    
     `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
-    `$SS_PIN`_Write(1);
+    
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 
     status = `$SPI_MASTER`_ReadRxData();
 #endif
