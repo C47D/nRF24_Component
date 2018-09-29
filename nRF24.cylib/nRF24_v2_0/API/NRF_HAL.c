@@ -245,10 +245,13 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_REGISTER | reg);
+    (void)`$SPI_MASTER`_ReadRxData();
+    
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
         }
+        (void)`$SPI_MASTER`_ReadRxData();
     }
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {

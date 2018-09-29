@@ -30,6 +30,7 @@ Backup/
 # User specific files
 ComponentUpdateLog.txt
 *.Xwx47
+*.d3bug
 
 # Random file
 *.cylib/CortexM0/

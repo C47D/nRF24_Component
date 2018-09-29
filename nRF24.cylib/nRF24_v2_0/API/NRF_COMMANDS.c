@@ -62,9 +62,10 @@ void `$INSTANCE_NAME`_send_command(const nrf_cmd cmd)
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(cmd);
-
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
+    (void)`$SPI_MASTER`_ReadRxData();
+    
     `$SS_PIN`_Write(1);
 #endif
 }
@@ -212,10 +213,15 @@ void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t siz
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_TX_PAYLOAD);
+    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
+    }
+    (void)`$SPI_MASTER`_ReadRxData();
+        
     for (size_t i = 0; i < size; i++) {
-        SPI_WriteTxData(data[i]);
-        while (!(SPI_ReadTxStatus() & SPI_STS_BYTE_COMPLETE)) {
+        `$SPI_MASTER`_WriteTxData(data[i]);
+        while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
         }
+        (void)`$SPI_MASTER`_ReadRxData();
     }
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
@@ -276,6 +282,8 @@ uint8_t `$INSTANCE_NAME`_read_payload_width_cmd(void)
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
+    (void)`$SPI_MASTER`_ReadRxData();
+    
     `$SS_PIN`_Write(1);
 
     (void)`$SPI_MASTER`_ReadRxData();
@@ -338,10 +346,15 @@ void `$INSTANCE_NAME`_write_ack_payload_cmd(const nrf_pipe pipe, const uint8_t* 
     `$SS_PIN`_Write(0);
 
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_ACK_PAYLOAD | pipe);
+    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
+    }
+    (void)`$SPI_MASTER`_ReadRxData();
+    
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
         }
+        (void)`$SPI_MASTER`_ReadRxData();
     }
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
@@ -389,10 +402,15 @@ void `$INSTANCE_NAME`_no_ack_payload_cmd(const uint8_t* data, const size_t size)
     `$SS_PIN`_Write(0);
 
     `$SPI_MASTER`_WriteTxData(NRF_CMD_W_TX_PAYLOAD_NOACK);
+    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
+    }
+    (void)`$SPI_MASTER`_ReadRxData();
+
     for (size_t i = 0; i < size; i++) {
         `$SPI_MASTER`_WriteTxData(data[i]);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
         }
+        (void)`$SPI_MASTER`_ReadRxData();
     }
 
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
@@ -439,9 +457,10 @@ uint8_t `$INSTANCE_NAME`_nop_cmd(void)
 
     `$SS_PIN`_Write(0);
     `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
-
     while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
     }
+    (void)`$SPI_MASTER`_ReadRxData();
+    
     `$SS_PIN`_Write(1);
 
     status = `$SPI_MASTER`_ReadRxData();
