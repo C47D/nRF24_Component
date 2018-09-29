@@ -113,10 +113,10 @@ void `$INSTANCE_NAME`_flush_tx_cmd(void)
  * Read RX payload: 1 - 32 bytes. A read operation always starts at byte 0.
  * Payload is deleted from FIFO after it is read.
  *
- * @param uint8_t* data: Data to be read.
- * @param const size_t size: Bytes of data to be read (max 32).
+ * @param data: Data to be read.
+ * @param data_size: Bytes of data to be read (max 32).
  */
-void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t *data, const size_t data_size)
 {
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
@@ -130,7 +130,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
 
     (void)Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < data_size; i++) {
         Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_NOP);
         while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 0) {
         }
@@ -150,7 +150,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
     // Read the status register, just to clear the rx fifo
     `$SPI_MASTER`_SpiUartReadRxData();
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < data_size; i++) {
         `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_NOP);
         while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){
         }
@@ -172,7 +172,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
     // Read the status register, just to clear the rx fifo
     `$SPI_MASTER`_ReadRxData();
 
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < data_size; i++) {
         `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
         while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
         }
@@ -190,7 +190,7 @@ void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t* data, const size_t size)
  * @param const uint8_t* data: Data to be sent.
  * @param const size_t size: Bytes of data to be sent (max 32).
  */
-void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t* data, const size_t size)
+void `$INSTANCE_NAME`_write_tx_payload_cmd(const uint8_t *data, const size_t size)
 {
 #if defined (_PSOC6)
     Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);

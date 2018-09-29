@@ -36,18 +36,6 @@
 # include "SS.h"
 #endif
 
-/* This is a test for Optinal Merge Region where the users can add
- * code without loosing it after a rebuild of the project.
- * Add: #define USER_CUSTOM_HAL to be able to write your own:
- * - read_register
- * - read_long_register
- * - write_register
- * - write_long_register
- */
-/* `#START hal_variables` */
-
-/* `#END` */
-
 /* GPIO Control */
 
 /**
@@ -88,6 +76,46 @@ void `$INSTANCE_NAME`_ce_write(nrf_gpio state)
     `$CE_PIN`_Write(1);
 #endif
     }
+}
+
+// in[0] is always the NRF_COMMAND
+// out[0] is always the STATUS_REGISTER
+void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size)
+{
+#if defined (_PSOC6)
+    Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
+#elif defined (_PSOC4_SCB)
+    `$SPI_MASTER`_SpiUartClearRxBuffer();
+    `$SPI_MASTER`_SpiUartClearTxBuffer();
+#else
+    `$SPI_MASTER`_ClearFIFO();
+#endif
+
+    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
+
+#if defined (_PSOC6)
+    for(size_t i = 0; i < xfer_size; i++){
+        while(Cy_SCB_Write(`$SPI_MASTER`_HW, in[i]) == 0);
+        while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {}
+        out[i] = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
+    }
+#elif defined (_PSOC4_SCB)
+    for (size_t i = 0; i < xfer_size; i++) {
+        `$SPI_MASTER`_SpiUartWriteTxData(in[i]);
+        while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){}
+        out[i] = `$SPI_MASTER`_SpiUartReadRxData();
+    }
+#else // _PSOC_UDB
+    for (size_t i = 0; i < xfer_size; i++) {
+        `$SPI_MASTER`_WriteTxData(in[i]);
+        while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
+        }
+        out[i] = `$SPI_MASTER`_ReadRxData();
+    }
+#endif
+
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
 }
 
 /**
