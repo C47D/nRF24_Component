@@ -28,6 +28,7 @@
 #  define _PSOC6
 # else
 #  define _PSOC4_SCB
+   #include "`$SPI_MASTER`_SPI_UART.h"
 # endif
 #else
 # define _PSOC_UDB

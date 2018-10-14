@@ -27,6 +27,7 @@
 
 /* SPI */
 void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size);
+void `$INSTANCE_NAME`_spi_clear_fifo(void);
 
 uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg);
 void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data , const size_t size);
