@@ -23,6 +23,9 @@
 * communication between the PSoC and the nRF24 radio.
 */
 
+#include <stdint.h>
+#include <string.h>
+
 #include "`$INSTANCE_NAME`_CONFIG.h"
 #include "`$INSTANCE_NAME`_HAL.h"
 
@@ -175,62 +178,17 @@ uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
 void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
                                            uint8_t* data, const size_t size)
 {
-    uint8_t _nrf_cmd = NRF_CMD_R_REGISTER | reg;
-
-    `$INSTANCE_NAME`_spi_clear_fifo();
+    uint8_t nrf_data[size + 1];
+    uint8_t dummy[size + 1];
     
-#if defined (_PSOC6)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    Cy_SCB_Write(`$SPI_MASTER`_HW, _nrf_cmd);
-    while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {
-    }
+    memset(dummy, 0xFF, sizeof(dummy));
+    dummy[0] = NRF_CMD_R_REGISTER | reg;
 
-    (void)Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
+    // Send the command and get the status
+    `$INSTANCE_NAME`_spi_xfer(dummy, nrf_data, sizeof(dummy));
 
-    for(size_t i = 0; i < size; i++){
-        while(Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_NOP) == 0);
-        while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) == 0) {}
-        data[1] = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
-    }
-
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#elif defined (_PSOC4_SCB)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_SpiUartWriteTxData(_nrf_cmd);
-    while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){
-    }
-
-    // Read the status register, just to clear the rx fifo
-    `$SPI_MASTER`_SpiUartReadRxData();
-
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_NOP);
-        while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){}
-        data[i] = `$SPI_MASTER`_SpiUartReadRxData();
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#else // _PSOC_UDB
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_WriteTxData(_nrf_cmd);
-    // Wait for the byte to be sent
-    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
-    }
-    // Read the status register, just to clear the rx fifo
-    (void)`$SPI_MASTER`_ReadRxData();
-
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
-        while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
-        }
-        data[i] = `$SPI_MASTER`_ReadRxData();
-    }
-
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#endif
+    // Copy data without the status register to the user pointer
+    memcpy(data, &nrf_data[1], size);
 }
 
 /**
