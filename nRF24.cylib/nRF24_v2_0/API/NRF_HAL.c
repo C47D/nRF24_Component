@@ -181,7 +181,6 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
     uint8_t nrf_data[size + 1];
     uint8_t dummy[size + 1];
     
-    memset(dummy, 0xFF, sizeof(dummy));
     dummy[0] = NRF_CMD_R_REGISTER | reg;
 
     // Send the command and get the status
@@ -199,39 +198,10 @@ void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
  */
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 {
-    `$INSTANCE_NAME`_spi_clear_fifo();
+    const uint8_t data_to_write[] = {NRF_CMD_W_REGISTER | reg, data};
+    uint8_t nrf_data[2] = {0};
     
-#if defined (_PSOC6)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-
-    Cy_SCB_WriteArrayBlocking(`$SPI_MASTER`_HW, (uint8_t []){NRF_CMD_W_REGISTER | reg, data}, 2);
-
-    while (Cy_SCB_IsTxComplete(`$SPI_MASTER`_HW) == false) {
-    }
-    CyDelayUs(1);
-
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#elif defined (_PSOC4_SCB)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_W_REGISTER | reg);
-    `$SPI_MASTER`_SpiUartWriteTxData(data);
-
-    while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != 2) {
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#else // _PSOC_UDB
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_WriteTxData(NRF_CMD_W_REGISTER | reg);
-    `$SPI_MASTER`_WriteTxData(data);
-
-    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#endif
+    `$INSTANCE_NAME`_spi_xfer(data_to_write, nrf_data, sizeof(data_to_write));
 }
 
 /**
@@ -244,48 +214,15 @@ void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
 void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
                                             const uint8_t* data, const size_t size)
 {
-    `$INSTANCE_NAME`_spi_clear_fifo();
+    uint8_t data_to_nrf[size + 1];
+    uint8_t data_from_nrf[size + 1];
     
-#if defined (_PSOC6)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    Cy_SCB_SPI_Write(`$SPI_MASTER`_HW, NRF_CMD_W_REGISTER | reg);
-    Cy_SCB_SPI_WriteArrayBlocking(`$SPI_MASTER`_HW, (void *) data, size);
+    // Set the write command and the register to write to
+    data_to_nrf[0] = NRF_CMD_W_REGISTER | reg;
+    // add the data given by the user
+    memcpy(&data_to_nrf[1], data, size);
 
-    while (Cy_SCB_IsTxComplete(`$SPI_MASTER`_HW) == false) {
-    }
-    CyDelayUs(1);
-
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#elif defined (_PSOC4_SCB)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-
-    `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_W_REGISTER | reg);
-    `$SPI_MASTER`_SpiUartPutArray(data, size);
-
-    // we're not using the embedded SS pin on the SCB component, can't use the
-    // SPI_Status function, we have to count the bytes on the RxBuffer to know
-    // when the transition is done, size + 1 bytes == W_REGISTER_CMD + data
-    while (`$SPI_MASTER`_SpiUartGetRxBufferSize() != (1 + size)) {
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#else // _PSOC_UDB
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    `$SPI_MASTER`_WriteTxData(NRF_CMD_W_REGISTER | reg);
-    (void)`$SPI_MASTER`_ReadRxData();
-    
-    for (size_t i = 0; i < size; i++) {
-        `$SPI_MASTER`_WriteTxData(data[i]);
-        while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)){
-        }
-        (void)`$SPI_MASTER`_ReadRxData();
-    }
-
-    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_SPI_IDLE)) {
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#endif
+    `$INSTANCE_NAME`_spi_xfer(data_to_nrf, data_from_nrf, sizeof(data_to_nrf));
 }
 
 /**
