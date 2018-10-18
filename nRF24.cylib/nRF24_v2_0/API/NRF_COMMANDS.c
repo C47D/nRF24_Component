@@ -84,75 +84,17 @@ void `$INSTANCE_NAME`_flush_tx_cmd(void)
  */
 void `$INSTANCE_NAME`_read_rx_payload_cmd(uint8_t *data, const size_t data_size)
 {
-#if 0
     uint8_t nrf_data_out[data_size + 1];
+    // the nrf_data_in array is to keep the spi sending dummy bytes so the
+    // radio can send us the payload, there's no need to set the array to
+    // any specific value, apart of the first element being the command
     uint8_t nrf_data_in[data_size + 1];
     
-    memset(nrf_data_in, 0, sizeof(nrf_data_in));
     nrf_data_in[0] = NRF_CMD_R_RX_PAYLOAD;
     
-    `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, data_size + 1);
+    `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_out));
     
     memcpy(data, &nrf_data_out[1], data_size);
-#else
-    `$INSTANCE_NAME`_spi_clear_fifo();
-    
-#if defined (_PSOC6)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-
-    Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_R_RX_PAYLOAD);
-    while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 0) {
-    }
-
-    (void)Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
-
-    for (size_t i = 0; i < data_size; i++) {
-        Cy_SCB_Write(`$SPI_MASTER`_HW, NRF_CMD_NOP);
-        while (Cy_SCB_GetNumInRxFifo(`$SPI_MASTER`_HW) != 0) {
-        }
-        data[i] = Cy_SCB_ReadRxFifo(`$SPI_MASTER`_HW);
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#elif defined (_PSOC4_SCB)
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_R_RX_PAYLOAD);
-    while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){
-    }
-    // Read the status register, just to clear the rx fifo
-    `$SPI_MASTER`_SpiUartReadRxData();
-
-    for (size_t i = 0; i < data_size; i++) {
-        `$SPI_MASTER`_SpiUartWriteTxData(NRF_CMD_NOP);
-        while (`$SPI_MASTER`_SpiUartGetRxBufferSize() == 0){
-        }
-        data[i] = `$SPI_MASTER`_SpiUartReadRxData();
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#else // _PSOC_UDB
-    `$INSTANCE_NAME`_ss_write(GPIO_CLEAR);
-    
-    `$SPI_MASTER`_WriteTxData(NRF_CMD_R_RX_PAYLOAD);
-
-    // Wait for the byte to be sent
-    while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
-    }
-
-    // Read the status register, just to clear the rx fifo
-    `$SPI_MASTER`_ReadRxData();
-
-    for (size_t i = 0; i < data_size; i++) {
-        `$SPI_MASTER`_WriteTxData(NRF_CMD_NOP);
-        while (!(`$SPI_MASTER`_ReadTxStatus() & `$SPI_MASTER`_STS_BYTE_COMPLETE)) {
-        }
-        data[i] = `$SPI_MASTER`_ReadRxData();
-    }
-    
-    `$INSTANCE_NAME`_ss_write(GPIO_SET);
-#endif
-#endif
 }
 
 /**
