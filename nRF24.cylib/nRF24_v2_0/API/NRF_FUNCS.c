@@ -59,18 +59,15 @@ void `$INSTANCE_NAME`_start(void)
 
     // Now the radio is in Power Down mode
 
-    // Start the `$SPI_MASTER` and set CE and SS to a known value
 #if defined (_PSOC6)
     /* We are using the low level driver, so pass NULL to the context */
     (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
     Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
-    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-#else // PSoC 4 and 5LP
+#else // _PSoC4_SCB and _PSOC_UDB
     `$SPI_MASTER`_Start();
-    `$CE_PIN`_Write(0);
-    `$SS_PIN`_Write(1);
 #endif
+    `$INSTANCE_NAME`_ss_write(GPIO_SET);
+    `$INSTANCE_NAME`_ce_write(GPIO_CLEAR);
 
     // Flush both nRF24 FIFOs
     `$INSTANCE_NAME`_flush_rx_cmd();
@@ -602,11 +599,7 @@ void `$INSTANCE_NAME`_disable_payload_with_no_ack(void)
  */
 void `$INSTANCE_NAME`_start_listening(void)
 {
-#if defined (_PSOC6)
-    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(1);
-#endif
+    `$INSTANCE_NAME`_ce_write(GPIO_SET);
 }
 
 /**
@@ -617,11 +610,7 @@ void `$INSTANCE_NAME`_start_listening(void)
  */
 void `$INSTANCE_NAME`_stop_listening(void)
 {
-#if defined (_PSOC6)
-    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(0);
-#endif
+    `$INSTANCE_NAME`_ce_write(GPIO_CLEAR);
 }
 
 /**
@@ -632,19 +621,9 @@ void `$INSTANCE_NAME`_stop_listening(void)
  */
 void `$INSTANCE_NAME`_transmit_pulse(void)
 {
-#if defined (_PSOC6)
-    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(1);
-#endif
-
+    `$INSTANCE_NAME`_ce_write(GPIO_SET);
     CyDelayUs(NRF_CE_PULSE_WIDTH_US);
-    
-#if defined (_PSOC6)
-    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(0);
-#endif
+    `$INSTANCE_NAME`_ce_write(GPIO_CLEAR);
 }
 
 /**
@@ -750,20 +729,10 @@ void `$INSTANCE_NAME`_get_rx_payload(uint8_t *data, const size_t size)
     if (NULL == data) {
         return;
     }
-    
-#if defined (_PSOC6)
-    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(0);
-#endif
 
+    `$INSTANCE_NAME`_ce_write(GPIO_CLEAR);
     `$INSTANCE_NAME`_read_rx_payload_cmd(data, size);
-
-#if defined (_PSOC6)    
-    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else
-    `$CE_PIN`_Write(1);
-#endif
+    `$INSTANCE_NAME`_ce_write(GPIO_SET);
 }
 
 /**

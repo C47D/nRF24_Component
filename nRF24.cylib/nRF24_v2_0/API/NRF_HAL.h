@@ -25,6 +25,10 @@
 
 #include "`$INSTANCE_NAME`_DEFS.h"
 
+/* SPI */
+void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size);
+void `$INSTANCE_NAME`_spi_clear_fifo(void);
+
 uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg);
 void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data , const size_t size);
 void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data);
@@ -32,6 +36,16 @@ void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t*
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit);
 void `$INSTANCE_NAME`_clear_bit(const nrf_register reg, const uint8_t bit);
 void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit);
+
+/* GPIO Control */
+
+typedef enum {
+    GPIO_CLEAR,
+    GPIO_SET
+} nrf_gpio;
+
+void `$INSTANCE_NAME`_ss_write(nrf_gpio state);
+void `$INSTANCE_NAME`_ce_write(nrf_gpio state);
 
 #endif /* `$INSTANCE_NAME`_HAL_H */
 
