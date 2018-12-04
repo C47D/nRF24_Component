@@ -122,48 +122,6 @@ void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfe
 }
 
 /**
- * Read the specified nRF24 register (1byte).
- *
- * @param const nrf_register reg: Register to be read.
- *
- * @return uint8_t: Content of the specified register.
- */
-uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg)
-{
-    const uint8_t _nrf_cmd[] = {
-        NRF_CMD_R_REGISTER | reg, NRF_CMD_NOP
-    };
-    uint8_t _nrf_data[2] = {0};
-    
-    `$INSTANCE_NAME`_spi_xfer(_nrf_cmd, _nrf_data, sizeof(_nrf_cmd) / sizeof(_nrf_cmd[0]));
-
-    return _nrf_data[1];
-}
-
-/**
- * Read the specified nRF24 register (bigger than 1 byte).
- *
- * @param const nrf_register reg: Register to be read.
- * @param uint8_t* data: Pointer to where the content of the register
- * will be stored.
- * @param size_t size: Size of the register and data.
- */
-void `$INSTANCE_NAME`_read_long_register(const nrf_register reg,
-                                           uint8_t* data, const size_t size)
-{
-    uint8_t nrf_data[size + 1];
-    uint8_t dummy[size + 1];
-    
-    dummy[0] = NRF_CMD_R_REGISTER | reg;
-
-    // Send the command and get the status
-    `$INSTANCE_NAME`_spi_xfer(dummy, nrf_data, sizeof(dummy));
-
-    // Copy data without the status register to the user pointer
-    memcpy(data, &nrf_data[1], size);
-}
-
-/**
  * Read the specified nRF24 register (bigger than 1 byte).
  *
  * @param[in]   reg: Register to be read, see @nrf_register.
@@ -211,41 +169,6 @@ uint8_t `$INSTANCE_NAME`_write_reg(const nrf_register reg,
 }
 
 /**
- * Write to the specified nRF24 Register (1byte).
- *
- * @param const nrf_register reg: Register to be written.
- * @param const uint8_t data: Data to be written into the specified register.
- */
-void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data)
-{
-    const uint8_t data_to_write[] = {NRF_CMD_W_REGISTER | reg, data};
-    uint8_t nrf_data[2] = {0};
-    
-    `$INSTANCE_NAME`_spi_xfer(data_to_write, nrf_data, sizeof(data_to_write));
-}
-
-/**
- * Write one or more bytes to the specified nRF24 Register.
- *
- * @param const nrf_register reg: Register to be written.
- * @param const uint8_t* data: Data to writen into the register.
- * @param size_t size: Bytes of the data to be written in the specified register.
- */
-void `$INSTANCE_NAME`_write_long_register(const nrf_register reg,
-                                            const uint8_t* data, const size_t size)
-{
-    uint8_t data_to_nrf[size + 1];
-    uint8_t data_from_nrf[size + 1];
-    
-    // Set the write command and the register to write to
-    data_to_nrf[0] = NRF_CMD_W_REGISTER | reg;
-    // add the data given by the user
-    memcpy(&data_to_nrf[1], data, size);
-
-    `$INSTANCE_NAME`_spi_xfer(data_to_nrf, data_from_nrf, sizeof(data_to_nrf));
-}
-
-/**
  * Read the content of the specified bit of the specified nrf_register.
  *
  * @param[in] reg: Register to be read, see @c nrf_register.
@@ -259,6 +182,8 @@ bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit_pos)
     nRF24_read_reg(reg, &reg_val, 1);
     return (reg_val & (1 << bit_pos)) != 0;
 }
+
+#define BIT_IS_SET(val, bit_pos)    (val & (1 << bit_pos))
 
 /**
  * Set (1) or clear (0) the specified bit of the specified nRF24 register.
@@ -274,29 +199,27 @@ bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit_pos)
 static void `$INSTANCE_NAME`_write_bit(const nrf_register reg,
                                   const uint8_t bit_pos, const bool value)
 {
+    bool should_update = false;
     uint8_t temp;
     `$INSTANCE_NAME`_read_reg(reg, &temp, 1);
     
-    const uint8_t bit_mask = 1 << bit_pos;
-    
     // Read the bit value before writing to it.
-    // Check if the bit is 1
-    if ((temp & bit_mask) != 0) {
-        // it is 1, return if we wanted to set it to 1
-        if (value) {
-            return;
-        }
-    } else { // the bit is 0
-        // it is 0, return if we wanted to set it to 0
+    if (BIT_IS_SET(temp, bit_pos)) {
         if (!value) {
-            return;
+            should_update = true;
+        }
+    } else {
+        if (value) {
+            should_update = true;
         }
     }
 
-    // Calculate the new value to be written into the register
-    temp = value ? temp | bit_mask : temp & ~bit_mask;
-
-    `$INSTANCE_NAME`_write_reg(reg, &temp, 1);
+    if (should_update) {
+        const uint8_t bit_mask = 1 << bit_pos;
+        // Calculate the new value to be written into the register
+        temp = value ? temp | bit_mask : temp & ~bit_mask;
+        `$INSTANCE_NAME`_write_reg(reg, &temp, 1);
+    }
 }
 
 /**

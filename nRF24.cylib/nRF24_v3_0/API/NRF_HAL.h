@@ -19,20 +19,13 @@ extern "C" {
 /* SPI */
 void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size);
 
-uint8_t `$INSTANCE_NAME`_read_register(const nrf_register reg);
-void `$INSTANCE_NAME`_read_long_register(const nrf_register reg, uint8_t* data , const size_t size);
-void `$INSTANCE_NAME`_write_register(const nrf_register reg, const uint8_t data);
-void `$INSTANCE_NAME`_write_long_register(const nrf_register reg, const uint8_t* data, const size_t size);
+uint8_t `$INSTANCE_NAME`_read_reg(const nrf_register reg, uint8_t *data, const size_t data_size);
+uint8_t `$INSTANCE_NAME`_write_reg(const nrf_register reg, const uint8_t *data, const size_t data_size);
 bool `$INSTANCE_NAME`_read_bit(const nrf_register reg, const uint8_t bit);
 void `$INSTANCE_NAME`_clear_bit(const nrf_register reg, const uint8_t bit_pos);
 void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit_pos);
 
-// 3.0
-uint8_t `$INSTANCE_NAME`_read_reg(const nrf_register reg, uint8_t *data, const size_t data_size);
-uint8_t `$INSTANCE_NAME`_write_reg(const nrf_register reg, const uint8_t *data, const size_t data_size);
-
 /* GPIO Control */
-
 typedef enum {
     GPIO_CLEAR,
     GPIO_SET
