@@ -12,20 +12,31 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "cytypes.h"
+
+#if (CY_PSOC3)
+#include <STDDEF.h>
+#define uint8_t uint8
+#define bool    uint8
+#define size_t  uint32
+#define true    1
+#define false   0
+#else
 #include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#endif
 
 #include "`$INSTANCE_NAME`_DEFS.h"
 
 void `$INSTANCE_NAME`_cmd_reuse_tx_payload(void);
-void `$INSTANCE_NAME`_cmd_read_rx_payload(uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_cmd_write_tx_payload(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_cmd_read_rx_payload(uint8_t* payload, const size_t payload_size);
+void `$INSTANCE_NAME`_cmd_write_tx_payload(const uint8_t* payload, const size_t payload_size);
 void `$INSTANCE_NAME`_cmd_flush_rx(void);
 void `$INSTANCE_NAME`_cmd_flush_tx(void);
 uint8_t `$INSTANCE_NAME`_cmd_read_payload_width(void);
-void `$INSTANCE_NAME`_cmd_write_ack_payload(const nrf_pipe pipe, const uint8_t* data, const size_t size);
-void `$INSTANCE_NAME`_cmd_no_ack_payload(const uint8_t* data, const size_t size);
+void `$INSTANCE_NAME`_cmd_write_ack_payload(const nrf_pipe pipe, const uint8_t* payload, const size_t payload_size);
+void `$INSTANCE_NAME`_cmd_no_ack_payload(const uint8_t* payload, const size_t payload_size);
 uint8_t `$INSTANCE_NAME`_cmd_nop(void);
 
 #ifdef __cplusplus

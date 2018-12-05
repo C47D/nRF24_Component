@@ -62,22 +62,22 @@ void `$INSTANCE_NAME`_cmd_flush_tx(void)
  *
  * @note Used in RX mode.
  *
- * @param data: Data to be read.
- * @param data_size: Bytes of data to be read (max 32).
+ * @param payload: payload to be read.
+ * @param data_size: Bytes of payload to be read (max 32).
  */
-void `$INSTANCE_NAME`_cmd_read_rx_payload(uint8_t *data, const size_t data_size)
+void `$INSTANCE_NAME`_cmd_read_rx_payload(uint8_t *payload, const size_t payload_size)
 {
-    uint8_t nrf_data_out[data_size + 1];
+    uint8_t nrf_data_out[payload_size + 1];
     // the nrf_data_in array is to keep the spi sending dummy bytes so the
     // radio can send us the payload, there's no need to set the array to
     // any specific value, apart of the first element being the command
-    uint8_t nrf_data_in[data_size + 1];
+    uint8_t nrf_data_in[payload_size + 1];
     
     nrf_data_in[0] = NRF_CMD_R_RX_PAYLOAD;
     
     `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_out));
     
-    memcpy(data, &nrf_data_out[1], data_size);
+    memcpy(payload, &nrf_data_out[1], payload_size);
 }
 
 /**
@@ -88,13 +88,13 @@ void `$INSTANCE_NAME`_cmd_read_rx_payload(uint8_t *data, const size_t data_size)
  * @param const uint8_t* data: Data to be sent.
  * @param const size_t size: Bytes of data to be sent (max 32).
  */
-void `$INSTANCE_NAME`_cmd_write_tx_payload(const uint8_t *data, const size_t data_size)
+void `$INSTANCE_NAME`_cmd_write_tx_payload(const uint8_t *payload, const size_t payload_size)
 {
-    uint8_t nrf_data_in[data_size + 1];
-    uint8_t nrf_data_out[data_size + 1];
+    uint8_t nrf_data_in[payload_size + 1];
+    uint8_t nrf_data_out[payload_size + 1];
     
     nrf_data_in[0] = NRF_CMD_W_TX_PAYLOAD;
-    memcpy(&nrf_data_in[1], data, data_size);
+    memcpy(&nrf_data_in[1], payload, payload_size);
     
     `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_in));
 }
@@ -135,13 +135,13 @@ uint8_t `$INSTANCE_NAME`_cmd_read_payload_width(void)
  * @note Used in RX mode.
  */
 void `$INSTANCE_NAME`_cmd_write_ack_payload(const nrf_pipe pipe,
-                                            const uint8_t* data, const size_t data_size)
+                                            const uint8_t* payload, const size_t payload_size)
 {
-    uint8_t nrf_data_in[data_size + 1];
-    uint8_t nrf_data_out[data_size + 1];
+    uint8_t nrf_data_in[payload_size + 1];
+    uint8_t nrf_data_out[payload_size + 1];
     
     nrf_data_in[0] = NRF_CMD_W_ACK_PAYLOAD | pipe;
-    memcpy(&nrf_data_in[1], data, data_size);
+    memcpy(&nrf_data_in[1], payload, payload_size);
     
     `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_in));
 }
@@ -154,13 +154,13 @@ void `$INSTANCE_NAME`_cmd_write_ack_payload(const nrf_pipe pipe,
  *
  * @note Used in TX mode.
  */
-void `$INSTANCE_NAME`_cmd_no_ack_payload(const uint8_t* data, const size_t data_size)
+void `$INSTANCE_NAME`_cmd_no_ack_payload(const uint8_t* payload, const size_t payload_size)
 {
-    uint8_t nrf_data_in[data_size + 1];
-    uint8_t nrf_data_out[data_size + 1];
+    uint8_t nrf_data_in[payload_size + 1];
+    uint8_t nrf_data_out[payload_size + 1];
     
     nrf_data_in[0] = NRF_CMD_W_TX_PAYLOAD_NO_ACK;
-    memcpy(&nrf_data_in[1], data, data_size);
+    memcpy(&nrf_data_in[1], payload, payload_size);
     
     `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_in));
 }

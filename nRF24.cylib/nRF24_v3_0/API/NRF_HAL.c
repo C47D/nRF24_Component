@@ -13,6 +13,10 @@
 
 #if defined (_PSOC6)
 # include "gpio/cy_gpio.h"
+#elif (CY_PSOC3)
+# include "cytypes.h"
+# include "CE.h"
+# include "SS.h"
 #else // (_PSOC_UDB) || (_PSOC4)
 # if defined (_PSOC4_SCB)
 #  include "`$SPI_MASTER`_SPI_UART.h" // may be no longer necessary
@@ -131,14 +135,14 @@ void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfe
  * @return      status register.
  */
 uint8_t `$INSTANCE_NAME`_read_reg(const nrf_register reg,
-    uint8_t *data, const size_t data_size)
+    uint8_t *content, const size_t content_size)
 {
-    uint8_t data_out[data_size + 1];
-    uint8_t data_in[data_size + 1];
+    uint8_t data_out[content_size + 1];
+    uint8_t data_in[content_size + 1];
     
     data_in[0] = NRF_CMD_R_REGISTER | reg;
     `$INSTANCE_NAME`_spi_xfer(data_in, data_out, sizeof data_in/sizeof *data_in);
-    memcpy(data, &data_out[1], data_size);
+    memcpy(content, &data_out[1], content_size);
     
     // Return the NRF_STATUS register.
     return data_out[0];
@@ -154,13 +158,13 @@ uint8_t `$INSTANCE_NAME`_read_reg(const nrf_register reg,
  * @return      status register.
  */
 uint8_t `$INSTANCE_NAME`_write_reg(const nrf_register reg,
-    const uint8_t *data, const size_t data_size)
+    const uint8_t *content, const size_t content_size)
 {
-    uint8_t data_out[data_size + 1];
-    uint8_t data_in[data_size + 1];
+    uint8_t data_out[content_size + 1];
+    uint8_t data_in[content_size + 1];
     
     data_in[0] = NRF_CMD_W_REGISTER | reg;
-    memcpy(&data_in[1], data, data_size);
+    memcpy(&data_in[1], content, content_size);
 
     `$INSTANCE_NAME`_spi_xfer(data_in, data_out, sizeof data_in/sizeof *data_in);
     

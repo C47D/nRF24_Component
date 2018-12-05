@@ -11,9 +11,20 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
+#include "cytypes.h"
+
+#if (CY_PSOC3)
+#include <STDDEF.h>
+#define uint8_t uint8
+#define bool    uint8
+#define size_t  uint32
+#define true    1
+#define false   0
+#else
 #include <stddef.h>
+#include <stdbool.h>
 #include <stdint.h>
+#endif
 
 #include "`$INSTANCE_NAME`_DEFS.h"
 
@@ -46,8 +57,7 @@ void `$INSTANCE_NAME`_set_address_width(const nrf_addr_width addr_width);
 uint8_t `$INSTANCE_NAME`_get_address_width(void);
 void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size);
 void `$INSTANCE_NAME`_get_tx_address(uint8_t *addr, size_t size);
-void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe,
-                                          uint8_t size);
+void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe, uint8_t size);
 uint8_t `$INSTANCE_NAME`_get_payload_size(const nrf_pld_size pipe);
 void `$INSTANCE_NAME`_enable_dynamic_payload(void);
 void `$INSTANCE_NAME`_disable_dynamic_payload(void);
@@ -68,13 +78,13 @@ uint8_t `$INSTANCE_NAME`_get_status(void);
 uint8_t `$INSTANCE_NAME`_get_fifo_status(void);
 uint8_t `$INSTANCE_NAME`_get_retransmissions_count(void);
 uint8_t `$INSTANCE_NAME`_get_lost_packets_count(void);
-void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *data, size_t size);
-void `$INSTANCE_NAME`_transmit(const uint8_t *data, size_t size);
+void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *payload, size_t payload_size);
+void `$INSTANCE_NAME`_transmit(const uint8_t *payload, size_t payload_size);
 bool `$INSTANCE_NAME`_is_data_ready(void);
-void `$INSTANCE_NAME`_get_rx_payload(uint8_t *payload, const size_t size);
-void `$INSTANCE_NAME`_tx_transmit_no_ack(const uint8_t *data, size_t size);
-void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe, const uint8_t *data,
-                                         size_t size);
+void `$INSTANCE_NAME`_get_rx_payload(uint8_t *payload, const size_t payload_size);
+void `$INSTANCE_NAME`_tx_transmit_no_ack(const uint8_t *payload, size_t payload_size);
+void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe, const uint8_t *payload,
+                                         size_t payload_size);
 uint8_t `$INSTANCE_NAME`_get_data_pipe_with_payload(void);
 uint8_t `$INSTANCE_NAME`_received_power_detector(void);
 bool `$INSTANCE_NAME`_is_tx_fifo_full(void);
