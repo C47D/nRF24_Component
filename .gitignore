@@ -26,6 +26,8 @@ Backup/
 # PSoC 4 based projects
 *.cydsn/CortexM0/
 
+# PSoC 3 based projects
+*.cydsn/DP8051
 
 # User specific files
 ComponentUpdateLog.txt
