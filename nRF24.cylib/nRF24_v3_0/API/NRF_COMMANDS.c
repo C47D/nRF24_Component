@@ -116,13 +116,6 @@ uint8_t `$INSTANCE_NAME`_cmd_read_payload_width(void)
     
     `$INSTANCE_NAME`_spi_xfer(nrf_data_in, nrf_data_out, sizeof(nrf_data_in));
 
-    #if 0 // This should be done at user level.
-    // If width is greater than 32 then is garbage, we must flush the RX FIFO
-    if (32 < nrf_data_out[1]) {
-        `$INSTANCE_NAME`_flush_rx_cmd();
-    }
-    #endif
-
     return nrf_data_out[1];
 }
 
@@ -180,24 +173,13 @@ void `$INSTANCE_NAME`_cmd_no_ack_payload(const uint8_t* payload, const size_t pa
  */
 uint8_t `$INSTANCE_NAME`_cmd_nop(void)
 {
-#if 1
     return `$INSTANCE_NAME`_send_cmd(NRF_CMD_NOP);
-#else
-    uint8_t dummy = 0xFF;
-    uint8_t status = 0;
-    
-    `$INSTANCE_NAME`_spi_xfer(&dummy, &status, 1);
-    
-    return status;
-#endif
 }
 
 static uint8_t `$INSTANCE_NAME`_send_cmd(const nrf_cmd cmd)
 {
     uint8_t status = 0;
-    
     `$INSTANCE_NAME`_spi_xfer(&cmd, &status, 1);
-    
     return status;
 }
 

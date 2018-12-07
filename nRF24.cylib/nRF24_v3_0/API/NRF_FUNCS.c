@@ -10,8 +10,6 @@
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_DEFS.h"
 
-#define NRF_3_CLEANUP   1
-
 /* "Helper" global variables */
 /* _nrf_addr_width expresed in bytes, declared with the default value */
 static nrf_pipe_addr_width _nrf_addr_width = NRF_PIPE_ADDR_WIDTH_5BYTES;
@@ -71,60 +69,40 @@ void `$INSTANCE_NAME`_start(void)
  */
 void `$INSTANCE_NAME`_init(void)
 {
-    uint8_t default_en_aa = CUSTOMIZER_EN_AA;
-    uint8_t default_en_rxaddr = CUSTOMIZER_EN_RXADDR;
-    uint8_t default_setup_aw = CUSTOMIZER_SETUP_AW;
-    uint8_t default_setup_retr = CUSTOMIZER_SETUP_RETR;
-    uint8_t default_rf_ch = CUSTOMIZER_RF_CH;
-    uint8_t default_rf_setup = CUSTOMIZER_RF_SETUP;
-    uint8_t default_dynpd = CUSTOMIZER_DYNPD;
-    uint8_t default_feature = CUSTOMIZER_FEATURE;
-    
-    `$INSTANCE_NAME`_write_reg(NRF_REG_EN_AA, &default_en_aa, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_EN_RXADDR, &default_en_rxaddr, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_AW, &default_setup_aw, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_RETR, &default_setup_retr, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RF_CH, &default_rf_ch, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RF_SETUP, &default_rf_setup, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_DYNPD, &default_dynpd, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_FEATURE, &default_feature, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_EN_AA, (uint8_t []){CUSTOMIZER_EN_AA}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_EN_RXADDR, (uint8_t []){CUSTOMIZER_EN_RXADDR}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_AW, (uint8_t []){CUSTOMIZER_SETUP_AW}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_RETR, (uint8_t []){CUSTOMIZER_SETUP_RETR}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RF_CH, (uint8_t []){CUSTOMIZER_RF_CH}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RF_SETUP, (uint8_t []){CUSTOMIZER_RF_SETUP}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_DYNPD, (uint8_t []){CUSTOMIZER_DYNPD}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_FEATURE, (uint8_t []){CUSTOMIZER_FEATURE}, 1);
 
 // Configuring data pipes
 #if (ENABLE_PIPE0 == 1)
-    uint8_t rx_pw_p0 = CUSTOMIZER_RX_PW_P0;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P0, &rx_pw_p0, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P0, (uint8_t []){CUSTOMIZER_RX_PW_P0}, 1);
 #endif
 #if (ENABLE_PIPE1 == 1)
-    uint8_t rx_pw_p1 = CUSTOMIZER_RX_PW_P1;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P1, &rx_pw_p1, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P1, (uint8_t []){CUSTOMIZER_RX_PW_P1}, 1);
 #endif
 #if (ENABLE_PIPE2 == 1)
-    uint8_t rx_addr_p2 = CUSTOMIZER_RX_ADDR_P2;
-    uint8_t rx_pw_p2 = CUSTOMIZER_RX_PW_P2;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P2, &rx_addr_p2, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P2, &rx_pw_p2, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P2, (uint8_t []){CUSTOMIZER_RX_ADDR_P2}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P2, (uint8_t []){CUSTOMIZER_RX_PW_P2}, 1);
 #endif
 #if (ENABLE_PIPE3 == 1)
-    uint8_t rx_addr_p3 = CUSTOMIZER_RX_ADDR_P3;
-    uint8_t rx_pw_p3 = CUSTOMIZER_RX_PW_P3;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P3, &rx_addr_p3, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P3, &rx_pw_p3, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P3, (uint8_t []){CUSTOMIZER_RX_ADDR_P3}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P3, (uint8_t []){CUSTOMIZER_RX_PW_P3}, 1);
 #endif
 #if (ENABLE_PIPE4 == 1)
-    uint8_t rx_addr_p4 = CUSTOMIZER_RX_ADDR_P4;
-    uint8_t rx_pw_p4 = CUSTOMIZER_RX_PW_P4;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P4, &rx_addr_p4, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P4, &rx_pw_p4, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P4, (uint8_t []){CUSTOMIZER_RX_ADDR_P4}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P4, (uint8_t []){CUSTOMIZER_RX_PW_P4}, 1);
 #endif
 #if (ENABLE_PIPE5 == 1)
-    uint8_t rx_addr_p5 = CUSTOMIZER_RX_ADDR_P5;
-    uint8_t rx_pw_p5 = CUSTOMIZER_RX_PW_P5;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P5, &rx_addr_p5, 1);
-    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P5, &rx_pw_p5, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_ADDR_P5, (uint8_t []){CUSTOMIZER_RX_ADDR_P5}, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_RX_PW_P5, (uint8_t []){CUSTOMIZER_RX_PW_P5}, 1);
 #endif
 
-    uint8_t default_config = CUSTOMIZER_CONFIG;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_CONFIG, &default_config, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_CONFIG, (uint8_t []){CUSTOMIZER_CONFIG}, 1);
 
     // Set the _nrf_addr_width variable
     _addr_width_conf_to_bytes(CUSTOMIZER_SETUP_AW);
@@ -323,11 +301,7 @@ uint8_t `$INSTANCE_NAME`_get_channel(void)
  */
 void `$INSTANCE_NAME`_set_address_width(const nrf_addr_width addr_width)
 {
-#if (NRF_3_CLEANUP == 1)
     `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_AW, &addr_width, 1);
-#else
-    `$INSTANCE_NAME`_write_register(NRF_REG_SETUP_AW, (uint8_t)addr_width);    
-#endif
 
     // update the _nrf_addr_width variable
     _addr_width_conf_to_bytes(addr_width);
@@ -370,11 +344,7 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
         if (_nrf_addr_width < size) {
             size = _nrf_addr_width;
         }
-#if (NRF_3_CLEANUP == 1)
         `$INSTANCE_NAME`_write_reg(pipe, addr, size);
-#else
-        `$INSTANCE_NAME`_write_long_register(pipe, addr, size);
-#endif
         break;
     // For pipes 2, 3, 4 and 5 we can change only the LSB of it's address
     case NRF_ADDR_PIPE2:
@@ -382,11 +352,7 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
     case NRF_ADDR_PIPE4:
     case NRF_ADDR_PIPE5:
         (void)size; // so we don't get a warning on unused variable
-#if (NRF_3_CLEANUP == 1)
         `$INSTANCE_NAME`_write_reg(pipe, addr, 1);
-#else
-        `$INSTANCE_NAME`_write_long_register(pipe, addr, 1);
-#endif
         break;
     }
 }
@@ -417,15 +383,15 @@ void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
     // For pipes 0 and 1 we can read up to 5 bytes of it's addresses
     case NRF_ADDR_PIPE0:
     case NRF_ADDR_PIPE1:
-        `$INSTANCE_NAME`_read_long_register(pipe, addr, size);
+        `$INSTANCE_NAME`_read_reg(pipe, addr, size);
         break;
     // For pipes 2, 3, 4 and 5 the address is the same to pipe1 except the LSB
     case NRF_ADDR_PIPE2:
     case NRF_ADDR_PIPE3:
     case NRF_ADDR_PIPE4:
     case NRF_ADDR_PIPE5:
-        `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-        addr[size - 1] = `$INSTANCE_NAME`_read_register(pipe);
+        `$INSTANCE_NAME`_read_reg(NRF_REG_RX_ADDR_P1, addr, size - 1);
+        `$INSTANCE_NAME`_read_reg(pipe, &addr[size - 1], 1);
         break;
     }
 }
@@ -446,11 +412,7 @@ void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size)
         size = _nrf_addr_width;
     }
 
-#if (NRF_3_CLEANUP == 1)
     `$INSTANCE_NAME`_write_reg(NRF_REG_TX_ADDR, addr, size);
-#else
-    `$INSTANCE_NAME`_write_long_register(NRF_REG_TX_ADDR, addr, size);
-#endif
 }
 
 /**
@@ -469,7 +431,7 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
         size = _nrf_addr_width;
     }
 
-    `$INSTANCE_NAME`_read_long_register(NRF_REG_TX_ADDR, addr, size);
+    `$INSTANCE_NAME`_read_reg(NRF_REG_TX_ADDR, addr, size);
 }
 
 /**
@@ -486,7 +448,7 @@ void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe, uint8_t size)
         size = NRF_PAYLOAD_SIZE_MAX;
     }
 
-    `$INSTANCE_NAME`_write_register(pipe, size);
+    `$INSTANCE_NAME`_write_reg(pipe, &size, 1);
 }
 
 /**
@@ -908,7 +870,7 @@ nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
 
 void `$INSTANCE_NAME`_poll_interrupt(void)
 {
-
+    // TODO
 }
 
 uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void)

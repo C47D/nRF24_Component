@@ -12,20 +12,9 @@
 extern "C" {
 #endif
 
-#include "cytypes.h"
-
-#if (CY_PSOC3)
-#include <STDDEF.h>
-#define uint8_t uint8
-#define bool    uint8
-#define size_t  uint32
-#define true    1
-#define false   0
-#else
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-#endif
 
 #include "`$INSTANCE_NAME`_DEFS.h"
 
