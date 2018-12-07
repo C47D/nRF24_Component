@@ -10,6 +10,8 @@
 #include "`$INSTANCE_NAME`_FUNCS.h"
 #include "`$INSTANCE_NAME`_DEFS.h"
 
+#define NRF_3_CLEANUP   1
+
 /* "Helper" global variables */
 /* _nrf_addr_width expresed in bytes, declared with the default value */
 static nrf_pipe_addr_width _nrf_addr_width = NRF_PIPE_ADDR_WIDTH_5BYTES;
@@ -321,7 +323,11 @@ uint8_t `$INSTANCE_NAME`_get_channel(void)
  */
 void `$INSTANCE_NAME`_set_address_width(const nrf_addr_width addr_width)
 {
+#if (NRF_3_CLEANUP == 1)
     `$INSTANCE_NAME`_write_reg(NRF_REG_SETUP_AW, &addr_width, 1);
+#else
+    `$INSTANCE_NAME`_write_register(NRF_REG_SETUP_AW, (uint8_t)addr_width);    
+#endif
 
     // update the _nrf_addr_width variable
     _addr_width_conf_to_bytes(addr_width);
@@ -364,9 +370,11 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
         if (_nrf_addr_width < size) {
             size = _nrf_addr_width;
         }
-
+#if (NRF_3_CLEANUP == 1)
         `$INSTANCE_NAME`_write_reg(pipe, addr, size);
-        // `$INSTANCE_NAME`_write_long_register(pipe, addr, size);
+#else
+        `$INSTANCE_NAME`_write_long_register(pipe, addr, size);
+#endif
         break;
     // For pipes 2, 3, 4 and 5 we can change only the LSB of it's address
     case NRF_ADDR_PIPE2:
@@ -374,8 +382,11 @@ void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
     case NRF_ADDR_PIPE4:
     case NRF_ADDR_PIPE5:
         (void)size; // so we don't get a warning on unused variable
+#if (NRF_3_CLEANUP == 1)
         `$INSTANCE_NAME`_write_reg(pipe, addr, 1);
-        // `$INSTANCE_NAME`_write_long_register(pipe, addr, 1);
+#else
+        `$INSTANCE_NAME`_write_long_register(pipe, addr, 1);
+#endif
         break;
     }
 }
@@ -406,18 +417,15 @@ void `$INSTANCE_NAME`_get_rx_pipe_address(const nrf_addr_rx_pipe pipe,
     // For pipes 0 and 1 we can read up to 5 bytes of it's addresses
     case NRF_ADDR_PIPE0:
     case NRF_ADDR_PIPE1:
-        `$INSTANCE_NAME`_read_reg(pipe, addr, size);
-        // `$INSTANCE_NAME`_read_long_register(pipe, addr, size);
+        `$INSTANCE_NAME`_read_long_register(pipe, addr, size);
         break;
     // For pipes 2, 3, 4 and 5 the address is the same to pipe1 except the LSB
     case NRF_ADDR_PIPE2:
     case NRF_ADDR_PIPE3:
     case NRF_ADDR_PIPE4:
     case NRF_ADDR_PIPE5:
-        `$INSTANCE_NAME`_read_reg(NRF_REG_RX_ADDR_P1, addr, size - 1);
-        `$INSTANCE_NAME`_read_reg(pipe, &addr[size - 1], 1);
-        // `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
-        // addr[size - 1] = `$INSTANCE_NAME`_read_register(pipe);
+        `$INSTANCE_NAME`_read_long_register(NRF_REG_RX_ADDR_P1, addr, size - 1);
+        addr[size - 1] = `$INSTANCE_NAME`_read_register(pipe);
         break;
     }
 }
@@ -438,8 +446,11 @@ void `$INSTANCE_NAME`_set_tx_address(const uint8_t *const addr, size_t size)
         size = _nrf_addr_width;
     }
 
+#if (NRF_3_CLEANUP == 1)
     `$INSTANCE_NAME`_write_reg(NRF_REG_TX_ADDR, addr, size);
-    // `$INSTANCE_NAME`_write_long_register(NRF_REG_TX_ADDR, addr, size);
+#else
+    `$INSTANCE_NAME`_write_long_register(NRF_REG_TX_ADDR, addr, size);
+#endif
 }
 
 /**
@@ -458,8 +469,7 @@ void `$INSTANCE_NAME`_get_tx_address(uint8_t* addr, size_t size)
         size = _nrf_addr_width;
     }
 
-    `$INSTANCE_NAME`_read_reg(NRF_REG_TX_ADDR, addr, size);
-    // `$INSTANCE_NAME`_read_long_register(NRF_REG_TX_ADDR, addr, size);
+    `$INSTANCE_NAME`_read_long_register(NRF_REG_TX_ADDR, addr, size);
 }
 
 /**
@@ -476,8 +486,7 @@ void `$INSTANCE_NAME`_set_payload_size(const nrf_pld_size pipe, uint8_t size)
         size = NRF_PAYLOAD_SIZE_MAX;
     }
 
-    `$INSTANCE_NAME`_write_reg(pipe, &size, 1);
-    // `$INSTANCE_NAME`_write_register(pipe, size);
+    `$INSTANCE_NAME`_write_register(pipe, size);
 }
 
 /**
