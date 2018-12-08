@@ -141,9 +141,9 @@ void `$INSTANCE_NAME`_sleep(void)
  */
 void `$INSTANCE_NAME`_wakeup(void)
 {
-    `$INSTANCE_NAME`_set_bit(NRF_REG_CONFIG, NRF_CONFIG_PWR_UP);
-    // after leaving standby-I mode the radio need a time to
-    // return to TX or RX Mode
+    `$INSTANCE_NAME`_set_bit(NRF_REG_CONFIG, NRF_CONFIG_BIT_PWR_UP);
+    // after leaving standby-I mode the radio need a time to return to TX or
+    // RX Mode
     CyDelay(5);
 }
 
@@ -187,7 +187,7 @@ void `$INSTANCE_NAME`_set_mode(const nrf_mode mode)
  */
 void `$INSTANCE_NAME`_set_power_down_mode(void)
 {
-    `$INSTANCE_NAME`_clear_bit(NRF_REG_CONFIG, NRF_CONFIG_PWR_UP);
+    `$INSTANCE_NAME`_clear_bit(NRF_REG_CONFIG, NRF_CONFIG_BIT_PWR_UP);
 }
 
 /**
@@ -218,7 +218,7 @@ void `$INSTANCE_NAME`_set_standby_i_mode(void)
 void `$INSTANCE_NAME`_set_standby_ii_mode(void)
 {
     `$INSTANCE_NAME`_start_listening();
-    `$INSTANCE_NAME`_set_bit(NRF_REG_CONFIG, NRF_CONFIG_PWR_UP);
+    `$INSTANCE_NAME`_set_bit(NRF_REG_CONFIG, NRF_CONFIG_BIT_PWR_UP);
 }
 
 /**
