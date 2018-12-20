@@ -831,8 +831,11 @@ void `$INSTANCE_NAME`_clear_all_irqs(void)
  */
 void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag)
 {
-    uint8_t mask = 1 << irq_flag;
-    `$INSTANCE_NAME`_write_reg(NRF_REG_STATUS, &mask, 1);
+    const uint8_t mask = 1 << irq_flag;
+    uint8_t status = `$INSTANCE_NAME`_get_status();
+    status |= mask;
+    
+    `$INSTANCE_NAME`_write_reg(NRF_REG_STATUS, &status, 1);
 }
 
 /**
