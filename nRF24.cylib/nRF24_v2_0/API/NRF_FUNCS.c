@@ -855,35 +855,20 @@ void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag)
  */
 nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
 {
-    nrf_irq irq = NRF_NONE_IRQ;
-
-    // Get the STATUS register
-    uint8_t sts = `$INSTANCE_NAME`_nop_cmd();
-
-    // We only care if bits 4, 5 or 6 are set, so we mask the STATUS with 0x0111_0000
-    switch (sts & NRF_ALL_IRQ_MASK) {
-    case NRF_STATUS_RX_DR_MASK:
-        irq = NRF_RX_DR_IRQ;
-        break;
-    case NRF_STATUS_TX_DS_MASK:
-        irq = NRF_TX_DS_IRQ;
-        break;
-    case NRF_STATUS_MAX_RT_MASK:
-        irq = NRF_MAX_RT_IRQ;
-        break;
-    default:
-        irq = NRF_ALL_IRQ_MASK;
-        break;
-    }
-
-    return irq;
+    return NRF_ALL_IRQ_MASK & `$INSTANCE_NAME`_nop_cmd();
 }
 
+/**
+ *
+ */
 void `$INSTANCE_NAME`_poll_interrupt(void)
 {
-
+    // TODO
 }
 
+/**
+ *
+ */
 uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void)
 {
     uint8_t sts = `$INSTANCE_NAME`_nop_cmd();
@@ -893,11 +878,18 @@ uint8_t `$INSTANCE_NAME`_get_status_clear_irq(void)
 }
 
 // command wrappers
+
+/**
+ *
+ */
 void `$INSTANCE_NAME`_flush_rx(void)
 {
     `$INSTANCE_NAME`_flush_rx_cmd();
 }
 
+/**
+ *
+ */
 void `$INSTANCE_NAME`_flush_tx(void)
 {
     `$INSTANCE_NAME`_flush_tx_cmd();
