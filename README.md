@@ -61,6 +61,25 @@ In this tab the user need to provide the names of the SPI Master component used 
 
 ![nRF_SPI](img/nRF24_spi_v3.png)
 
+## nRF24 Component configuration.
+
+Note: All the functions assumes your component is named nRF24 on your schematic.
+
+### Set Rx pipes and Tx pipe address.
+
+To set the Tx address of the radio you should use the `nRF24_set_tx_address(addr, size)`
+function where `addr` will be set as the Tx address of the radio and `size`
+should be up to the configured address width configured on the radio. Example of use:
+
+```c
+const uint8_t my_addr[] = {0xBA, 0xAD, 0xC0, 0xFF, 0xEE};
+
+nRF24_set_tx_address(my_addr, sizeof my_addr);
+```
+
+Remember the addresses of the nRF24 radio starts with the LSB so the real
+Tx address of the radio will be: 0xEEFFC0ADBA.
+
 ## Coding style
 
 The code style in the v2.0 will be similar to the [Linux kernel coding style](https://www.kernel.org/doc/html/v4.10/process/coding-style.html), for this the tool clang-format is used, the repo contains the .clang-format file.
