@@ -45,8 +45,11 @@ void `$INSTANCE_NAME`_start(void)
     /* We are using the low level driver, so pass NULL to the context */
     (void) Cy_SCB_`$SPI_MASTER`_Init(`$SPI_MASTER`_HW, &`$SPI_MASTER`_config, NULL);
     Cy_SCB_`$SPI_MASTER`_Enable(`$SPI_MASTER`_HW);
-#else // _PSoC4_SCB and _PSOC_UDB
-    `$SPI_MASTER`_Start();
+#else // _PSoC4_SCB and _PSOC_UDB    
+    // _initVar is set to 1 when _Start is called 
+    if (0 == `$SPI_MASTER`_initVar) {
+        `$SPI_MASTER`_Start();
+    }
 #endif
     `$INSTANCE_NAME`_ss_write(GPIO_SET);
     `$INSTANCE_NAME`_ce_write(GPIO_CLEAR);
