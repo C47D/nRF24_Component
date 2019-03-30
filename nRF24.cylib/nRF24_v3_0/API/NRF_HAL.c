@@ -21,61 +21,13 @@
 # include "SS.h"
 #endif
 
-/* GPIO Control */
+static void `$INSTANCE_NAME`_spi_clear_fifo(void);
 
-/**
- * GPIO control in PSoC6 and PSoC4/PSoC5LP is a little bit different,
- * so here we try to unify them.
- *
- * @param[in] nrf_gpio state 
- */
-void `$INSTANCE_NAME`_ss_write(nrf_gpio state)
-{
-    if (GPIO_CLEAR == state) {
-#if defined (_PSOC6)
-    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-#else // _PSoC4_SCB | _PSOC_UDB
-    `$SS_PIN`_Write(0);
-#endif
-    } else { // GPIO_SET
-#if defined (_PSOC6)
-    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
-#else // _PSoC4_SCB | _PSOC_UDB
-    `$SS_PIN`_Write(1);
-#endif
-    }
-}
+nrf_spi_xfer `$INSTANCE_NAME`_spi_xfer = `$INSTANCE_NAME`_default_spi_xfer;
 
-void `$INSTANCE_NAME`_ce_write(nrf_gpio state)
+void `$INSTANCE_NAME`_register_spi_xfer(nrf_spi_xfer new_spi_xfer)
 {
-    if (GPIO_CLEAR == state) {
-#if defined (_PSOC6)
-    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else // _PSoC4_SCB | _PSOC_UDB
-    `$CE_PIN`_Write(0);
-#endif
-    } else { // GPIO_SET
-#if defined (_PSOC6)
-    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
-#else // _PSoC4_SCB | _PSOC_UDB
-    `$CE_PIN`_Write(1);
-#endif
-    }
-}
-
-static void `$INSTANCE_NAME`_spi_clear_fifo(void)
-{
-#if defined (_PSOC6)
-    Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
-    Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
-#elif defined (_PSOC4_SCB)
-    `$SPI_MASTER`_SpiUartClearRxBuffer();
-    `$SPI_MASTER`_SpiUartClearTxBuffer();
-#elif defined (_PSOC_UDB)
-    `$SPI_MASTER`_ClearFIFO();
-#else
-    #error "Non valid PSoC device identified."
-#endif
+    `$INSTANCE_NAME`_spi_xfer = new_spi_xfer;
 }
 
 // xfer xfer_size bytes to the nrf24 radio and get back xfer_size bytes back
@@ -89,7 +41,7 @@ static void `$INSTANCE_NAME`_spi_clear_fifo(void)
 // uint8_t NRF_DUMMY = 0xFF;
 // uint8_t status_reg = 0;
 // nrf24_spi_xfer(&NRF_DUMMY, &status_reg, 1);
-void `$INSTANCE_NAME`_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size)
+void `$INSTANCE_NAME`_default_spi_xfer(const uint8_t *in, uint8_t *out, const size_t xfer_size)
 {
     `$INSTANCE_NAME`_spi_clear_fifo();
 
@@ -250,6 +202,63 @@ void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit_pos)
     }
 
     `$INSTANCE_NAME`_write_bit(reg, bit_pos, 1);
+}
+
+/* GPIO Control */
+
+/**
+ * GPIO control in PSoC6 and PSoC4/PSoC5LP is a little bit different,
+ * so here we try to unify them.
+ *
+ * @param[in] nrf_gpio state 
+ */
+void `$INSTANCE_NAME`_ss_write(nrf_gpio state)
+{
+    if (GPIO_CLEAR == state) {
+#if defined (_PSOC6)
+    Cy_GPIO_Clr(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+#else // _PSoC4_SCB | _PSOC_UDB
+    `$SS_PIN`_Write(0);
+#endif
+    } else { // GPIO_SET
+#if defined (_PSOC6)
+    Cy_GPIO_Set(`$SS_PIN`_PORT, `$SS_PIN`_NUM);
+#else // _PSoC4_SCB | _PSOC_UDB
+    `$SS_PIN`_Write(1);
+#endif
+    }
+}
+
+void `$INSTANCE_NAME`_ce_write(nrf_gpio state)
+{
+    if (GPIO_CLEAR == state) {
+#if defined (_PSOC6)
+    Cy_GPIO_Clr(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+#else // _PSoC4_SCB | _PSOC_UDB
+    `$CE_PIN`_Write(0);
+#endif
+    } else { // GPIO_SET
+#if defined (_PSOC6)
+    Cy_GPIO_Set(`$CE_PIN`_PORT, `$CE_PIN`_NUM);
+#else // _PSoC4_SCB | _PSOC_UDB
+    `$CE_PIN`_Write(1);
+#endif
+    }
+}
+
+static void `$INSTANCE_NAME`_spi_clear_fifo(void)
+{
+#if defined (_PSOC6)
+    Cy_SCB_ClearRxFifo(`$SPI_MASTER`_HW);
+    Cy_SCB_ClearTxFifo(`$SPI_MASTER`_HW);
+#elif defined (_PSOC4_SCB)
+    `$SPI_MASTER`_SpiUartClearRxBuffer();
+    `$SPI_MASTER`_SpiUartClearTxBuffer();
+#elif defined (_PSOC_UDB)
+    `$SPI_MASTER`_ClearFIFO();
+#else
+    #error "Non valid PSoC device identified."
+#endif
 }
 
 /* [] END OF FILE */
