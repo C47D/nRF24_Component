@@ -17,8 +17,8 @@
 # if defined (_PSOC4_SCB)
 #  include "`$SPI_MASTER`_SPI_UART.h" // may be no longer necessary
 # endif
-# include "CE.h"
-# include "SS.h"
+# include "`$CE_PIN`.h"
+# include "`$SS_PIN`.h"
 #endif
 
 static void `$INSTANCE_NAME`_spi_clear_fifo(void);
