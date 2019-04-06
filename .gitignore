@@ -36,6 +36,7 @@ ComponentUpdateLog.txt
 
 # Random file
 *.cylib/CortexM0/
+*.cylib/BUILD.log
 
 codegentemp
 Generated_Source
