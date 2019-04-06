@@ -3,6 +3,7 @@
 * @version  3
 * @brief    nRF24 commands.
 */
+#include <string.h>
 
 #include "`$INSTANCE_NAME`_CONFIG.h"
 #include "`$INSTANCE_NAME`_HAL.h"
