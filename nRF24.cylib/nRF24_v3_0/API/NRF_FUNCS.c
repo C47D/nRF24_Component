@@ -663,18 +663,27 @@ uint8_t `$INSTANCE_NAME`_get_lost_packets_count(void)
  *
  * @param const uint8_t* data:
  * @param const size_t size:
+ *
+ * @return true if payload was placed on the fifo, false otherwise.
  */
-void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t* payload, size_t payload_size)
+bool `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t* payload, size_t payload_size)
 {
+    bool placed_on_fifo = false;
+    
     if (NULL == payload) {
-        return;
+        return false;
     }
 
     if (NRF_PAYLOAD_SIZE_MAX < payload_size) {
         payload_size = NRF_PAYLOAD_SIZE_MAX;
     }
+    
+    if (false == `$INSTANCE_NAME`_is_tx_fifo_full()) {
+        placed_on_fifo = true;
+        `$INSTANCE_NAME`_cmd_write_tx_payload(payload, payload_size);
+    }
 
-    `$INSTANCE_NAME`_cmd_write_tx_payload(payload, payload_size);
+    return placed_on_fifo;
 }
 
 /**
@@ -682,6 +691,10 @@ void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t* payload, size_t payload_size
  *
  * @param const uint8_t* data:
  * @param const size_t size:
+ *
+ * TODO
+ * This function assumes the tx fifo is empty, so it doesn't check if the fifo
+ * already have payloads in.
  */
 void `$INSTANCE_NAME`_transmit(const uint8_t* payload, size_t payload_size)
 {

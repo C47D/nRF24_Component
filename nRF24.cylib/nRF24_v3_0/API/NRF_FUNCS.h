@@ -64,10 +64,8 @@ void `$INSTANCE_NAME`_start_listening(void);
 void `$INSTANCE_NAME`_stop_listening(void);
 void `$INSTANCE_NAME`_transmit_pulse(void);
 uint8_t `$INSTANCE_NAME`_get_status(void);
-uint8_t `$INSTANCE_NAME`_get_fifo_status(void);
 uint8_t `$INSTANCE_NAME`_get_retransmissions_count(void);
 uint8_t `$INSTANCE_NAME`_get_lost_packets_count(void);
-void `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *payload, size_t payload_size);
 void `$INSTANCE_NAME`_transmit(const uint8_t *payload, size_t payload_size);
 bool `$INSTANCE_NAME`_is_data_ready(void);
 void `$INSTANCE_NAME`_get_rx_payload(uint8_t *payload, const size_t payload_size);
@@ -76,9 +74,14 @@ void `$INSTANCE_NAME`_rx_write_payload(const nrf_pipe pipe, const uint8_t *paylo
                                          size_t payload_size);
 uint8_t `$INSTANCE_NAME`_get_data_pipe_with_payload(void);
 uint8_t `$INSTANCE_NAME`_received_power_detector(void);
+
+bool `$INSTANCE_NAME`_test_carrier(void);
+
+// tx and rx fifo related functions
 bool `$INSTANCE_NAME`_is_tx_fifo_full(void);
 bool `$INSTANCE_NAME`_is_rx_fifo_empty(void);
-bool `$INSTANCE_NAME`_test_carrier(void);
+uint8_t `$INSTANCE_NAME`_get_fifo_status(void);
+bool `$INSTANCE_NAME`_put_in_tx_fifo(const uint8_t *payload, size_t payload_size);
 
 // v2.0
 void `$INSTANCE_NAME`_set_rx_pipe_address(const nrf_addr_rx_pipe pipe,
