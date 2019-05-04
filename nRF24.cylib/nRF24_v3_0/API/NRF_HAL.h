@@ -38,10 +38,10 @@ void `$INSTANCE_NAME`_set_bit(const nrf_register reg, const uint8_t bit_pos);
 typedef enum {
     GPIO_CLEAR,
     GPIO_SET
-} nrf_gpio;
+} gpio_state;
 
-void `$INSTANCE_NAME`_ss_write(nrf_gpio state);
-void `$INSTANCE_NAME`_ce_write(nrf_gpio state);
+void `$INSTANCE_NAME`_ss_write(gpio_state state);
+void `$INSTANCE_NAME`_ce_write(gpio_state state);
 
 #ifdef __cplusplus
 } /* extern "C" */
