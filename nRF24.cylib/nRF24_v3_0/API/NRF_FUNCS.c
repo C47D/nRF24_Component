@@ -848,10 +848,8 @@ void `$INSTANCE_NAME`_clear_all_irqs(void)
 void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag)
 {
     const uint8_t mask = 1 << irq_flag;
-    uint8_t status = `$INSTANCE_NAME`_get_status();
-    status |= mask;
     
-    `$INSTANCE_NAME`_write_reg(NRF_REG_STATUS, &status, 1);
+    `$INSTANCE_NAME`_write_reg(NRF_REG_STATUS, &mask, 1);
 }
 
 /**
@@ -863,7 +861,20 @@ void `$INSTANCE_NAME`_clear_irq_flag(const nrf_irq irq_flag)
  */
 nrf_irq `$INSTANCE_NAME`_get_irq_flag(void)
 {
-    return NRF_ALL_IRQ_MASK & `$INSTANCE_NAME`_cmd_nop();
+    uint8_t irq = NRF_ALL_IRQ_MASK & `$INSTANCE_NAME`_cmd_nop();
+    nrf_irq retval = NRF_NONE_IRQ;
+
+    if (NRF_STATUS_MAX_RT_MASK & irq) {
+        retval = NRF_MAX_RT_IRQ;
+    } else if (NRF_STATUS_TX_DS_MASK & irq) {
+        retval = NRF_TX_DS_IRQ;
+    } else if (NRF_STATUS_RX_DR_MASK & irq) {
+        retval = NRF_RX_DR_IRQ;
+    } else {
+        retval = NRF_NONE_IRQ;
+    }
+
+    return retval; 
 }
 
 void `$INSTANCE_NAME`_poll_interrupt(void)
